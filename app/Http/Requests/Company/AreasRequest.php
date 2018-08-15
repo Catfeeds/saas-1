@@ -44,7 +44,7 @@ class AreasRequest extends FormRequest
             case 'store':
                 return [
                     'name' => 'required|max:32',
-                    'storefronts_guid' => [
+                    'storefronts_guid.*' => [
                         'nullable',
                         'array',
 //                        Rule::in(

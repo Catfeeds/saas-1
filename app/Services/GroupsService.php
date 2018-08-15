@@ -2,44 +2,43 @@
 
 namespace App\Services;
 
+
 use App\Handler\Common;
+use App\Models\Group;
 use App\Models\RelStorefront;
 use App\Models\RelUser;
-use App\Models\Storefront;
 
-class StorefrontsService
+class GroupsService
 {
-    public function addStorefront(
+    public function addGroup(
         $request
     )
     {
         \DB::beginTransaction();
         try {
-            $storefront = Storefront::create([
+            $group = Group::create([
                 'guid' => Common::getUuid(),
                 'name' => $request->name
             ]);
-            if (empty($storefront)) throw new \Exception('片区添加失败');
+            if (empty($group)) throw new \Exception('分组添加失败');
 
-            if (!empty($request->area_guid)) {
-                $relStorefront = RelStorefront::create([
-                    'guid' => Common::getUuid(),
-                    'storefronts_guid' => $storefront->guid,
-                    'rel_guid' => $request->area_guid,
-                    'model_type' => 'App\Models\Area'
-                ]);
-                if (empty($relStorefront)) throw new \Exception('片区与门店关联表');
-            }
+            $relStorefront = RelStorefront::create([
+                'guid' => Common::getUuid(),
+                'storefronts_guid' => $request->storefronts_guid,
+                'rel_guid' => $group->guid,
+                'model_type' => 'App\Models\Group',
+            ]);
+            if (empty($relStorefront)) throw new \Exception('分组与门店关联表添加失败');
 
             if (!empty($request->user_guid)) {
                 foreach ($request->user_guid as $value) {
                     $relUser = RelUser::create([
                         'guid' => Common::getUuid(),
                         'user_guid' => $value,
-                        'rel_guid' => $storefront->guid,
+                        'rel_guid' => $group->guid,
                         'model_type' => 'App\Models\Storefront'
                     ]);
-                    if (empty($relUser)) throw new \Exception('门店与成员关联表');
+                    if (empty($relUser)) throw new \Exception('分组与成员关联表');
                 }
             }
 
@@ -49,6 +48,9 @@ class StorefrontsService
             \DB::rollBack();
             return false;
         }
+
+
+
     }
 
 

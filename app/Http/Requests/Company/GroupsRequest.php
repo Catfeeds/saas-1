@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests\Company;
 
-use App\Models\Area;
+use App\Models\Storefront;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StorefrontsRequest extends FormRequest
+class GroupsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class StorefrontsRequest extends FormRequest
         switch ($this->route()->getActionMethod()) {
             case 'store':
                 return [
-                    'area_guid.in' => '片区必须存在',
+                    'storefronts_guid.in' => '门店必须存在',
                     'user_guid.in' => '成员必须存在',
                     'user_guid.array' => '成员数据必须为一个数组'
                 ];
@@ -47,10 +47,11 @@ class StorefrontsRequest extends FormRequest
             case 'store':
                 return [
                     'name' => 'required|max:32',
-                    'area_guid' => [
-                        'nullable',
+                    'storefronts_guid' => [
+                        'required',
+                        'max:32',
                         Rule::in(
-                            Area::all()->pluck('guid')->toArray()
+                            Storefront::all()->pluck('guid')->toArray()
                         )
                     ],
                     'user_guid' => [

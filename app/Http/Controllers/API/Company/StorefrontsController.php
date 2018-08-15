@@ -13,10 +13,8 @@ class StorefrontsController extends APIBaseController
     )
     {
         $res = $service->addStorefront($request);
-        if (empty($res))
-
+        if (empty($res)) return $this->sendError('门店添加失败');
+        return $this->sendResponse($res,'门店添加成功');
     }
-
-
 
 }

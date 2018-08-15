@@ -47,26 +47,24 @@ class UsersRequest extends FormRequest
             case 'store';
                 return [
                     'tel' => 'required|max:16|unique:users,tel',
-                    'name' => 'required|64',
+                    'name' => 'required|max:64',
                     'role_id' => [
-                        'nullable',
+                        'required',
 //                        Rule::in(
 //                            Role::where('')
 //                        )
                     ],
-                    'status' => 'required|integer'
                 ];
             case 'update':
                 return [
                     'tel' => 'required|max:16|unique:users,tel',
-                    'name' => 'required|64',
+                    'name' => 'required|max:64',
                     'role_id' => [
                         'nullable',
 //                        Rule::in(
 //                            Role::where('')
 //                        )
                     ],
-                    'status' => 'required|integer'
                 ];
             default:
                 {

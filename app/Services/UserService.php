@@ -20,13 +20,12 @@ class UserService
                 'name' => $request->name,
                 'password' => bcrypt($request->password),
                 'role_id' => $request->role_id,
-                'status' => $request->status
             ]);
             if (empty($user)) throw new \Exception('用户添加失败');
 
             $rel_user = RelUser::create([
                 'guid' => Common::getUuid(),
-                'user_guid' => $request->user_guid,
+                'user_guid' => $user->guid,
                 'rel_guid' => $request->rel_guid,
                 'model_type' => $request->model_type
             ]);
@@ -47,7 +46,6 @@ class UserService
             return true;
         } catch (\Exception $exception) {
             \DB::rollback();
-            \Log::error('用户添加失败'.$exception->getMessage());
             return false;
         }
     }

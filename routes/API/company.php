@@ -15,4 +15,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::resource('storefronts', 'StorefrontsController');
 
     Route::resource('groups', 'GroupsController');
+
+
+    //用户管理
+    Route::resource('users','UsersController');
 });

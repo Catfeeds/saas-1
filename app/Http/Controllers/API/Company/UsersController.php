@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\API\Admin;
+namespace App\Http\Controllers\API\Company;
 
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\API\UsersRequest;
 use App\Models\User;
 use App\Services\UserService;
-use Illuminate\Http\Request;
 
 class UsersController extends APIBaseController
 {

@@ -9,5 +9,5 @@
 Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
 
-    
+
 });

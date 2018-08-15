@@ -18,7 +18,5 @@ class BaseModel extends Model
     // 主键类型
     protected $keyType = 'string';
 
-    protected $dates = ['deleted_at'];
-
     protected $guarded = [];
 }

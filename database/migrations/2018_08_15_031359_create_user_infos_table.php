@@ -16,7 +16,7 @@ class CreateUserInfosTable extends Migration
         Schema::create('user_infos', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('guid主键');
             $table->char('user_guid', 32)->nullable()->comment('用户guid');
-            $table->tinyInteger('sex')->nullable()->comment('性别,1:男 2:女');
+            $table->tinyInteger('sex')->nullable()->comment('性别 1:男 2:女');
             $table->date('entry')->nullable()->comment('入职日期');
             $table->date('birth')->nullable()->comment('生日');
             $table->string('native_place',16)->nullable()->comment('籍贯');

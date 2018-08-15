@@ -1,10 +1,9 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 class User extends BaseModel
 {
-
     /**
      * The attributes that are mass assignable.
      *

@@ -8,7 +8,8 @@
 
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
 
-
+     //用户管理
+    Route::resource('users','UsersController');
 
 
 });

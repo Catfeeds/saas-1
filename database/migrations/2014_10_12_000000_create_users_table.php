@@ -14,13 +14,16 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
+            $table->char('guid', 32)->primary()->comment('guid主键');
+            $table->char('company_guid', 32)->nullable()->comment('所属公司id');
+            $table->string('name', 64)->nullable()->comment('用户姓名');
+            $table->string('tel', 16)->nullable()->comment('用户电话');
+            $table->string('password')->nullable()->comment('登录密码');
+            $table->tinyInteger('level')->nullable()->comment('成员等级,1:本公司 2:本区 3:本门店 4:本组 5:');
             $table->rememberToken();
             $table->timestamps();
         });
+        DB::statement("alter table `users` comment'用户表'");
     }
 
     /**

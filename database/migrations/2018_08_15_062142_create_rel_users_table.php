@@ -20,7 +20,7 @@ class CreateRelUsersTable extends Migration
             $table->string('model_type',32)->nullable()->comment('门店/组model');
             $table->timestamps();
         });
-        DB::statement("alter table `rel_users` comment'片区,组与门店关联表'");
+        DB::statement("alter table `rel_users` comment'门店,组与成员关联表'");
     }
 
     /**

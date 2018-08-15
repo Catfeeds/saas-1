@@ -15,6 +15,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('guid主键');
+            $table->string('openid', 64)->nullable()->comment('微信openid');
             $table->char('company_guid', 32)->nullable()->comment('所属公司guid');
             $table->string('name', 64)->nullable()->comment('用户姓名');
             $table->string('tel', 16)->nullable()->comment('用户电话');

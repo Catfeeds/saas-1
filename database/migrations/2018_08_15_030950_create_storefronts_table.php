@@ -15,7 +15,6 @@ class CreateStorefrontsTable extends Migration
     {
         Schema::create('storefronts', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('主键guid');
-            $table->char('area_guid', 32)->nullable()->comment('片区guid');
             $table->string('name', 32)->nullable()->comment('门店名称');
             $table->timestamps();
         });

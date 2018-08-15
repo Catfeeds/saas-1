@@ -15,7 +15,6 @@ class CreateGroupsTable extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->char('guid')->primary()->comment('guid主键');
-            $table->char('storefronts_guid')->nullable()->comment('门店guid');
             $table->string('name', 32)->nullable()->comment('组名');
             $table->timestamps();
         });

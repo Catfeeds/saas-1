@@ -10,5 +10,5 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     Route::resource('company', 'CompanyController');
 
-
+    Route::resource('areas', 'AreasController');
 });

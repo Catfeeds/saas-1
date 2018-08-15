@@ -15,8 +15,8 @@ class CreateRelUsersTable extends Migration
     {
         Schema::create('rel_users', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('guid主键');
-            $table->char('rel_guid',32)->nullable()->comment('门店/组guid');
             $table->char('user_guid',32)->nullable()->comment('成员guid');
+            $table->char('rel_guid',32)->nullable()->comment('门店/组guid');
             $table->string('model_type',32)->nullable()->comment('门店/组model');
             $table->timestamps();
         });

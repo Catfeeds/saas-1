@@ -15,8 +15,8 @@ class CreateRelStorefrontsTable extends Migration
     {
         Schema::create('rel_storefronts', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('guid主键');
-            $table->char('rel_guid',32)->nullable()->comment('片区/组guid');
             $table->char('storefronts_guid',32)->nullable()->comment('门店guid');
+            $table->char('rel_guid',32)->nullable()->comment('片区/组guid');
             $table->string('model_type',32)->nullable()->comment('片区/组model');
             $table->timestamps();
         });

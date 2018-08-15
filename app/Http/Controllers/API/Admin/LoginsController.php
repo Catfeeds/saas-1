@@ -11,13 +11,14 @@ use Laravel\Passport\Token;
 
 class LoginsController extends APIBaseController
 {
-
+    //微信登录查数据库
     public function index(Request $request)
     {
+        return $request->openid;
         $user = User::where('openid', $request->openid)->first();
     }
 
-    //生成唯一标识
+    //生成唯一安全标识
     public function create
     (
         Request $request,
@@ -45,6 +46,7 @@ class LoginsController extends APIBaseController
         return $this->sendResponse($token['data'], '获取token成功！');
     }
 
+    //退出登录
     public function logout()
     {
         $user = Auth::guard('api')->user();

@@ -23,4 +23,6 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('freeze/{guid}','UsersController@freeze');
     //离职
     Route::get('resignation/{guid}','UsersController@resignation');
+    //角色管理
+    Route::resource('roles','RolesController');
 });

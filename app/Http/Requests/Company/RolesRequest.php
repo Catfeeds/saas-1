@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Company;
 
+use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RolesRequest extends FormRequest
 {
@@ -13,9 +15,26 @@ class RolesRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
+    public function messages()
+    {
+        switch ($this->route()->getActionMethod()) {
+            case 'store':
+                return [
+                    'name.not_in' => '同一公司下名称不能重复'
+                ];
+            case 'update':
+                return [
+                    'name.not_in' => '同一公司下名称不能重复'
+                ];
+            default:
+                {
+                    return [];
+                }
+        }
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -23,8 +42,40 @@ class RolesRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        switch ($this->route()->getActionMethod()) {
+            case 'store':
+                return [
+                    'name' => [
+                        'required',
+                        'max:32',
+                        Rule::notIn(
+                            Role::where('company_guid',$this->company_guid)->pluck('name')->toArray()
+                        )
+                    ],
+                    'level' => [
+                        'required',
+                        'integer',
+                        'between:1,5',
+                    ]
+                ];
+            case 'update':
+                return [
+                    'name' => [
+                        'required',
+                        'max:32',
+                        Rule::notIn(
+                            Role::where('company_guid',$this->company_guid)->pluck('name')->toArray()
+                        )
+                    ],
+                    'lavel' => [
+                        'integer',
+                        'between:1,5',
+                    ]
+                ];
+            default:
+                {
+                    return [];
+                }
+        }
     }
 }

@@ -25,4 +25,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('resignation/{guid}','UsersController@resignation');
     //角色管理
     Route::resource('roles','RolesController');
+        //修改角色名称
+        Route::get('update_role_name','RolesController@updateRoleName');
+        //修改角色级别
+        Route::get('update_role_level','RolesController@updateRoleLevel');
 });

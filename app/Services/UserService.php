@@ -108,4 +108,16 @@ class UserService
             return false;
         }
     }
+
+    //冻结用户
+    public function freeze($guid)
+    {
+        return User::where(['guid' => $guid])->update(['status' => 3]);
+    }
+    
+    //人员离职
+    public function resignation($guid)
+    {
+        return User::where(['guid' => $guid])->update(['status' => 2]);
+    }
 }

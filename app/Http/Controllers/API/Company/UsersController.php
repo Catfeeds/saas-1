@@ -44,4 +44,26 @@ class UsersController extends APIBaseController
         $res = $service->del($user);
         return $this->sendResponse($res,'删除用户成功');
     }
+
+    //冻结用户
+    public function freeze
+    (
+        $guid,
+        UserService $service
+    )
+    {
+        $res = $service->freeze($guid);
+        return $this->sendResponse($res,'冻结成功');
+    }
+
+    //人员离职
+    public function resignation
+    (
+        $guid,
+        UserService $service
+    )
+    {
+        $res = $service->resignation($guid);
+        return $this->sendResponse($res,'离职成功');
+    }
 }

@@ -22,7 +22,7 @@ class RolesController extends APIBaseController
     //修改之前原始数据
     public function edit(Role $role)
     {
-       return $this->sendResponse($role,'获取修改前原始数据成功');
+        return $this->sendResponse($role,'获取修改前原始数据成功');
     }
 
     //修改角色名称

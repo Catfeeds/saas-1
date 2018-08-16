@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Company;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UsersRequest extends FormRequest
 {
@@ -44,6 +45,7 @@ class UsersRequest extends FormRequest
      */
     public function rules()
     {
+
         switch ($this->route()->getActionMethod()) {
             case 'store':
                 return [
@@ -66,10 +68,10 @@ class UsersRequest extends FormRequest
             case 'update':
                 return [
                     'name' => 'required|max:64',
-                    'tel' => 'required|max:16|unique:users,tel'.$this->route('user')->guid.'guid',
-                    'status' => [
-                        'integer',
-                        'between:1,3',
+                    'tel' => [
+                        'required',
+                        'max:16',
+                        Rule::unique('users')->ignore($this->route('user')->guid,'guid'),
                     ],
                     'sex' => [
                         'required',

@@ -17,8 +17,8 @@ class UsersController extends APIBaseController
     )
     {
         $res = $service->addUser($request);
-        if ($res)return $this->sendResponse($res,'添加用户成功');
-            return $this->sendError($res,'添加用户失败');
+        if ($res) return $this->sendResponse($res,'添加用户成功');
+        return $this->sendError($res,'添加用户失败');
     }
 
     //修改用户
@@ -30,7 +30,8 @@ class UsersController extends APIBaseController
     )
     {
         $res = $service->updateUser($request,$user);
-        return $this->sendResponse($res,'用户修改成功');
+        if (empty($res)) return $this->sendError($res,'修改用户失败');
+        return $this->sendResponse($res,'修改用户修改成功');
     }
 
     //删除用户 TODO 必须移除所有相关数据维护人,不可恢复

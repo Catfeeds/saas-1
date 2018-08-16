@@ -60,7 +60,6 @@ class RolesRequest extends FormRequest
                 ];
             case 'update':
             case 'updateRoleName':
-            case 'updateRoleLevel':
                 return [
                     'name' => [
                         'max:32',
@@ -68,6 +67,9 @@ class RolesRequest extends FormRequest
                             Role::where('company_guid',$this->company_guid)->pluck('name')->toArray()
                         )
                     ],
+                ];
+            case 'updateRoleLevel':
+                return [
                     'level' => [
                         'integer',
                         'between:1,5',

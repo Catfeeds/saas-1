@@ -59,8 +59,6 @@ class UserService
             $user->name = $request->name;
             $user->password = bcrypt($request->password);
             $user->role_id = $request->role_id;
-            $user->status = $request->status;
-
             if (!$user->save()) throw new \Exception('用户修改失败');
 
             $rel_user = RelUser::where('user_guid',$user->guid)->first();

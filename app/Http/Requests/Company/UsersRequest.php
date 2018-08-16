@@ -66,7 +66,7 @@ class UsersRequest extends FormRequest
             case 'update':
                 return [
                     'name' => 'required|max:64',
-                    'tel' => 'required|max:16|unique:users,tel',
+                    'tel' => 'required|max:16|unique:users,tel'.$this->route('user')->guid.'guid',
                     'status' => [
                         'integer',
                         'between:1,3',

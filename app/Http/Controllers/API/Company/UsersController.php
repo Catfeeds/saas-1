@@ -17,12 +17,8 @@ class UsersController extends APIBaseController
     )
     {
         $res = $service->addUser($request);
-        if ($res) {
-            return $this->sendResponse($res,'添加用户成功');
-        }else {
+        if ($res)return $this->sendResponse($res,'添加用户成功');
             return $this->sendError($res,'添加用户失败');
-        }
-
     }
 
     //修改用户

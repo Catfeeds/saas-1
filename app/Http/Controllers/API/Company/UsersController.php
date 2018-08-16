@@ -33,7 +33,7 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res,'用户修改成功');
     }
 
-    //删除用户
+    //删除用户 TODO 必须移除所有相关数据维护人,不可恢复
     public function destroy
     (
         User $user,
@@ -44,7 +44,7 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res,'删除用户成功');
     }
 
-    //冻结用户
+    //冻结用户 TODO 所有相关信息保留,可以恢复
     public function freeze
     (
         $guid,
@@ -55,7 +55,7 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res,'冻结成功');
     }
 
-    //人员离职
+    //人员离职 TODO 必须移除所有相关数据维护人
     public function resignation
     (
         $guid,

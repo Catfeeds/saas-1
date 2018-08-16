@@ -19,19 +19,16 @@ class RoleRepository extends Model
     }
 
     //修改角色名称
-    public function updateRoleName($request,$role)
+    public function updateRoleName($request)
     {
-        $role->name = $request->name;
-        if(!$role->save()) return false;
-        return true;
+        return Role::where('guid',$request->guid)->update(['name' => $request->name]);
+
     }
 
     //修改角色级别
-    public function updateRloeLevel($request,$role)
+    public function updateRoleLevel($request)
     {
-        $role->level = $request->level;
-        if(!$role->save())  return false;
-        return true;
+       return Role::where('guid',$request->guid)->update(['level' => $request->level]);
     }
     
 }

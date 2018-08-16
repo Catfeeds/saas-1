@@ -59,15 +59,16 @@ class RolesRequest extends FormRequest
                     ]
                 ];
             case 'update':
+            case 'updateRoleName':
+            case 'updateRoleLevel':
                 return [
                     'name' => [
-                        'required',
                         'max:32',
                         Rule::notIn(
                             Role::where('company_guid',$this->company_guid)->pluck('name')->toArray()
                         )
                     ],
-                    'lavel' => [
+                    'level' => [
                         'integer',
                         'between:1,5',
                     ]

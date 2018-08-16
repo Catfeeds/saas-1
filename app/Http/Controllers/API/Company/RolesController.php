@@ -19,33 +19,26 @@ class RolesController extends APIBaseController
         $res = $repository->addRole($request);
         return $this->sendResponse($res,'添加角色成功');
     }
-    //修改之前原始数据
-    public function edit(Role $role)
-    {
-        return $this->sendResponse($role,'获取修改前原始数据成功');
-    }
 
     //修改角色名称
-    public function update
+    public function updateRoleName
     (
         RolesRequest $request,
-        RoleRepository $repository,
-        Role $role
+        RoleRepository $repository
     )
     {
-        $res = $repository->updateRoleName($request,$role);
+        $res = $repository->updateRoleName($request);
         return $this->sendResponse($res,'修改角色名称成功');
     }
 
     //修改角色级别
-    public function show
+    public function updateRoleLevel
     (
         RolesRequest $request,
-        RoleRepository $repository,
-        Role $role
+        RoleRepository $repository
     )
     {
-        $res = $repository->updateRloeLevel($request,$role);
+        $res = $repository->updateRoleLevel($request);
         return $this->sendResponse($res,'修改角色级别成功');
     }
 

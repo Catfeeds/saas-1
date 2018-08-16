@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\Company;
 
 use App\Http\Controllers\API\APIBaseController;
-use App\Http\Requests\API\UsersRequest;
+use App\Http\Requests\Company\UsersRequest;
 use App\Models\User;
 use App\Services\UserService;
 
@@ -17,7 +17,12 @@ class UsersController extends APIBaseController
     )
     {
         $res = $service->addUser($request);
-        return $this->sendResponse($res,'添加用户成功');
+        if ($res) {
+            return $this->sendResponse($res,'添加用户成功');
+        }else {
+            return $this->sendError($res,'添加用户失败');
+        }
+
     }
 
     //修改用户

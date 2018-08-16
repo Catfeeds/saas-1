@@ -33,7 +33,7 @@ class UserService
 
             $user_info = UserInfo::create([
                 'guid' => Common::getUuid(),
-                'user_guid' => $request->user_guid,
+                'user_guid' => $user->guid,
                 'sex' => $request->sex,
                 'entry' => $request->entry,
                 'birth' => $request->birth,
@@ -65,7 +65,7 @@ class UserService
 
             $rel_user = RelUser::where('user_guid',$user->guid)->first();
             if (!empty($rel_user)) {
-                $rel_user->user_guid = $request->user_guid;
+                $rel_user->user_guid = $user->guid;
                 $rel_user->rel_guid = $request->rel_guid;
                 $rel_user->model_type = $request->model_type;
                 if (!$rel_user->save()) throw new \Exception('片区,组与门店关联表修改数据失败');
@@ -73,7 +73,7 @@ class UserService
 
             $user_info = UserInfo::where('user_guid',$user->guid)->first();
             if (!empty($user_info)) {
-                $user_info->user_guid = $request->user_guid;
+                $user_info->user_guid = $user->guid;
                 $user_info->sex = $request->sex;
                 $user_info->entry = $request->entry;
                 $user_info->birth = $request->birth;
@@ -85,7 +85,6 @@ class UserService
             return true;
         } catch (\Exception $exception) {
             \DB::rollBack();
-            \Log::error('用户修改失败'.$exception->getMessage());
             return false;
         }
     }
@@ -108,7 +107,6 @@ class UserService
             return true;
         } catch (\Exception $exception) {
             \DB::rollBack();
-            \Log::error('用户删除失败'.$exception->getMessage());
             return false;
         }
     }

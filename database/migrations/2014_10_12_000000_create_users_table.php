@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-        DB::statement("alter table `users` comment'用户表'");
+        \DB::statement("alter table `users` comment'用户表'");
     }
 
     /**

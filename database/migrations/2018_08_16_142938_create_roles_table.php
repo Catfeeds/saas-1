@@ -20,7 +20,7 @@ class CreateRolesTable extends Migration
             $table->tinyInteger('level')->nullable()->comment('角色等级 1: 公司 2: 片区 3: 门店 4: 分组 5: 个人');
             $table->timestamps();
         });
-        DB::statement("alter table `roles` comment'角色表'");
+        \DB::statement("alter table `roles` comment'角色表'");
     }
 
     /**

@@ -21,8 +21,7 @@ class CreateCompaniesTable extends Migration
             $table->string('address',256)->nullable()->comment('公司地址');
             $table->timestamps();
         });
-        DB::statement("alter table `companies` comment'公司表'");
-
+        \DB::statement("alter table `companies` comment'公司表'");
     }
 
     /**

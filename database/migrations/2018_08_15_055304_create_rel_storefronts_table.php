@@ -20,7 +20,7 @@ class CreateRelStorefrontsTable extends Migration
             $table->string('model_type',32)->nullable()->comment('片区/组model');
             $table->timestamps();
         });
-        DB::statement("alter table `rel_storefronts` comment'片区,组与门店关联表'");
+        \DB::statement("alter table `rel_storefronts` comment'片区,组与门店关联表'");
     }
 
     /**

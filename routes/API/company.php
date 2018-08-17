@@ -23,14 +23,14 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('freeze/{guid}','UsersController@freeze');
     // 离职
     Route::get('resignation/{guid}','UsersController@resignation');
-    // 角色管理
-    Route::resource('roles','RolesController');
-    // 修改角色名称
-    Route::get('update_role_name','RolesController@updateRoleName');
-    // 修改角色级别
-    Route::get('update_role_level','RolesController@updateRoleLevel');
-    // 修改角色权限
-    Route::get('update_role_permission', 'RolesController@updateRolePermission');
+    // 岗位管理
+    Route::resource('quarters','QuartersController');
+    // 修改岗位名称
+    Route::post('update_role_name','QuartersController@updateRoleName');
+    // 修改岗位级别
+    Route::post('update_role_level','QuartersController@updateRoleLevel');
+    // 修改岗位权限
+    Route::post('update_role_permission', 'QuartersController@updateRolePermission');
 
     // 微信确认
     Route::get('confirm_wechat', 'UsersController@confirmWechat');

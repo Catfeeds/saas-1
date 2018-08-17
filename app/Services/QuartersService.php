@@ -1,26 +1,36 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Services;
 
 use App\Handler\Common;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\RoleHasPermission;
-use Illuminate\Database\Eloquent\Model;
 
-class RoleRepository extends Model
+class QuartersService
 {
     protected $user;
 
     public function __construct()
     {
-       $this->user = Common::user();
+        $this->user = Common::user();
     }
 
-    //获取该登录人所属公司角色列表
-    public function getList($request)
+    //岗位设置列表
+    public function roleHasPermissionList()
     {
-        return Role::where(['company_guid' => $this->user->company_guid])->paginate($request->per_page??10);
+        $res = Role::where('company_guid', $this->user->company_guid)->with('roleHasPermission')->get();
+        $datas = array();
+        foreach ($res as $k => $v) {
+            $datas[$v->guid]['name'] = $v->name;
+            $permission = array();
+
+            foreach ($v->roleHasPermission as $key => $val) {
+                $permission[$val->permission_guid] = $val;
+            }
+            $datas[$v->guid]['permission'] = $permission;
+        }
+        return $datas;
     }
 
     //添加角色
@@ -32,14 +42,14 @@ class RoleRepository extends Model
         \DB::beginTransaction();
         try {
             $role = Role::create([
-               'guid' => Common::getUuid(),
+                'guid' => Common::getUuid(),
                 'company_guid' =>  $this->user->company_guid,
                 'name' => $request->name,
                 'level' => $request->level
             ]);
 
             foreach ($permissionId as $v) {
-                 RoleHasPermission::create([
+                RoleHasPermission::create([
                     'guid' => Common::getUuid(),
                     'role_guid' => $role->guid,
                     'permission_guid' => $v,
@@ -63,18 +73,31 @@ class RoleRepository extends Model
     public function updateRoleName($request)
     {
         return Role::where('guid',$request->guid)->update(['name' => $request->name]);
-
     }
 
     //修改角色级别
     public function updateRoleLevel($request)
     {
-       return Role::where('guid',$request->guid)->update(['level' => $request->level]);
+        return Role::where('guid',$request->guid)->update(['level' => $request->level]);
+    }
+
+    // 修改角色权限
+    public function updateRolePermission($request)
+    {
+        return RoleHasPermission::where([
+            'role_guid' => $request->role_guid,
+            'permission_guid' => $request->permission_guid
+        ])->update([
+            'action_scope' => $request->action_scope,
+            'operation_number' => $request->operation_number,
+            'follow_up' => $request->follow_up
+        ]);
     }
 
     //删除角色及相关权限关联
-    public function delRole($role)
+    public function delRole($guid)
     {
+        $role = Role::where('guid', $guid)->first();
         \DB::beginTransaction();
         try {
             $role->delete();
@@ -87,5 +110,4 @@ class RoleRepository extends Model
             return false;
         }
     }
-    
 }

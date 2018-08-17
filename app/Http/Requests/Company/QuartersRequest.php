@@ -3,11 +3,10 @@
 namespace App\Http\Requests\Company;
 
 use App\Handler\Common;
-use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class RolesRequest extends FormRequest
+class QuartersRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,9 +25,14 @@ class RolesRequest extends FormRequest
                 return [
                     'name.unique' => '同公司角色不能重复'
                 ];
-            case 'update':
+            case 'updateRoleName':
                 return [
-                    'name.not_in' => '同公司角色不能重复'
+                    'name.unique' => '同公司角色不能重复'
+                ];
+            case 'updateRolePermission':
+                return [
+                    'role_guid.exists' => '岗位必须存在',
+                    'permission_guid.exists' => '权限必须存在'
                 ];
             default:
                 {
@@ -59,22 +63,30 @@ class RolesRequest extends FormRequest
                         'between:1,5',
                     ]
                 ];
-            case 'update':
             case 'updateRoleName':
                 return [
                     'name' => [
                         'max:32',
-                        Rule::notIn(
-                            Role::where('company_guid',$this->company_guid)->pluck('name')->toArray()
-                        )
+                        Rule::unique('roles')->where(function($query) {
+                            $query->where('company_guid', Common::user()->company_guid);
+                        })->ignore($this->guid, 'guid')
                     ],
                 ];
             case 'updateRoleLevel':
                 return [
                     'level' => [
+                        'required',
                         'integer',
-                        'between:1,5',
+                        'between:1,5'
                     ]
+                ];
+            case 'updateRolePermission':
+                return [
+                    'role_guid' => 'required|exists:role_has_permissions,role_guid',
+                    'permission_guid' => 'required|exists:role_has_permissions,permission_guid',
+                    'action_scope' => 'required|integer|between:1,6',
+                    'operation_number' => 'required|integer|max:9999',
+                    'follow_up' => 'required|integer|between:1,3'
                 ];
             default:
                 {

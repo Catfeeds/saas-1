@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\Company;
 
 use App\Http\Controllers\API\APIBaseController;
-use App\Http\Requests\API\UsersRequest;
+use App\Http\Requests\Company\UsersRequest;
 use App\Models\User;
 use App\Services\LoginsService;
 use App\Services\UserService;
@@ -18,7 +18,8 @@ class UsersController extends APIBaseController
     )
     {
         $res = $service->addUser($request);
-        return $this->sendResponse($res,'添加用户成功');
+        if ($res) return $this->sendResponse($res,'添加用户成功');
+        return $this->sendError($res,'添加用户失败');
     }
 
     //修改用户
@@ -30,10 +31,11 @@ class UsersController extends APIBaseController
     )
     {
         $res = $service->updateUser($request,$user);
-        return $this->sendResponse($res,'用户修改成功');
+        if (empty($res)) return $this->sendError($res,'修改用户失败');
+        return $this->sendResponse($res,'修改用户修改成功');
     }
 
-    //删除用户
+    //删除用户 TODO 必须移除所有相关数据维护人,不可恢复
     public function destroy
     (
         User $user,
@@ -43,7 +45,29 @@ class UsersController extends APIBaseController
         $res = $service->del($user);
         return $this->sendResponse($res,'删除用户成功');
     }
-    
+
+    //冻结用户 TODO 所有相关信息保留,可以恢复
+    public function freeze
+    (
+        $guid,
+        UserService $service
+    )
+    {
+        $res = $service->freeze($guid);
+        return $this->sendResponse($res,'冻结成功');
+    }
+
+    //人员离职 TODO 必须移除所有相关数据维护人
+    public function resignation
+    (
+        $guid,
+        UserService $service
+    )
+    {
+        $res = $service->resignation($guid);
+        return $this->sendResponse($res, '离职成功');
+    }
+
     //微信确认
     public function confirmWechat
     (

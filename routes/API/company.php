@@ -19,7 +19,16 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     //用户管理
     Route::resource('users','UsersController');
-
+    //冻结
+    Route::get('freeze/{guid}','UsersController@freeze');
+    //离职
+    Route::get('resignation/{guid}','UsersController@resignation');
+    //角色管理
+    Route::resource('roles','RolesController');
+    //修改角色名称
+    Route::get('update_role_name','RolesController@updateRoleName');
+    //修改角色级别
+    Route::get('update_role_level','RolesController@updateRoleLevel');
     //微信确认
     Route::get('confirm_wechat', 'UsersController@confirmWechat');
     //微信换绑

@@ -18,8 +18,7 @@ class CreateGroupsTable extends Migration
             $table->string('name', 32)->nullable()->comment('组名');
             $table->timestamps();
         });
-        DB::statement("alter table `groups` comment'组表'");
-
+        \DB::statement("alter table `groups` comment'组表'");
     }
 
     /**

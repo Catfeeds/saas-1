@@ -18,8 +18,7 @@ class CreateStorefrontsTable extends Migration
             $table->string('name', 32)->nullable()->comment('门店名称');
             $table->timestamps();
         });
-        DB::statement("alter table `storefronts` comment'门店表'");
-
+        \DB::statement("alter table `storefronts` comment'门店表'");
     }
 
     /**

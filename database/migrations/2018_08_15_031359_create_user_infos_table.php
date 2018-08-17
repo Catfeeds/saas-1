@@ -23,8 +23,7 @@ class CreateUserInfosTable extends Migration
             $table->string('race',16)->nullable()->comment('名族');
             $table->timestamps();
         });
-        DB::statement("alter table `user_infos` comment'用户基础信息表'");
-
+        \DB::statement("alter table `user_infos` comment'用户基础信息表'");
     }
 
     /**

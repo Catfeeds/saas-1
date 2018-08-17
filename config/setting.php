@@ -16,6 +16,8 @@ return [
     // 七牛测试后缀
     'qiniu_suffix' => '-test',
     //微信请求登录
-    'login_url' => env('LOGIN_URL')
+    'login_url' => env('LOGIN_URL'),
+    //微信
+    'wechat_url' => env('WECHAT_URL')
 
 ];

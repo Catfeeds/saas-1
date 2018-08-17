@@ -109,4 +109,12 @@ class LoginsService
         return $tel;
     }
 
+    //生成密文
+    public function cipher($ip,$tel)
+    {
+        $code = $ip.'-'.$tel;
+        $key = $this->lock($code);
+        return $key;
+    }
+
 }

@@ -47,7 +47,14 @@ class LoginsController extends APIBaseController
         $user = User::where(['tel' => $request->tel])->first();
         if (empty($user)) return $this->sendError('用户不存在');
         //查询用户是否绑定微信
-        if (empty($user->openid)) return $this->sendError('未绑定微信');
+        if (empty($user->openid)) {
+            //如果未绑定,生成用户电话产生的密文
+            $key = $service->cipher($request->getClientIp(), $request->tel);
+            //通过密文获取二维码
+            $res = curl(config('setting.wechat_url').'/qrcode/'.$key,'get');
+            if (empty($res->data)) return $this->sendError('二维码获取失败');
+            return $this->sendResponse($res->data, '二维码获取成功');
+        }
         //获取token
         $token = $service->getToken($request->tel, $request->password);
         if (empty($token['success'])) return $this->sendError($token['message']);
@@ -62,13 +69,13 @@ class LoginsController extends APIBaseController
     )
     {
         $tel = $service->getTel($request->saftySign);
-        return $tel;
         $res = User::where('tel', $tel)->update(['openid' => $request->openid]);
         if (!empty($res)) {
             curl(config('setting.login_url').'/?openid='.$request->openid.'&saftySign='.$request->saftySign,'get');
         }
     }
 
+    //微信登录
     public function wechatLogins
     (
         Request $request,

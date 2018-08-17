@@ -56,7 +56,11 @@ class UsersController extends APIBaseController
         $openid = User::where('tel', $tel)->value('openid');
         //比较openid
         if ($openid === $request->openid) {
-            return $this->sendResponse(true, '验证成功');
+            //验证成功,则返回换绑二维码
+            $key = $service->cipher($request->getClientIp(), $tel);
+            $res = curl(config('setting.wechat_url').'/temporary/'. $key .'/update_wechat','get');
+            if (empty($res->data)) return $this->sendError('二维码获取失败');
+            return $this->sendResponse($res->data, '二维码获取成功');
         } else {
             return $this->sendError('验证失败');
         }

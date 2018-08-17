@@ -14,8 +14,9 @@ class LoginsController extends APIBaseController
     //微信登录查数据库
     public function index(Request $request)
     {
-        return $request->openid;
         $user = User::where('openid', $request->openid)->first();
+        //请求前端登录接口
+        if (!empty($user)) curl(config('setting.login_url').'/?openid='.$request->openid.'&saftySign='.$request->saftySign,'get');
     }
 
     //生成唯一安全标识
@@ -25,12 +26,17 @@ class LoginsController extends APIBaseController
         LoginsService $service
     )
     {
-        $code =  $request->getClientIp().'-'.time();
+        $code =  $request->getClientIp();
+        if (!empty($request->tel)) {
+            $code .= '-'.$request->tel;
+        } else {
+            $code .=  '-'.time();
+        }
         $key = $service->lock($code);
         return $this->sendResponse($key, '获取成功');
     }
 
-    //手机号,密码直接登录
+    //手机号、密码登录
     public function store
     (
         Request $request,
@@ -40,10 +46,40 @@ class LoginsController extends APIBaseController
         //查询用户是否存在
         $user = User::where(['tel' => $request->tel])->first();
         if (empty($user)) return $this->sendError('用户不存在');
+        //查询用户是否绑定微信
+        if (empty($user->openid)) return $this->sendError('未绑定微信');
         //获取token
         $token = $service->getToken($request->tel, $request->password);
         if (empty($token['success'])) return $this->sendError($token['message']);
         return $this->sendResponse($token['data'], '获取token成功！');
+    }
+
+    //首次登陆绑定微信后跳转登陆
+    public function bandingWechat
+    (
+        Request $request,
+        LoginsService $service
+    )
+    {
+        $tel = $service->getTel($request->saftySign);
+        return $tel;
+        $res = User::where('tel', $tel)->update(['openid' => $request->openid]);
+        if (!empty($res)) {
+            curl(config('setting.login_url').'/?openid='.$request->openid.'&saftySign='.$request->saftySign,'get');
+        }
+    }
+
+    public function wechatLogins
+    (
+        Request $request,
+        LoginsService $service
+    )
+    {
+       $user = User::where('openid', $request->openid)->first();
+       if (empty($user)) return $this->sendError('用户不存在');
+       $res = $service->wechatLogins($user);
+       if (empty($res['status'])) return $this->sendError($res['message']);
+       return $this->sendResponse($res, 'token获取成功');
     }
 
     //退出登录
@@ -59,9 +95,8 @@ class LoginsController extends APIBaseController
 
         // 找到这条access_token并且将其删除
         $token = Token::find($accessToken);
-        if (empty($token)) {
-            return $this->sendError('暂无有效令牌', 403);
-        }
+        if (empty($token)) return $this->sendError('暂无有效令牌', 403);
+
         if (!empty($token->delete())) {
             return $this->sendResponse([], '退出成功！');
         } else {

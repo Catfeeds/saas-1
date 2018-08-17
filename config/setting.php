@@ -15,4 +15,7 @@ return [
     'qiniu_url' => env('QINIU_URL', 'http://osibaji20.bkt.clouddn.com/'),// 七牛访问url
     // 七牛测试后缀
     'qiniu_suffix' => '-test',
+    //微信请求登录
+    'login_url' => env('LOGIN_URL')
+
 ];

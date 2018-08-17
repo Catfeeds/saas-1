@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Company;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\UsersRequest;
 use App\Models\User;
+use App\Services\LoginsService;
 use App\Services\UserService;
 
 class UsersController extends APIBaseController
@@ -64,6 +65,37 @@ class UsersController extends APIBaseController
     )
     {
         $res = $service->resignation($guid);
-        return $this->sendResponse($res,'离职成功');
+        return $this->sendResponse($res, '离职成功');
+    }
+
+    //微信确认
+    public function confirmWechat
+    (
+        UsersRequest $request,
+        LoginsService $service
+    )
+    {
+        $tel = $service->getTel($request->saftySign);
+        //查库
+        $openid = User::where('tel', $tel)->value('openid');
+        //比较openid
+        if ($openid === $request->openid) {
+            return $this->sendResponse(true, '验证成功');
+        } else {
+            return $this->sendError('验证失败');
+        }
+    }
+
+    //微信换绑
+    public function updateWechat
+    (
+        UsersRequest $request,
+        LoginsService $service
+    )
+    {
+        $tel = $service->getTel($request->saftySign);
+        $res = User::where('tel', $tel)->update(['openid' => $request->openid]);
+        if (!$res) return $this->sendError('换绑失败');
+        return $this->sendResponse($res, '换绑成功');
     }
 }

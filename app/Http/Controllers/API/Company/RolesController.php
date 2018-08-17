@@ -9,6 +9,17 @@ use App\Repositories\RoleRepository;
 
 class RolesController extends APIBaseController
 {
+
+    public function index
+    (
+        RolesRequest $request,
+        RoleRepository $repository
+    )
+    {
+        $res = $repository->getList($request);
+        return $this->sendResponse($res, '角色列表获取成功');
+    }
+    
     //添加角色
     public function store
     (
@@ -17,6 +28,7 @@ class RolesController extends APIBaseController
     )
     {
         $res = $repository->addRole($request);
+        if (!$res) return $this->sendError('角色添加失败');
         return $this->sendResponse($res,'添加角色成功');
     }
 
@@ -42,10 +54,24 @@ class RolesController extends APIBaseController
         return $this->sendResponse($res,'修改角色级别成功');
     }
 
-    //删除角色 TODO 必须删除与角色相关数据
-    public function destroy(Role $role)
+    public function updatePermission
+    (
+        RolesRequest $request,
+        RoleRepository $repository
+    )
     {
-        $res = $role->delete();
-        return $this->sendResponse($res,'删除角色成功');
+
+    }
+
+    //删除角色 
+    public function destroy
+    (
+        Role $role,
+        RoleRepository $repository
+    )
+    {
+        $res = $repository->delRole($role);
+        if (!$res) return $this->sendError('删除失败');
+        return $this->sendResponse($res, '删除成功');
     }
 }

@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class RoleHasPermission extends Model
+class RoleHasPermission extends BaseModel
 {
     //
 }

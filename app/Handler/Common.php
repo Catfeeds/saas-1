@@ -29,6 +29,12 @@ class Common
         return preg_match('#^1\d{10}$#', $mobile) ? true : false;
     }
 
+    //登录用户
+    public static function user()
+    {
+        return \Illuminate\Support\Facades\Auth::guard('api')->user();
+    }
+
     // 获取七牛token
     public static function getToken($accessKey = null, $secretKey = null, $bucket = null)
     {

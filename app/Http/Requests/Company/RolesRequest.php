@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Company;
 
+use App\Handler\Common;
 use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -23,11 +24,11 @@ class RolesRequest extends FormRequest
         switch ($this->route()->getActionMethod()) {
             case 'store':
                 return [
-                    'name.not_in' => '同一公司下名称不能重复'
+                    'name.unique' => '同公司角色不能重复'
                 ];
             case 'update':
                 return [
-                    'name.not_in' => '同一公司下名称不能重复'
+                    'name.not_in' => '同公司角色不能重复'
                 ];
             default:
                 {
@@ -48,9 +49,9 @@ class RolesRequest extends FormRequest
                     'name' => [
                         'required',
                         'max:32',
-                        Rule::notIn(
-                            Role::where('company_guid',$this->company_guid)->pluck('name')->toArray()
-                        )
+                        Rule::unique('roles')->where(function($query) {
+                            $query->where('company_guid', Common::user()->company_guid);
+                        })
                     ],
                     'level' => [
                         'required',

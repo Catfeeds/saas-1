@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API\Company;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\RolesRequest;
 use App\Models\Role;
+use App\Repositories\RoleHasPermissionsRepository;
 use App\Repositories\RoleRepository;
+use Illuminate\Http\Request;
 
 class RolesController extends APIBaseController
 {
@@ -24,6 +26,7 @@ class RolesController extends APIBaseController
     public function store
     (
         RolesRequest $request,
+
         RoleRepository $repository
     )
     {
@@ -73,5 +76,15 @@ class RolesController extends APIBaseController
         $res = $repository->delRole($role);
         if (!$res) return $this->sendError('删除失败');
         return $this->sendResponse($res, '删除成功');
+    }
+
+    // 修改角色权限
+    public function updateRolePermission(
+        Request $request,
+        RoleHasPermissionsRepository $repository
+    )
+    {
+        $res = $repository->updateRolePermission($request);
+        return $this->sendResponse($res,'角色权限修改成功');
     }
 }

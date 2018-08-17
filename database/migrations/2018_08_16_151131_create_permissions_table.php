@@ -16,7 +16,6 @@ class CreatePermissionsTable extends Migration
         Schema::create('permissions', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('guid主键');
             $table->string('name',32)->nullable()->comment('权限名');
-            $table->char('parent_guid',32)->nullable()->comment('父级guid');
             $table->timestamps();
         });
         \DB::statement("alter table `permissions` comment'权限表'");

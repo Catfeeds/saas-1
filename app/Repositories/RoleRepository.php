@@ -11,14 +11,11 @@ class RoleRepository extends Model
     //添加角色
     public function addRole($request)
     {
-
-
         return Role::create([
             'guid' => Common::getUuid(),
             'name' => $request->name,
             'level' => $request->level,
         ]);
-
     }
 
     //修改角色名称

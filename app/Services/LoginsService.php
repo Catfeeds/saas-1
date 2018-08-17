@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-
 use GuzzleHttp\Client;
 
 class LoginsService
 {
     private $key = 'chulouwang';
-    private $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789=+';
+    private $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+';
 
+    //电话、密码获取token
     public function getToken($username, $password)
     {
         $data = [
@@ -53,10 +53,18 @@ class LoginsService
         ]];
     }
 
+    //openid获取token
+    public function wechatLogins($user)
+    {
+        $token = $user->createToken($user->openid)->accessToken;
+        if (empty($token)) return ['status' => false, 'message' => '获取令牌失败'];
+        return ['status' => true, 'token' => $token];
+    }
+
+
     //加密
     function lock($txt)
     {
-        $txt = $txt.$this->key;
         $nh = rand(0,64);
         $ch = $this->chars[$nh];
         $mdKey = md5($this->key.$ch);
@@ -69,13 +77,13 @@ class LoginsService
             $j = ($nh+strpos($this->chars,$txt[$i])+ord($mdKey[$k++]))%64;
             $tmp .= $this->chars[$j];
         }
-        return urlencode(base64_encode($ch.$tmp));
+        return urlencode($ch.$tmp);
     }
 
     //解密
     function unlock($txt)
     {
-        $txt = base64_decode(urldecode($txt));
+        $txt = urldecode($txt);
         $ch = $txt[0];
         $nh = strpos($this->chars,$ch);
         $mdKey = md5($this->key.$ch);
@@ -89,7 +97,16 @@ class LoginsService
             while ($j<0) $j+=64;
             $tmp .= $this->chars[$j];
         }
-        return trim(base64_decode($tmp),$this->key);
+        return base64_decode($tmp);
+    }
+
+    //密文获取电话
+    public function getTel($saftySign)
+    {
+        $str = $this->unlock($saftySign);
+        $arr = explode('-', $str);
+        $tel = end($arr);
+        return $tel;
     }
 
 }

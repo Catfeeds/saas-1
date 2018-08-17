@@ -19,4 +19,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     //用户管理
     Route::resource('users','UsersController');
+
+    //微信确认
+    Route::get('confirm_wechat', 'UsersController@confirmWechat');
+    //微信换绑
+    Route::post('update_wechat', 'UsersController@updateWechat');
 });

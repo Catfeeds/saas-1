@@ -39,4 +39,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     Route::resource('role_has_permission_list', 'RoleHasPermissionController');
 
+
+    //组织架构
+    Route::get('company_frameworks', 'CompanyFrameworksController');
 });

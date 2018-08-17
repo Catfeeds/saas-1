@@ -6,7 +6,7 @@ use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\CompanyFrameworksRequest;
 use App\Repositories\CompanyFrameworksRepository;
 
-class CompanyFramework extends APIBaseController
+class CompanyFrameworksController extends APIBaseController
 {
 
     public function index

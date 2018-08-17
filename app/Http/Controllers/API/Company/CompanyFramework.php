@@ -3,18 +3,20 @@
 namespace App\Http\Controllers\API\Company;
 
 use App\Http\Controllers\API\APIBaseController;
-use Illuminate\Http\Request;
+use App\Http\Requests\Company\CompanyFrameworksRequest;
+use App\Repositories\CompanyFrameworksRepository;
 
 class CompanyFramework extends APIBaseController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function index
+    (
+        CompanyFrameworksRepository $repository,
+        CompanyFrameworksRequest $request
+    )
     {
-        //
+        $res = $repository->getList($request);
+        return $this->sendResponse($res, '列表获取成功');
     }
 
     /**

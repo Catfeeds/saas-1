@@ -81,11 +81,13 @@ class CompanyFrameworksRepository extends Model
                 'level' => 2,
                 'parent_guid' => $request->parent_guid
             ]);
+            if (empty($store)) throw new \Exception('门店添加失败');
 
             // 处理人员
-            $res = User::whereIn('guid', $request->userGuid)->update(['rel_guid' => $store->guid]);
-
-            if (empty($store) && empty($res)) return true;
+            if ($request->userGuid) {
+                $res = User::whereIn('guid', $request->userGuid)->update(['rel_guid' => $store->guid]);
+            }
+            return true;
             \DB::commit();
         }catch (\Exception $exception) {
             \DB::rollback();
@@ -104,9 +106,11 @@ class CompanyFrameworksRepository extends Model
                 'level' => 3,
                 'parent_guid' => $request->parent_guid
             ]);
-            $res = User::whereIn('guid',$request->userGuid)->update(['rel_guid' => $group->guid]);
-
-            if (empty($group) && empty($res)) return true;
+            if (empty($group)) throw new \Exception('分组添加失败');
+            if ($request->userGuid) {
+                $res = User::whereIn('guid',$request->userGuid)->update(['rel_guid' => $group->guid]);
+            }
+            return true;
             \DB::commit();
         } catch (\Exception $exception) {
             \DB::rollback();

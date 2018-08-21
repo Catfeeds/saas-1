@@ -31,6 +31,10 @@ class CompanyFrameworksRequest extends FormRequest
                     'name' => [
                         'required',
                         'max:32',
+                    ],
+                    'storefront_guid' => 'array',
+                    'storefront_guid.*' => [
+                        Rule::in(CompanyFramework::all()->pluck('guid')->toArray())
                     ]
                 ];
             case 'addStorefront':

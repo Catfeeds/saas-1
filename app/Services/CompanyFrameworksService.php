@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Handler\Common;
 use App\Models\CompanyFramework;
 use App\Models\User;
 
@@ -42,6 +43,30 @@ class CompanyFrameworksService
     )
     {
        return User::where('name','like','%,'.$request->name.',%')->get();
+    }
+
+    //获取登录人公司的全部门店下拉数据
+    public function getStorefront()
+    {
+        $res = CompanyFramework::where(['company_guid' => Common::user()->company_guid, 'level' => 2])->get();
+        return $res->map(function($v) {
+            return [
+                'value' => $v->guid,
+                'name' => $v->name
+            ];
+        });
+    }
+
+    //获取登录人公司的全部分组下拉数据
+    public function getGroup()
+    {
+        $res = CompanyFramework::where(['company_guid' => Common::user()->company_guid, 'level' => 3])->get();
+        return $res->map(function($v) {
+            return [
+                'value' => $v->guid,
+                'name' => $v->name
+            ];
+        });
     }
 
 

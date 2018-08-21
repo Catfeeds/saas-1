@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\CompanyFramework;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class CompanyFrameworksRepository extends Model
@@ -48,5 +47,14 @@ class CompanyFrameworksRepository extends Model
     {
         \DB::beginTransaction();
         
+    }
+
+    public function updateData($companyFramework, $request)
+    {
+        $companyFramework->name = $request->name;
+        $companyFramework->parent_guid = $request->parent_guid;
+        if (!$companyFramework->save()) return false;
+        return true;
+
     }
 }

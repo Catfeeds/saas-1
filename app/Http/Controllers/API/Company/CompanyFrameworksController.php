@@ -110,7 +110,7 @@ class CompanyFrameworksController extends APIBaseController
         }), '获取所有门店成功');
     }
 
-    //通过门店获取分组
+    // 通过门店获取分组
     public function getGroup
     (
         CompanyFrameworksRequest $request,

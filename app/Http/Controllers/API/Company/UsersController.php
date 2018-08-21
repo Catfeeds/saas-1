@@ -22,7 +22,7 @@ class UsersController extends APIBaseController
         return $this->sendError($res,'添加用户失败');
     }
 
-    //修改用户
+    // 修改用户
     public function update
     (
         UsersRequest $request,
@@ -35,7 +35,7 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res,'修改用户修改成功');
     }
 
-    //删除用户 TODO 必须移除所有相关数据维护人,不可恢复
+    // 删除用户 TODO 必须移除所有相关数据维护人,不可恢复
     public function destroy
     (
         User $user,
@@ -46,7 +46,7 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res,'删除用户成功');
     }
 
-    //冻结用户 TODO 所有相关信息保留,可以恢复
+    // 冻结用户 TODO 所有相关信息保留,可以恢复
     public function freeze
     (
         $guid,
@@ -57,7 +57,7 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res,'冻结成功');
     }
 
-    //人员离职 TODO 必须移除所有相关数据维护人
+    // 人员离职 TODO 必须移除所有相关数据维护人
     public function resignation
     (
         $guid,
@@ -68,7 +68,7 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res, '离职成功');
     }
 
-    //微信确认
+    // 微信确认
     public function confirmWechat
     (
         UsersRequest $request,
@@ -76,11 +76,11 @@ class UsersController extends APIBaseController
     )
     {
         $tel = $service->getTel($request->saftySign);
-        //查库
+        // 查库
         $openid = User::where('tel', $tel)->value('openid');
-        //比较openid
+        // 比较openid
         if ($openid === $request->openid) {
-            //验证成功,则返回换绑二维码
+            // 验证成功,则返回换绑二维码
             $key = $service->cipher($request->getClientIp(), $tel);
             $res = curl(config('setting.wechat_url').'/temporary/'. $key .'/update_wechat','get');
             if (empty($res->data)) return $this->sendError('二维码获取失败');
@@ -90,7 +90,7 @@ class UsersController extends APIBaseController
         }
     }
 
-    //微信换绑
+    // 微信换绑
     public function updateWechat
     (
         UsersRequest $request,
@@ -103,7 +103,7 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res, '换绑成功');
     }
 
-    //获取全部岗位
+    // 获取全部岗位
     public function getAllQuarters(UserService $service)
     {
         $res = $service->getAllQuarters();

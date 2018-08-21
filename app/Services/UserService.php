@@ -10,7 +10,7 @@ use App\Models\UserInfo;
 
 class UserService
 {
-    //添加用户
+    // 添加用户
     public function addUser($request)
     {
         \DB::beginTransaction();
@@ -45,7 +45,7 @@ class UserService
         }
     }
 
-    //修改用户信息
+    // 修改用户信息
     public function updateUser($request, $user)
     {
         \DB::beginTransaction();
@@ -54,15 +54,8 @@ class UserService
             $user->name = $request->name;
             $user->password = bcrypt($request->password);
             $user->role_id = $request->role_id;
+            $user->rel_guid = $request->rel_guid;
             if (!$user->save()) throw new \Exception('用户修改失败');
-
-            $rel_user = RelUser::where('user_guid',$user->guid)->first();
-            if (!empty($rel_user)) {
-                $rel_user->user_guid = $user->guid;
-                $rel_user->rel_guid = $request->rel_guid;
-                $rel_user->model_type = $request->model_type;
-                if (!$rel_user->save()) throw new \Exception('片区,组与门店关联表修改数据失败');
-            }
 
             $user_info = UserInfo::where('user_guid',$user->guid)->first();
             if (!empty($user_info)) {
@@ -90,9 +83,7 @@ class UserService
             // 删除员工表
             $res = $user->delete();
             if (!$res) throw new \Exception('用户删除失败');
-            // 删除片区,组与门店关联表数据
-            $suc = RelUser::where('user_guid',$user->guid)->delete();
-            if (!$suc) throw new \Exception('片区组与门店关联表数据删除失败');
+
             // 删除用户基础信息
             $succ = UserInfo::where('user_guid',$user->guid)->delete();
             if (!$succ) throw new \Exception('用户基础信息删除失败');

@@ -26,7 +26,7 @@ class CompanyFrameworksRequest extends FormRequest
     public function rules()
     {
         switch ($this->route()->getActionMethod()) {
-            case 'store':
+            case 'addArea':
                 return [
                     'name' => [
                         'required',
@@ -35,6 +35,27 @@ class CompanyFrameworksRequest extends FormRequest
                             CompanyFramework::all()->pluck('name')->toArray()
                         )
                     ]
+                ];
+            case 'addStore':
+                return [
+                    'name' => [
+                        'required',
+                        'max:32',
+                        Rule::notIn(
+                            CompanyFramework::all()->pluck('name')->toArray()
+                        )
+                    ]
+                ];
+            case 'addGroup':
+                return [
+                    'name' => [
+                        'required',
+                        'max:32',
+                        Rule::notIn(
+                            CompanyFramework::all()->pluck('name')->toArray()
+                        )
+                    ],
+                    'parent_guid' => 'required'
                 ];
             default;
                 return [

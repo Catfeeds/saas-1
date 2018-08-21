@@ -20,34 +20,34 @@ class CompanyFrameworksController extends APIBaseController
     }
 
    //新增片区
-    public function newArea
+    public function addArea
     (
         CompanyFrameworksRequest $request,
         CompanyFrameworksRepository $repository
     )
     {
-        $res = $repository->newArea($request);
+        $res = $repository->addArea($request);
         return $this->sendResponse($res,'新增片区成功');
     }
     //新增门店
-    public function newStore
+    public function add
     (
         CompanyFrameworksRequest $request,
         CompanyFrameworksRepository $repository
     )
     {
-        $res = $repository->newStore($request);
+        $res = $repository->addStore($request);
         return $this->sendResponse($res,'新增门店成功');
     }
 
    //新增分组
-    public function newGroup
+    public function addGroup
     (
         CompanyFrameworksRequest $request,
         CompanyFrameworksRepository $repository
     )
     {
-        $res = $repository->newGroup($request);
+        $res = $repository->addGroup($request);
         return $this->sendResponse($res,'新增分组成功');
     }
 

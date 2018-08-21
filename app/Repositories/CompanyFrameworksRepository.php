@@ -31,7 +31,7 @@ class CompanyFrameworksRepository extends Model
     }
 
     //新增片区
-    public function newArea($request)
+    public function addArea($request)
     {
         \DB::beginTransaction();
         //查询门店的guid在公司组织架构表中的数据
@@ -59,7 +59,7 @@ class CompanyFrameworksRepository extends Model
     }
 
     //新增门店
-    public function newStore($request)
+    public function addStore($request)
     {
         \DB::beginTransation();
         try {
@@ -86,7 +86,7 @@ class CompanyFrameworksRepository extends Model
     }
 
     //新增分组
-    public function newGroup($request)
+    public function addGroup($request)
     {
         \DB::beginTransation();
         try {

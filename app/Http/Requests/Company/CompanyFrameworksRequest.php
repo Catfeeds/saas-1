@@ -36,7 +36,7 @@ class CompanyFrameworksRequest extends FormRequest
                         )
                     ]
                 ];
-            case 'addStore':
+            case 'addStorefront':
                 return [
                     'name' => [
                         'required',

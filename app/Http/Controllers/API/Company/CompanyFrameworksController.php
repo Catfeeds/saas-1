@@ -32,13 +32,13 @@ class CompanyFrameworksController extends APIBaseController
         return $this->sendResponse($res,'新增片区成功');
     }
     //新增门店
-    public function add
+    public function addStorefront
     (
         CompanyFrameworksRequest $request,
         CompanyFrameworksRepository $repository
     )
     {
-        $res = $repository->addStore($request);
+        $res = $repository->addStorefront($request);
         return $this->sendResponse($res,'新增门店成功');
     }
 

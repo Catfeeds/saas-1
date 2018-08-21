@@ -11,13 +11,13 @@ use Illuminate\Http\Request;
 class CompanyFrameworksController extends APIBaseController
 {
 
+    //片区,门店,分组 3级菜单
     public function index
     (
-        CompanyFrameworksRepository $repository,
-        CompanyFrameworksRequest $request
+        CompanyFrameworksRepository $repository
     )
     {
-        $res = $repository->getList($request);
+        $res = $repository->getList();
         return $this->sendResponse($res, '获取成功');
     }
 

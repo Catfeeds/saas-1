@@ -90,7 +90,8 @@ class QuartersService
         ])->update([
             'action_scope' => $request->action_scope,
             'operation_number' => $request->operation_number,
-            'follow_up' => $request->follow_up
+            'follow_up' => $request->follow_up,
+            'status' => $request->status
         ]);
     }
 

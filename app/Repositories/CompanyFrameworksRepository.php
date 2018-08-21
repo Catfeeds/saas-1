@@ -45,4 +45,11 @@ class CompanyFrameworksRepository extends Model
         }
         return $box;
     }
+
+    //新增片区
+    public function newArea($arr)
+    {
+        \DB::beginTransaction();
+        
+    }
 }

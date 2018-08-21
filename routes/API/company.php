@@ -42,4 +42,13 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     //组织架构
     Route::resource('company_frameworks', 'CompanyFrameworksController');
+    // 通过公司获取所有用户
+    Route::get('adopt_company_get_user', 'CompanyFrameworksController@adoptCompanyGetUser');
+    // 通过区域获取所有用户
+    Route::get('adopt_area_get_user', 'CompanyFrameworksController@adoptAreaGetUser');
+    // 通过门店/组获取所有用户
+    Route::get('adopt_condition_get_user', 'CompanyFrameworksController@adoptConditionGetUser');
+    // 通过用户名称获取用户
+    Route::get('adopt_name_get_user', 'CompanyFrameworksController@adoptNameGetUser');
+
 });

@@ -85,8 +85,8 @@ class UserService
             if (!$res) throw new \Exception('用户删除失败');
 
             // 删除用户基础信息
-            $succ = UserInfo::where('user_guid',$user->guid)->delete();
-            if (!$succ) throw new \Exception('用户基础信息删除失败');
+            $delUserInfo = UserInfo::where('user_guid', $user->guid)->delete();
+            if (!$delUserInfo) throw new \Exception('用户基础信息删除失败');
             \DB::commit();
             return true;
         } catch (\Exception $exception) {

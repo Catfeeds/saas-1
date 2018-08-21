@@ -47,4 +47,16 @@ class CompanyFrameworksService
         if (!in_array($request->level, [1, 2, 3]) && empty($request->level)) return collect();
         return CompanyFramework::where(['company_guid' => Common::user()->company_guid, 'level' => $request->level])->get();
     }
+
+    //通过门店获取分组
+    public function getGroup($storefrontId)
+    {
+        $storefront = CompanyFramework::where('parent_guid', $storefrontId)->get();
+        return $storefront->map(function($v) {
+           return [
+               'value' => $v->guid,
+               'name' => $v->name
+           ];
+        });
+    }
 }

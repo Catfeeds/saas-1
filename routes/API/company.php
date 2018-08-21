@@ -61,5 +61,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     //新增分组
     Route::get('add_group','CompanyFrameworksController@addGroup');
+    //通过门店获取分组
+    Route::get('get_group', 'CompanyFrameworksController@getGroup');
 
 });

@@ -29,4 +29,11 @@ class CompanyFrameworksRepository extends Model
         ])->get();
         dd($area);
     }
+
+    //新增片区
+    public function newArea($arr)
+    {
+        \DB::beginTransaction();
+        
+    }
 }

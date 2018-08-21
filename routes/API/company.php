@@ -41,5 +41,5 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
 
     //组织架构
-    Route::get('company_frameworks', 'CompanyFrameworksController');
+    Route::resource('company_frameworks', 'CompanyFrameworksController');
 });

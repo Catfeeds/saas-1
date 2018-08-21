@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Handler\Common;
 use App\Models\RelUser;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
 
@@ -119,5 +120,17 @@ class UserService
     public function resignation($guid)
     {
         return User::where(['guid' => $guid])->update(['status' => 2]);
+    }
+
+    //获取公司下的全部岗位
+    public function getAllQuarters()
+    {
+        $res = Role::where('company_guid', Common::user()->company_guid)->get();
+        return $res->map(function($v) {
+           return [
+              'value' => $v->guid,
+              'name' => $v->name
+           ] ;
+        });
     }
 }

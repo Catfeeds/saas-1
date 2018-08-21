@@ -15,12 +15,14 @@ class CompanyFrameworksRepository extends Model
         $user = User::where('company_guid', 'aaa12')->get();
         $areas = CompanyFramework::with('framework')->where('parent_guid', null)->get();
         $box = [];
+        $box[] = $user;
+        //循环一级划分,查询下级
         foreach ($areas as $area) {
-           //查出片区下面的门店
             $store_data = [];
+            //查出片区下面的门店
             foreach ($area->framework as $store) {
-                //查询门店下面的分组
                 $group_data = [];
+                //查询门店下面的分组
                 foreach ($store->framework as $group) {
                     $item = [
                         'value' => $group->guid,
@@ -41,7 +43,6 @@ class CompanyFrameworksRepository extends Model
             ];
             $box[] =  $data;
         }
-        $box['user'] = $user;
         return $box;
     }
 }

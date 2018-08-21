@@ -66,6 +66,17 @@ class UserService
                 $user_info->native_place = $request->native_place;
                 $user_info->race = $request->race;
                 if (!$user_info->save()) throw new \Exception('用户基础信息修改失败');
+            } else {
+                $update_user_info = UserInfo::create([
+                    'guid' => Common::getUuid(),
+                    'user_guid' => $user->guid,
+                    'sex' => $request->sex,
+                    'entry' => $request->entry,
+                    'birth' => $request->birth,
+                    'native_place' => $request->native_place,
+                    'race' => $request->race
+                ]);
+                if (empty($update_user_info)) throw new \Exception('用户基础信息修改失败');
             }
             \DB::commit();
             return true;
@@ -85,8 +96,8 @@ class UserService
             if (!$res) throw new \Exception('用户删除失败');
 
             // 删除用户基础信息
-            $succ = UserInfo::where('user_guid',$user->guid)->delete();
-            if (!$succ) throw new \Exception('用户基础信息删除失败');
+            $delUserInfo = UserInfo::where('user_guid',$user->guid)->delete();
+            if (!$delUserInfo) throw new \Exception('用户基础信息删除失败');
             \DB::commit();
             return true;
         } catch (\Exception $exception) {

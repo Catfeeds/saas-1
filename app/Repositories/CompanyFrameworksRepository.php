@@ -44,26 +44,20 @@ class CompanyFrameworksRepository extends Model
     }
 
     //新增片区
-    public function newArea($request)
+    public function addArea($request)
     {
         \DB::beginTransaction();
-        //查询门店的guid在公司组织架构表中的数据
         try {
            $area =  CompanyFramework::create([
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
-                'level' => $request->level,
+                'level' => 1,
            ]);
         if (empty($area)) throw new \Exception('片区添加失败');
 
-        $add_area = CompanyFramework::whereIn('guid',$request->arr)->update(['parent_guid' => $area->guid]);
+            $res = CompanyFramework::whereIn('guid',$request->arr)->update(['parent_guid' => $area->guid]);
 
-        if (!empty($add_area)) {
-            foreach ($add_area as $v) {
-                $res = CompanyFramework::create(['parent_guid' => $v->guid]);
-            }
-        }
-        if (empty($area) && empty($res)) return true;
+            if (empty($area) && empty($res)) return true;
         \DB::commit();
         } catch (\Exception $exception) {
             \DB::rollback();
@@ -72,30 +66,20 @@ class CompanyFrameworksRepository extends Model
     }
 
     //新增门店
-    public function newStore($request)
+    public function addStorefront($request)
     {
         \DB::beginTransation();
         try {
             $store = CompanyFramework::create([
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
-                'level' => $request->level,
+                'level' => 2,
                 'parent_guid' => $request->parent_guid
             ]);
 
             // 处理人员
-            User::whereIn('guid', $request->userGuid)->update(['rel_guid' => $store->guid]);
+            $res = User::whereIn('guid', $request->userGuid)->update(['rel_guid' => $store->guid]);
 
-
-            $add_store = CompanyFramework::whereIn('guid',$request->arr)->all();
-            foreach ($add_store as $v) {
-                if (empty($request->parent_guid)) {
-                    $res = CompanyFramework::create(['parent_guid' => $v->guid]);
-                } else {
-                    $res = CompanyFramework::where(['parent_guid' => $request->parent_guid])->update(['parent_guid' =>
-                        $v->guid]);
-                }
-            }
             if (empty($store) && empty($res)) return true;
             \DB::commit();
         }catch (\Exception $exception) {
@@ -105,24 +89,18 @@ class CompanyFrameworksRepository extends Model
     }
 
     //新增分组
-    public function newGroup($request)
+    public function addGroup($request)
     {
         \DB::beginTransation();
         try {
             $group = CompanyFramework::create([
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
-                'level' => $request->level,
+                'level' => 3,
+                'parent_guid' => $request->parent_guid
             ]);
-            $add_group = CompanyFramework::whereIn('guid',$request->arr)->all();
-            foreach ($add_group as $v) {
-                if (empty($request->parent_guid)) {
-                    $res = CompanyFramework::create(['parent_guid' => $v->guid]);
-                } else {
-                    $res = CompanyFramework::where(['parent_guid' => $request->parent_guid])->update(['parent_guid' =>
-                        $v->guid]);
-                }
-            }
+            $res = User::whereIn('guid',$request->userGuid)->update(['rel_guid' => $group->guid]);
+
             if (empty($group) && empty($res)) return true;
             \DB::commit();
         } catch (\Exception $exception) {

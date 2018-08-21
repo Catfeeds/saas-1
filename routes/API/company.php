@@ -54,12 +54,12 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
 
     //新增片区
-    Route::get('new_area','CompanyFrameworksController@newArea');
+    Route::get('add_area','CompanyFrameworksController@addArea');
 
     //新增门店
-    Route::get('new_store','CompanyFrameworksController@newStore');
+    Route::get('add_storefront','CompanyFrameworksController@addStorefront');
 
     //新增分组
-    Route::get('new_group','CompanyFrameworksController@newGroup');
+    Route::get('add_group','CompanyFrameworksController@addGroup');
 
 });

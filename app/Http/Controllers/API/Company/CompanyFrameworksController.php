@@ -7,21 +7,29 @@ use App\Http\Requests\Company\CompanyFrameworksRequest;
 use App\Repositories\CompanyFrameworksRepository;
 use App\Services\CompanyFrameworksService;
 use Illuminate\Http\Request;
+use App\Models\CompanyFramework;
+
 
 class CompanyFrameworksController extends APIBaseController
 {
 
+    //片区,门店,分组 3级菜单
     public function index
     (
-        CompanyFrameworksRepository $repository,
-        CompanyFrameworksRequest $request
+        CompanyFrameworksRepository $repository
     )
     {
-        $res = $repository->getList($request);
+        $res = $repository->getList();
         return $this->sendResponse($res, '获取成功');
     }
 
    //新增片区
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function newArea
     (
         CompanyFrameworksRequest $request,
@@ -53,12 +61,27 @@ class CompanyFrameworksController extends APIBaseController
         return $this->sendResponse($res,'新增分组成功');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+    //修改之前原始数据
+    public function edit(CompanyFramework $companyFramework)
+    {
+        return $this->sendResponse($companyFramework,'修改之前原始数据');
+    }
+
+    //修改片区、门店、分组
+    public function update
+    (
+        CompanyFramework $companyFramework,
+        CompanyFrameworksRepository $repository,
+        CompanyFrameworksRequest $request
+    )
+    {
+        $res = $repository->updateData($companyFramework, $request);
+        if (!$res) return $this->sendError('修改失败');
+        return $this->sendResponse($res, '修改成功');
+    }
+
+
     public function destroy($id)
     {
         //
@@ -98,5 +121,4 @@ class CompanyFrameworksController extends APIBaseController
             ];
         }), '获取所有门店成功');
     }
-    
 }

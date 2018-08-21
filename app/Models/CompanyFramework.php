@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 class CompanyFramework extends BaseModel
 {
     //自关联

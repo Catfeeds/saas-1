@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Handler\Common;
 use App\Models\CompanyFramework;
 use App\Models\User;
 
@@ -44,8 +45,6 @@ class CompanyFrameworksService
     )
     {
         if (!in_array($request->level, [1, 2, 3]) && empty($request->level)) return collect();
-        return CompanyFramework::where(['level' => $request->level])->get();
+        return CompanyFramework::where(['company_guid' => Common::user()->company_guid, 'level' => $request->level])->get();
     }
-
-
 }

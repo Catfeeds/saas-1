@@ -4,19 +4,15 @@ namespace App\Repositories;
 
 use App\Handler\Common;
 use App\Models\CompanyFramework;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class CompanyFrameworksRepository extends Model
 {
-
-    public function getList($request)
+    //片区,门店,分组 3级菜单
+    public function getList()
     {
-        //查询登录人公司全部人员
-        $user = User::where('company_guid', 'aaa12')->get();
         $areas = CompanyFramework::with('framework')->where('parent_guid', null)->get();
         $box = [];
-        $box[] = $user;
         //循环一级划分,查询下级
         foreach ($areas as $area) {
             $store_data = [];
@@ -133,5 +129,14 @@ class CompanyFrameworksRepository extends Model
             \DB::rollback();
             return false;
         }
+    }
+
+    public function updateData($companyFramework, $request)
+    {
+        $companyFramework->name = $request->name;
+        $companyFramework->parent_guid = $request->parent_guid;
+        if (!$companyFramework->save()) return false;
+        return true;
+
     }
 }

@@ -12,9 +12,7 @@ class CompanyFrameworksService
         $request
     )
     {
-        if (empty($request)) {
-            return User::where('company_guid', $request->company_guid)->paginate(10);
-        } elseif ($request->area_guid) {
+        if ($request->area_guid) {
             // 获取区域下门店guid
             $storefrontGuid = CompanyFramework::where('parent_guid', $request->area_guid)->pluck('guid')->toArray();
             // 获取区域下组guid
@@ -27,6 +25,8 @@ class CompanyFrameworksService
             // 将门店guid拼接到关联数据中
             $storefrontGuid[] = $request->storefront_guid;
             return User::whereIn('rel_guid', $request->rel_guid)->paginate(10);
+        } else {
+            return User::where('company_guid', $request->company_guid)->paginate(10);
         }
     }
 
@@ -36,6 +36,15 @@ class CompanyFrameworksService
     )
     {
         return User::where('name', 'like' , '%,'.$request->name.',%')->get();
+    }
+
+    // 根据条件获取所有区域/门店/组
+    public function getAllBasicsInfo(
+        $request
+    )
+    {
+        if (!in_array($request->level, [1, 2, 3]) && empty($request->level)) return collect();
+        return CompanyFramework::where(['level' => $request->level])->get();
     }
 
 

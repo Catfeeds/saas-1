@@ -83,4 +83,20 @@ class CompanyFrameworksController extends APIBaseController
         $res = $service->adoptNameGetUser($request);
         return $this->sendResponse($res,'通过用户名称获取用户成功');
     }
+
+    // 根据条件获取所有区域/门店/组
+    public function getAllBasicsInfo(
+        Request $request,
+        CompanyFrameworksService $service
+    )
+    {
+        $res = $service->getAllBasicsInfo($request);
+        return $this->sendResponse($res->map(function($v) {
+            return [
+                'value' => $v->guid,
+                'label' => $v->name
+            ];
+        }), '获取所有门店成功');
+    }
+    
 }

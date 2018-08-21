@@ -64,28 +64,7 @@ class CompanyFrameworksController extends APIBaseController
         //
     }
 
-    // 通过公司获取所有用户
-    public function adoptCompanyGetUser(
-        Request $request,
-        CompanyFrameworksService $service
-
-    )
-    {
-        $res = $service->adoptCompanyGetUser($request);
-        return $this->sendResponse($res,'通过公司获取所有用户成功');
-    }
-
-    // 通过区域获取所有用户
-    public function adoptAreaGetUser(
-        Request $request,
-        CompanyFrameworksService $service
-    )
-    {
-        $res = $service->adoptAreaGetUser($request);
-        return $this->sendResponse($res,'通过区域获取所有用户成功');
-    }
-
-    // 通过门店/组获取所有用户
+    // 通过公司/区域/门店/组获取所有用户
     public function adoptConditionGetUser(
         Request $request,
         CompanyFrameworksService $service

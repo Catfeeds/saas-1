@@ -10,4 +10,10 @@ class CompanyFramework extends BaseModel
     {
         return $this->hasMany(CompanyFramework::class, 'parent_guid','guid');
     }
+
+    //关联人员
+    public function users()
+    {
+        return $this->hasMany(User::class, 'rel_guid', 'guid');
+    }
 }

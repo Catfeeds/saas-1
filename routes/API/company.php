@@ -68,4 +68,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 通过门店获取分组
     Route::get('get_group', 'CompanyFrameworksController@getGroup');
 
+    //删除片区、门店、分组
+    Route::get('delete', 'CompanyFrameworksController@delete');
+
 });

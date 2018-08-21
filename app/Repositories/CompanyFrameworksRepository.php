@@ -10,24 +10,41 @@ use Illuminate\Database\Eloquent\Model;
 class CompanyFrameworksRepository extends Model
 {
 
-    protected $user;
-
-    public function __construct()
-    {
-        $this->user = Common::user();
-    }
-
     public function getList($request)
     {
         //查询登录人公司全部人员
-        $user = User::where('company_guid', $this->user->guid);
-        //查出一级划分
-        $area = CompanyFramework::where([
-            'company_guid' => $this->user->company_guid,
-            'parent_guid' => '',
-            'level' => 1
-        ])->get();
-        dd($area);
+        $user = User::where('company_guid', 'aaa12')->get();
+        $areas = CompanyFramework::with('framework')->where('parent_guid', null)->get();
+        $box = [];
+        $box[] = $user;
+        //循环一级划分,查询下级
+        foreach ($areas as $area) {
+            $store_data = [];
+            //查出片区下面的门店
+            foreach ($area->framework as $store) {
+                $group_data = [];
+                //查询门店下面的分组
+                foreach ($store->framework as $group) {
+                    $item = [
+                        'value' => $group->guid,
+                        'name' => $group->name
+                    ];
+                    $group_data[] = $item;
+                }
+                $store_data[] = [
+                    'value' => $store->guid,
+                    'name' => $store->name,
+                    'group' => $group_data
+                ];
+            }
+            $data = [
+                'value' => $area->guid,
+                'name' => $area->name,
+                'store' => $store_data
+            ];
+            $box[] =  $data;
+        }
+        return $box;
     }
 
     //新增片区
@@ -39,11 +56,11 @@ class CompanyFrameworksRepository extends Model
            $area =  CompanyFramework::create([
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
-               'level' => $request->level,
+                'level' => $request->level,
            ]);
         if (empty($area)) throw new \Exception('片区添加失败');
 
-        $add_area = CompanyFramework::whereIn('guid',$request->arr)->all();
+        $add_area = CompanyFramework::whereIn('guid',$request->arr)->update(['parent_guid' => $area->guid]);
 
         if (!empty($add_area)) {
             foreach ($add_area as $v) {
@@ -67,7 +84,13 @@ class CompanyFrameworksRepository extends Model
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
                 'level' => $request->level,
+                'parent_guid' => $request->parent_guid
             ]);
+
+            // 处理人员
+            User::whereIn('guid', $request->userGuid)->update(['rel_guid' => $store->guid]);
+
+
             $add_store = CompanyFramework::whereIn('guid',$request->arr)->all();
             foreach ($add_store as $v) {
                 if (empty($request->parent_guid)) {

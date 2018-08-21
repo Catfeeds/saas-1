@@ -88,7 +88,7 @@ class CompanyFrameworksController extends APIBaseController
     )
     {
         $res = $service->adoptConditionGetUser($request);
-        return $this->sendResponse($res,'通过门店/组获取所有用户成功');
+        return $this->sendResponse($res,'通过公司/区域/门店/组获取所有用户成功');
     }
 
     // 通过用户名称获取用户

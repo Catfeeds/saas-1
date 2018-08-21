@@ -20,6 +20,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('freeze/{guid}','UsersController@freeze');
     // 离职
     Route::get('resignation/{guid}','UsersController@resignation');
+    //岗位下拉数据
+    Route::get('get_all_quarters', 'UsersController@getAllQuarters');
 
     /*
     |--------------------------------------------------------------------------
@@ -61,5 +63,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     //新增分组
     Route::get('add_group','CompanyFrameworksController@addGroup');
+    //通过门店获取分组
+    Route::get('get_group', 'CompanyFrameworksController@getGroup');
 
 });

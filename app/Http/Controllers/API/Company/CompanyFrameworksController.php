@@ -121,4 +121,15 @@ class CompanyFrameworksController extends APIBaseController
             ];
         }), '获取所有门店成功');
     }
+
+    //通过门店获取分组
+    public function getGroup
+    (
+        CompanyFrameworksRequest $request,
+        CompanyFrameworksService $service
+    )
+    {
+        $res = $service->getGroup($request->storefrontId);
+        return $this->sendResponse($res, '门店下的分组获取成功');
+    }
 }

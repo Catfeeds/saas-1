@@ -102,4 +102,11 @@ class UsersController extends APIBaseController
         if (!$res) return $this->sendError('换绑失败');
         return $this->sendResponse($res, '换绑成功');
     }
+
+    //获取全部岗位
+    public function getAllQuarters(UserService $service)
+    {
+        $res = $service->getAllQuarters();
+        return $this->sendResponse($res, '岗位获取成功');
+    }
 }

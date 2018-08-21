@@ -12,7 +12,13 @@ class CompanyFrameworksService
         $request
     )
     {
-        return User::where('company_guid', $request->company_guid)->get();
+        if (!empty($request->status)) {
+            $status = [1, 2, 3];
+        } else {
+            $status = [1, 3];
+        }
+
+        return User::where('company_guid', $request->company_guid)->whereIn('status', $status)->get();
     }
 
     // 通过区域获取所有用户
@@ -25,7 +31,13 @@ class CompanyFrameworksService
         // 获取区域下组guid
         $groupGuid = CompanyFramework::whereIn('parent_guid', $storefrontGuid)->pluck('guid');
         $guid = array_merge($storefrontGuid, $groupGuid);
-        return User::whereIn('rel_guid', $guid)->get();
+
+        if (!empty($request->status)) {
+            $status = [1, 2, 3];
+        } else {
+            $status = [1, 3];
+        }
+        return User::whereIn('rel_guid', $guid)->whereIn('status', $status)->get();
     }
 
     // 通过门店/组获取所有用户
@@ -33,7 +45,13 @@ class CompanyFrameworksService
         $request
     )
     {
-        return User::where('rel_guid', $request->rel_guid)->get();
+        if (!empty($request->status)) {
+            $status = [1, 2, 3];
+        } else {
+            $status = [1, 3];
+        }
+
+        return User::where('rel_guid', $request->rel_guid)->whereIn('status', $status)->get();
     }
 
     // 通过用户名称获取用户

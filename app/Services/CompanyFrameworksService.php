@@ -74,7 +74,6 @@ class CompanyFrameworksService
                 }
             }
 
-
            //查询所有门店
             if (!empty($data[1])) {
                 $storefront = CompanyFramework::with('framework')->whereIn('guid', $data[1])->get();

@@ -69,7 +69,7 @@ class CompanyFrameworksService
             if (!empty($data[2])) {
                 $group = CompanyFramework::with('users')->whereIn('guid', $data[2])->get();
                 foreach ($group as $v) {
-                    if (!$v->users->isEMpty()) throw new \Exception('删除失败,'. $v->name. '下还有员工');
+                    if (!$v->users->isEMpty()) return ['status' => false, 'message' => '删除失败,'. $v->name. '下还有员工'];
                     $v->delete();
                 }
             }
@@ -78,7 +78,7 @@ class CompanyFrameworksService
             if (!empty($data[1])) {
                 $storefront = CompanyFramework::with('framework')->whereIn('guid', $data[1])->get();
                 foreach ($storefront as $v) {
-                    if (!$v->framework->isEMpty()) throw new \Exception('删除失败,'. $v->name. '下还有分组');
+                    if (!$v->framework->isEMpty()) return ['status' => false, 'message' => '删除失败,'. $v->name. '下还有分组'];
                     $v->delete();
                 }
             }
@@ -87,7 +87,7 @@ class CompanyFrameworksService
             if (!empty($data[0])) {
                 $area = CompanyFramework::with('framework')->whereIn('guid', $data[0])->get();
                 foreach ($area as $v) {
-                    if (!$v->framework->isEMpty()) throw new \Exception('删除失败,'. $v->name. '下还有门店');
+                    if (!$v->framework->isEMpty()) return ['status' => false, 'message' => '删除失败,'. $v->name. '下还有门店'];
                     $v->delete();
                 }
             }
@@ -96,7 +96,7 @@ class CompanyFrameworksService
         } catch (\Exception $exception) {
             \DB::rollback();
             \Log::error('删除失败'.$exception->getMessage());
-            return ['status' => false, 'message' => $exception->getMessage()];
+            return ['status' => false, 'message' => '删除失败'];
         }
     }
 }

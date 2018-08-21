@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Company;
 
 use App\Models\CompanyFramework;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -59,6 +60,18 @@ class CompanyFrameworksRequest extends FormRequest
                     'name' => [
                         'required',
                         'max:32',
+                    ],
+                    'userGuid' => 'array',
+                    'userGuid.*' => [
+                        Rule::in(
+                            User::where(['company_guid' => 'asdasdas' ])->pluck('guid')->toArray()
+                        )
+                    ],
+                    'parent_guid' => [
+                        Rule::in(
+                            CompanyFramework::where(['level' => 1, 'company_guid' => 'asdasdas'])->pluck('guid')
+                                ->toArray()
+                        )
                     ]
                 ];
             case 'addGroup':
@@ -67,7 +80,18 @@ class CompanyFrameworksRequest extends FormRequest
                         'required',
                         'max:32',
                     ],
-                    'parent_guid' => 'required'
+                    'parent_guid' => [
+                        'required',
+                        Rule::in(
+                            CompanyFramework::where(['level' => 2, 'company_guid' => 'asdasdas'])->pluck('guid')->toArray()
+                        )
+                    ],
+                    'userGuid' => 'array',
+                    'userGuid.*' => [
+                        Rule::in(
+                            User::where(['company_guid' => 'asdasdas'])->pluck('guid')->toArray()
+                        )
+                    ],
                 ];
             default;
                 return [

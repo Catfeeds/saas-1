@@ -79,6 +79,7 @@ class CompanyFrameworksRepository extends Model
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
                 'level' => 2,
+                'company_guid' => 'asdasdas',    // TODO 获取登录人的公司guid
                 'parent_guid' => $request->parent_guid
             ]);
             if (empty($store)) throw new \Exception('门店添加失败');
@@ -86,7 +87,7 @@ class CompanyFrameworksRepository extends Model
             // 处理人员
             if ($request->userGuid) {
                 $res = User::whereIn('guid', $request->userGuid)->update(['rel_guid' => $store->guid]);
-
+                if (empty($res)) throw new \Exception('片区关联门店失败');
             }
             \DB::commit();
             return true;
@@ -105,12 +106,13 @@ class CompanyFrameworksRepository extends Model
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
                 'level' => 3,
+                'company_guid' => 'asdasdas',    // TODO 获取登录人的公司guid
                 'parent_guid' => $request->parent_guid
             ]);
             if (empty($group)) throw new \Exception('分组添加失败');
             if ($request->userGuid) {
                 $res = User::whereIn('guid',$request->userGuid)->update(['rel_guid' => $group->guid]);
-
+                if (empty($res)) throw new \Exception('分组关联门店失败');
             }
 
             \DB::commit();

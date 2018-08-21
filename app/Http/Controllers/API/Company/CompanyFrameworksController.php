@@ -24,12 +24,6 @@ class CompanyFrameworksController extends APIBaseController
     }
 
    //新增片区
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function addArea
     (
         CompanyFrameworksRequest $request,

@@ -12,7 +12,6 @@ use App\Models\CompanyFramework;
 
 class CompanyFrameworksController extends APIBaseController
 {
-
     //片区,门店,分组 3级菜单
     public function index
     (
@@ -23,7 +22,7 @@ class CompanyFrameworksController extends APIBaseController
         return $this->sendResponse($res, '获取成功');
     }
 
-   //新增片区
+    // 新增片区
     public function addArea
     (
         CompanyFrameworksRequest $request,
@@ -33,7 +32,8 @@ class CompanyFrameworksController extends APIBaseController
         $res = $repository->addArea($request);
         return $this->sendResponse($res,'新增片区成功');
     }
-    //新增门店
+
+    // 新增门店
     public function addStorefront
     (
         CompanyFrameworksRequest $request,
@@ -44,7 +44,7 @@ class CompanyFrameworksController extends APIBaseController
         return $this->sendResponse($res,'新增门店成功');
     }
 
-   //新增分组
+    // 新增分组
     public function addGroup
     (
         CompanyFrameworksRequest $request,
@@ -56,13 +56,13 @@ class CompanyFrameworksController extends APIBaseController
     }
 
 
-    //修改之前原始数据
+    // 修改之前原始数据
     public function edit(CompanyFramework $companyFramework)
     {
         return $this->sendResponse($companyFramework,'修改之前原始数据');
     }
 
-    //修改片区、门店、分组
+    // 修改片区、门店、分组
     public function update
     (
         CompanyFramework $companyFramework,

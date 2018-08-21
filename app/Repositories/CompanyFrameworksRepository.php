@@ -97,7 +97,7 @@ class CompanyFrameworksRepository extends Model
         }
     }
 
-    //新增分组
+    // 新增分组
     public function addGroup($request)
     {
         \DB::beginTransaction();
@@ -110,8 +110,9 @@ class CompanyFrameworksRepository extends Model
                 'parent_guid' => $request->parent_guid
             ]);
             if (empty($group)) throw new \Exception('分组添加失败');
+
             if ($request->userGuid) {
-                $res = User::whereIn('guid',$request->userGuid)->update(['rel_guid' => $group->guid]);
+                $res = User::whereIn('guid', $request->userGuid)->update(['rel_guid' => $group->guid]);
                 if (empty($res)) throw new \Exception('分组关联门店失败');
             }
 

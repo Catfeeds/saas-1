@@ -21,16 +21,10 @@ class UserService
                 'name' => $request->name,
                 'password' => bcrypt($request->password),
                 'role_id' => $request->role_id,
+                'rel_guid' => $request->rel_guid,
+                'company_guid' => 'asdasdas'    // TODO 获取登录用户公司guid
             ]);
             if (empty($user)) throw new \Exception('用户添加失败');
-
-            $rel_user = RelUser::create([
-                'guid' => Common::getUuid(),
-                'user_guid' => $user->guid,
-                'rel_guid' => $request->rel_guid,
-                'model_type' => $request->model_type
-            ]);
-            if (empty($rel_user)) throw new \Exception('片区,组与门店关联表插入数据失败');
 
             $user_info = UserInfo::create([
                 'guid' => Common::getUuid(),
@@ -88,18 +82,18 @@ class UserService
         }
     }
     
-    //删除用户
+    // 删除用户
     public function del($user)
     {
         \DB::beginTransaction();
         try {
-            //删除员工表
+            // 删除员工表
             $res = $user->delete();
             if (!$res) throw new \Exception('用户删除失败');
-            //删除片区,组与门店关联表数据
+            // 删除片区,组与门店关联表数据
             $suc = RelUser::where('user_guid',$user->guid)->delete();
             if (!$suc) throw new \Exception('片区组与门店关联表数据删除失败');
-            //删除用户基础信息
+            // 删除用户基础信息
             $succ = UserInfo::where('user_guid',$user->guid)->delete();
             if (!$succ) throw new \Exception('用户基础信息删除失败');
             \DB::commit();
@@ -110,19 +104,19 @@ class UserService
         }
     }
 
-    //冻结用户
+    // 冻结用户
     public function freeze($guid)
     {
         return User::where(['guid' => $guid])->update(['status' => 3]);
     }
     
-    //人员离职
+    // 人员离职
     public function resignation($guid)
     {
         return User::where(['guid' => $guid])->update(['status' => 2]);
     }
 
-    //获取公司下的全部岗位
+    // 获取公司下的全部岗位
     public function getAllQuarters()
     {
         $res = Role::where('company_guid', Common::user()->company_guid)->get();

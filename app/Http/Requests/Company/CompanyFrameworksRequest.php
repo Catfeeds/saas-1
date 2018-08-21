@@ -19,12 +19,23 @@ class CompanyFrameworksRequest extends FormRequest
         return true;
     }
 
+    // 中文报错
     public function messages()
     {
         switch ($this->route()->getActionMethod()) {
             case 'addArea':
                 return [
                     'storefront_guid.*.in' => '请添加存在的门店'
+                ];
+            case 'addStorefront':
+                return [
+                    'parent_guid.in' => '请添加存在的区域',
+                    'userGuid.*.in' => '用户必须存在'
+                ];
+            case 'addGroup':
+                return [
+                    'parent_guid.in' => '请添加存在的门店',
+                    'userGuid.*.in' => '用户必须存在'
                 ];
             default;
                 return [
@@ -33,7 +44,6 @@ class CompanyFrameworksRequest extends FormRequest
         }
     }
 
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -41,6 +51,8 @@ class CompanyFrameworksRequest extends FormRequest
      */
     public function rules()
     {
+        // TODO 公司guid
+
         switch ($this->route()->getActionMethod()) {
             case 'addArea':
                 return [
@@ -69,8 +81,7 @@ class CompanyFrameworksRequest extends FormRequest
                     ],
                     'parent_guid' => [
                         Rule::in(
-                            CompanyFramework::where(['level' => 1, 'company_guid' => 'asdasdas'])->pluck('guid')
-                                ->toArray()
+                            CompanyFramework::where(['level' => 1, 'company_guid' => 'asdasdas'])->pluck('guid')->toArray()
                         )
                     ]
                 ];

@@ -55,17 +55,17 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('get_all_basics_info', 'CompanyFrameworksController@getAllBasicsInfo');
 
 
-    //新增片区
+    // 新增片区
     Route::post('add_area','CompanyFrameworksController@addArea');
 
-    //新增门店
+    // 新增门店
     Route::post('add_storefront','CompanyFrameworksController@addStorefront');
 
-    //新增分组
+    // 新增分组
     Route::post('add_group','CompanyFrameworksController@addGroup');
 
 
-    //通过门店获取分组
+    // 通过门店获取分组
     Route::get('get_group', 'CompanyFrameworksController@getGroup');
 
 });

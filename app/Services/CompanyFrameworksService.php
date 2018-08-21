@@ -27,9 +27,9 @@ class CompanyFrameworksService
     )
     {
         // 获取区域下门店guid
-        $storefrontGuid = CompanyFramework::where('parent_guid', $request->area_guid)->pluck('guid');
+        $storefrontGuid = CompanyFramework::where('parent_guid', $request->area_guid)->pluck('guid')->toArray();
         // 获取区域下组guid
-        $groupGuid = CompanyFramework::whereIn('parent_guid', $storefrontGuid)->pluck('guid');
+        $groupGuid = CompanyFramework::whereIn('parent_guid', $storefrontGuid)->pluck('guid')->toArray();
         $guid = array_merge($storefrontGuid, $groupGuid);
 
         if (!empty($request->status)) {

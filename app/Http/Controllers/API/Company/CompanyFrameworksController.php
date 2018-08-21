@@ -18,7 +18,7 @@ class CompanyFrameworksController extends APIBaseController
     )
     {
         $res = $repository->getList($request);
-        return $this->sendResponse($res, '列表获取成功');
+        return $this->sendResponse($res, '获取成功');
     }
 
     /**

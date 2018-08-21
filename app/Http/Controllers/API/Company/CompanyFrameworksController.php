@@ -19,72 +19,37 @@ class CompanyFrameworksController extends APIBaseController
         return $this->sendResponse($res, '列表获取成功');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+   //新增片区
     public function newArea
     (
-        CompanyFrameworksRequest $request
+        CompanyFrameworksRequest $request,
+        CompanyFrameworksRepository $repository
     )
     {
-
+        $res = $repository->newArea($request);
+        return $this->sendResponse($res,'新增片区成功');
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    //新增门店
+    public function newStore
+    (
+        CompanyFrameworksRequest $request,
+        CompanyFrameworksRepository $repository
+    )
     {
-        //
+        $res = $repository->newStore($request);
+        return $this->sendResponse($res,'新增门店成功');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+   //新增分组
+    public function newGroup
+    (
+        CompanyFrameworksRequest $request,
+        CompanyFrameworksRepository $repository
+    )
     {
-        //
+        $res = $repository->newGroup($request);
+        return $this->sendResponse($res,'新增分组成功');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

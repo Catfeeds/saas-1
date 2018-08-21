@@ -42,4 +42,14 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     //组织架构
     Route::get('company_frameworks', 'CompanyFrameworksController');
+
+    //新增片区
+    Route::get('new_area','CompanyFrameworksController@newArea');
+
+    //新增门店
+    Route::get('new_store','CompanyFrameworksController@newStore');
+
+    //新增分组
+    Route::get('new_group','CompanyFrameworksController@newGroup');
+
 });

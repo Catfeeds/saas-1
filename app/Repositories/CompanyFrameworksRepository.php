@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Handler\Common;
 use App\Models\CompanyFramework;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class CompanyFrameworksRepository extends Model
@@ -52,12 +53,13 @@ class CompanyFrameworksRepository extends Model
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
                 'level' => 1,
+               'company_guid' => 123,
            ]);
         if (empty($area)) throw new \Exception('片区添加失败');
-
-            $res = CompanyFramework::whereIn('guid',$request->arr)->update(['parent_guid' => $area->guid]);
-
-            if (empty($area) && empty($res)) return true;
+        if ($request->storefront_guid) {
+            $res = CompanyFramework::whereIn('guid',$request->storefront_guid)->update(['parent_guid' => $area->guid]);
+        }
+            return true;
         \DB::commit();
         } catch (\Exception $exception) {
             \DB::rollback();
@@ -76,11 +78,13 @@ class CompanyFrameworksRepository extends Model
                 'level' => 2,
                 'parent_guid' => $request->parent_guid
             ]);
+            if (empty($store)) throw new \Exception('门店添加失败');
 
             // 处理人员
-            $res = User::whereIn('guid', $request->userGuid)->update(['rel_guid' => $store->guid]);
-
-            if (empty($store) && empty($res)) return true;
+            if ($request->userGuid) {
+                $res = User::whereIn('guid', $request->userGuid)->update(['rel_guid' => $store->guid]);
+            }
+            return true;
             \DB::commit();
         }catch (\Exception $exception) {
             \DB::rollback();
@@ -99,9 +103,11 @@ class CompanyFrameworksRepository extends Model
                 'level' => 3,
                 'parent_guid' => $request->parent_guid
             ]);
-            $res = User::whereIn('guid',$request->userGuid)->update(['rel_guid' => $group->guid]);
-
-            if (empty($group) && empty($res)) return true;
+            if (empty($group)) throw new \Exception('分组添加失败');
+            if ($request->userGuid) {
+                $res = User::whereIn('guid',$request->userGuid)->update(['rel_guid' => $group->guid]);
+            }
+            return true;
             \DB::commit();
         } catch (\Exception $exception) {
             \DB::rollback();

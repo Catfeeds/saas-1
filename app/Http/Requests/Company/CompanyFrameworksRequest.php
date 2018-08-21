@@ -31,9 +31,6 @@ class CompanyFrameworksRequest extends FormRequest
                     'name' => [
                         'required',
                         'max:32',
-                        Rule::notIn(
-                            CompanyFramework::all()->pluck('name')->toArray()
-                        )
                     ]
                 ];
             case 'addStorefront':

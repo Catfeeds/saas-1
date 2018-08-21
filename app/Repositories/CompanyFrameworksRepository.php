@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Handler\Common;
 use App\Models\CompanyFramework;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class CompanyFrameworksRepository extends Model
@@ -43,22 +44,26 @@ class CompanyFrameworksRepository extends Model
         return $box;
     }
 
-    //新增片区
+    // 新增片区
     public function addArea($request)
     {
         \DB::beginTransaction();
         try {
-           $area =  CompanyFramework::create([
+            $area =  CompanyFramework::create([
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
                 'level' => 1,
-           ]);
-        if (empty($area)) throw new \Exception('片区添加失败');
+                'company_guid' => 'asdasdas'    // TODO 获取登录人的公司guid
+            ]);
+            if (empty($area)) throw new \Exception('片区添加失败');
 
-            $res = CompanyFramework::whereIn('guid',$request->arr)->update(['parent_guid' => $area->guid]);
+            if ($request->storefront_guid) {
+                $res = CompanyFramework::whereIn('guid', $request->storefront_guid)->update(['parent_guid' => $area->guid]);
+                if (empty($res)) throw new \Exception('片区关联门店失败');
+            }
 
-            if (empty($area) && empty($res)) return true;
-        \DB::commit();
+            \DB::commit();
+            return true;
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;

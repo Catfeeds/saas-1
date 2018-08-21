@@ -54,4 +54,14 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 通过用户名称获取用户
     Route::get('adopt_name_get_user', 'CompanyFrameworksController@adoptNameGetUser');
 
+
+    //新增片区
+    Route::get('new_area','CompanyFrameworksController@newArea');
+
+    //新增门店
+    Route::get('new_store','CompanyFrameworksController@newStore');
+
+    //新增分组
+    Route::get('new_group','CompanyFrameworksController@newGroup');
+
 });

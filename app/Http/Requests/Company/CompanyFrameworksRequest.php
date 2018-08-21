@@ -18,6 +18,21 @@ class CompanyFrameworksRequest extends FormRequest
         return true;
     }
 
+    public function messages()
+    {
+        switch ($this->route()->getActionMethod()) {
+            case 'addArea':
+                return [
+                    'storefront_guid.*.in' => '请添加存在的门店'
+                ];
+            default;
+                return [
+
+                ];
+        }
+    }
+
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -34,7 +49,9 @@ class CompanyFrameworksRequest extends FormRequest
                     ],
                     'storefront_guid' => 'array',
                     'storefront_guid.*' => [
-                        Rule::in(CompanyFramework::all()->pluck('guid')->toArray())
+                        Rule::in(
+                            CompanyFramework::where(['level' => 2, 'company_guid' => 'asdasdas'])->pluck('guid')->toArray()
+                        )
                     ]
                 ];
             case 'addStorefront':
@@ -42,9 +59,6 @@ class CompanyFrameworksRequest extends FormRequest
                     'name' => [
                         'required',
                         'max:32',
-                        Rule::notIn(
-                            CompanyFramework::all()->pluck('name')->toArray()
-                        )
                     ]
                 ];
             case 'addGroup':
@@ -52,9 +66,6 @@ class CompanyFrameworksRequest extends FormRequest
                     'name' => [
                         'required',
                         'max:32',
-                        Rule::notIn(
-                            CompanyFramework::all()->pluck('name')->toArray()
-                        )
                     ],
                     'parent_guid' => 'required'
                 ];

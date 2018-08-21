@@ -73,7 +73,7 @@ class CompanyFrameworksRepository extends Model
     //新增门店
     public function addStorefront($request)
     {
-        \DB::beginTransation();
+        \DB::beginTransaction();
         try {
             $store = CompanyFramework::create([
                 'guid' => Common::getUuid(),
@@ -86,9 +86,10 @@ class CompanyFrameworksRepository extends Model
             // 处理人员
             if ($request->userGuid) {
                 $res = User::whereIn('guid', $request->userGuid)->update(['rel_guid' => $store->guid]);
+
             }
-            return true;
             \DB::commit();
+            return true;
         }catch (\Exception $exception) {
             \DB::rollback();
             return false;
@@ -98,7 +99,7 @@ class CompanyFrameworksRepository extends Model
     //新增分组
     public function addGroup($request)
     {
-        \DB::beginTransation();
+        \DB::beginTransaction();
         try {
             $group = CompanyFramework::create([
                 'guid' => Common::getUuid(),
@@ -109,9 +110,11 @@ class CompanyFrameworksRepository extends Model
             if (empty($group)) throw new \Exception('分组添加失败');
             if ($request->userGuid) {
                 $res = User::whereIn('guid',$request->userGuid)->update(['rel_guid' => $group->guid]);
+
             }
-            return true;
+
             \DB::commit();
+            return true;
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;

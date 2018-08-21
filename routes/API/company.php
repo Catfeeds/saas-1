@@ -56,13 +56,15 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
 
     //新增片区
-    Route::get('add_area','CompanyFrameworksController@addArea');
+    Route::post('add_area','CompanyFrameworksController@addArea');
 
     //新增门店
-    Route::get('add_storefront','CompanyFrameworksController@addStorefront');
+    Route::post('add_storefront','CompanyFrameworksController@addStorefront');
 
     //新增分组
-    Route::get('add_group','CompanyFrameworksController@addGroup');
+    Route::post('add_group','CompanyFrameworksController@addGroup');
+
+
     //通过门店获取分组
     Route::get('get_group', 'CompanyFrameworksController@getGroup');
 

@@ -57,6 +57,18 @@ class CreateHousesTable extends Migration
             $table->tinyInteger('shortest_lease')->nullable()->comment('最短租期: 1: 1年 2: 2年 3: 3年 4: 5年 5: 5年以上');
             $table->text('remarks')->nullable()->comment('备注');
 
+            // 图片
+            $table->json('house_type_img')->nullable()->comment('户型图:json');
+            $table->json('indoor_img')->nullable()->comment('室内图:json');
+            $table->json('outdoor_img')->nullable()->comment('室外图:json');
+
+            // 操作人
+            $table->char('entry_person',32)->nullable()->comment('录入人');
+            $table->char('guardian_person')->nullable()->comment('维护人');
+            $table->char('pic_person')->nullable()->comment('图片人');
+            $table->char('key_person')->nullable()->comment('钥匙人');
+            $table->char('client_person')->nullable()->comment('委托人');
+
             $table->timestamps();
         });
         \DB::statement("alter table `houses` comment'房源表'");

@@ -121,7 +121,7 @@ class CompanyFrameworksController extends APIBaseController
         return $this->sendResponse($res, '门店下的分组获取成功');
     }
 
-    //删除
+    // 删除
     public function delete
     (
         CompanyFrameworksRequest $request,

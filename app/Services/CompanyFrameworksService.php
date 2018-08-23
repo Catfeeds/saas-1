@@ -52,7 +52,7 @@ class CompanyFrameworksService
     }
 
     //通过门店获取分组
-    public function getGroup($storefrontId)
+    public function  getGroup($storefrontId)
     {
         $storefront = CompanyFramework::where('parent_guid', $storefrontId)->get();
         return $storefront->map(function($v) {

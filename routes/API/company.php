@@ -17,9 +17,6 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     //退出登录
     Route::get('logout', 'LoginsController@logout');
 
-
-
-
     // 公司管理
     Route::resource('company', 'CompanyController');
 

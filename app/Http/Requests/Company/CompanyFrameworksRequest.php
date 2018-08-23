@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Company;
 
+use App\Handler\Common;
 use App\Models\CompanyFramework;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
@@ -51,7 +52,7 @@ class CompanyFrameworksRequest extends FormRequest
      */
     public function rules()
     {
-        // TODO 公司guid
+        // TODO 公司guid 已修改
 
         switch ($this->route()->getActionMethod()) {
             case 'addArea':
@@ -63,7 +64,8 @@ class CompanyFrameworksRequest extends FormRequest
                     'storefront_guid' => 'nullable|array',
                     'storefront_guid.*' => [
                         Rule::in(
-                            CompanyFramework::where(['level' => 2, 'company_guid' => 'asdasdas'])->pluck('guid')->toArray()
+                            CompanyFramework::where(['level' => 2, 'company_guid' => Common::user()->company_guid])->pluck('guid')
+                                ->toArray()
                         )
                     ]
                 ];

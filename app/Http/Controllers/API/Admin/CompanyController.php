@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\API\Company;
+namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\CompaniesRequest;

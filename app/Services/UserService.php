@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Handler\Common;
-use App\Models\RelUser;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -22,7 +21,7 @@ class UserService
                 'password' => bcrypt($request->password),
                 'role_guid' => $request->role_guid,
                 'rel_guid' => $request->rel_guid,
-                'company_guid' => 'asdasdas'    // TODO 获取登录用户公司guid
+                'company_guid' => Common::user()->company_guid
             ]);
             if (empty($user)) throw new \Exception('用户添加失败');
 
@@ -98,6 +97,7 @@ class UserService
             // 删除用户基础信息
             $delUserInfo = UserInfo::where('user_guid', $user->guid)->delete();
             if (!$delUserInfo) throw new \Exception('用户基础信息删除失败');
+
             \DB::commit();
             return true;
         } catch (\Exception $exception) {
@@ -124,8 +124,9 @@ class UserService
         $res = Role::where('company_guid', Common::user()->company_guid)->get();
         return $res->map(function($v) {
            return [
-              'value' => $v->guid,
-              'name' => $v->name
+                'value' => $v->guid,
+                'name' => $v->name,
+                'level' => $v->level
            ] ;
         });
     }

@@ -24,20 +24,23 @@ class CompanyFrameworksRepository extends Model
                 foreach ($store->framework as $group) {
                     $item = [
                         'value' => $group->guid,
-                        'name' => $group->name
+                        'name' => $group->name,
+                        'level' => $group->level
                     ];
                     $group_data[] = $item;
                 }
                 $store_data[] = [
                     'value' => $store->guid,
                     'name' => $store->name,
-                    'group' => $group_data
+                    'level' => $store->level,
+                    'children' => $group_data
                 ];
             }
             $data = [
                 'value' => $area->guid,
                 'name' => $area->name,
-                'store' => $store_data
+                'level' => $area->level,
+                'children' => $store_data
             ];
             $box[] =  $data;
         }

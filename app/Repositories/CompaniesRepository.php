@@ -22,6 +22,7 @@ class CompaniesRepository extends Model
                 'address' => $request->address,
             ]);
             if (empty($company)) throw new \Exception('公司添加失败');
+
             $user = User::create([
                 'guid' => Common::getUuid(),
                 'tel' => $request->tel,

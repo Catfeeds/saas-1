@@ -24,13 +24,13 @@ class UsersRequest extends FormRequest
             case 'store':
                 return [
                     'tel.unique' => '手机号不能重复',
-                    'role_id.in' => '角色必须存在',
+                    'role_guid.in' => '角色必须存在',
                     'rel_guid.in' => '门店必须存在',
                 ];
             case 'update':
                 return [
                     'tel.unique' => '手机号不能重复',
-                    'role_id.in' => '角色必须存在',
+                    'role_guid.in' => '角色必须存在',
                     'rel_guid.in' => '门店必须存在',
                 ];
             default:

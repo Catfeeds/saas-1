@@ -3,7 +3,6 @@ namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\CompaniesRequest;
-use App\Models\Company;
 use App\Repositories\CompaniesRepository;
 
 class CompanyController extends APIBaseController

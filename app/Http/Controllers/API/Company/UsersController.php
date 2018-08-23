@@ -18,8 +18,6 @@ class UsersController extends APIBaseController
         UserService $service
     )
     {
-
-
         $res = $service->addUser($request);
         if ($res) return $this->sendResponse($res,'添加用户成功');
         return $this->sendError($res,'添加用户失败');
@@ -121,6 +119,6 @@ class UsersController extends APIBaseController
         $res = $user->toArray();
         //根据当前登录用户角色,获取所有权限
         $res['permission'] = $user->role->permission->pluck('name')->toArray()??[];
-        return $this->sendResponse($res, '成功');
+        return $this->sendResponse($res, '用户信息获取成功');
     }
 }

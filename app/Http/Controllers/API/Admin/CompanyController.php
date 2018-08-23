@@ -18,4 +18,5 @@ class CompanyController extends APIBaseController
         if ($res) return $this->sendResponse($res,'添加公司成功');
         return $this->sendError($res,'添加公司失败');
     }
+
 }

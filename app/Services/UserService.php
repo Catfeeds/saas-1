@@ -20,7 +20,7 @@ class UserService
                 'tel' => $request->tel,
                 'name' => $request->name,
                 'password' => bcrypt($request->password),
-                'role_id' => $request->role_id,
+                'role_guid' => $request->role_guid,
                 'rel_guid' => $request->rel_guid,
                 'company_guid' => 'asdasdas'    // TODO 获取登录用户公司guid
             ]);
@@ -53,7 +53,7 @@ class UserService
             $user->tel = $request->tel;
             $user->name = $request->name;
             $user->password = bcrypt($request->password);
-            $user->role_id = $request->role_id;
+            $user->role_guid = $request->role_guid;
             $user->rel_guid = $request->rel_guid;
             if (!$user->save()) throw new \Exception('用户修改失败');
 

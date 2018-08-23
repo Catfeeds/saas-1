@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Company;
 
+use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\UsersRequest;
 use App\Models\User;
@@ -17,6 +18,8 @@ class UsersController extends APIBaseController
         UserService $service
     )
     {
+
+
         $res = $service->addUser($request);
         if ($res) return $this->sendResponse($res,'添加用户成功');
         return $this->sendError($res,'添加用户失败');
@@ -108,5 +111,16 @@ class UsersController extends APIBaseController
     {
         $res = $service->getAllQuarters();
         return $this->sendResponse($res, '岗位获取成功');
+    }
+
+    //登录人信息
+    public function show()
+    {
+        $user = Common::user();
+        if (empty($user)) return $this->sendError('登录账户异常');
+        $res = $user->toArray();
+        //根据当前登录用户角色,获取所有权限
+        $res['permission'] = $user->role->permission->pluck('name')->toArray()??[];
+        return $this->sendResponse($res, '成功');
     }
 }

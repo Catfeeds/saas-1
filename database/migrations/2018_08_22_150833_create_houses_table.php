@@ -21,10 +21,11 @@ class CreateHousesTable extends Migration
             $table->tinyInteger('public_private')->default(1)->comment('公私盘 1: 私盘 2: 公盘');
             $table->json('owner_info')->nullable()->comment('业主联系方式: json');
             $table->string('name',32)->nullable()->comment('小区');
-            $table->string('pedestal',16)->nullable()->comment('栋座');
-            $table->tinyInteger('pedestal_unit')->nullable()->comment('栋座单位 1: 栋 2: 弄 3: 座 4: 号 5: 号楼 6: 胡同');
-            $table->string('unit', 32)->nullable()->comment('单元');
-            $table->tinyInteger('unit_unit')->nullable()->comment('单元单位 1: 单元 2: 栋 3: 幢 4: 号 5: 号楼');
+            $table->integer('building_block_guid')->nullable()->comment('楼座guid');
+//            $table->string('pedestal',16)->nullable()->comment('栋座');
+//            $table->tinyInteger('pedestal_unit')->nullable()->comment('栋座单位 1: 栋 2: 弄 3: 座 4: 号 5: 号楼 6: 胡同');
+//            $table->string('unit', 32)->nullable()->comment('单元');
+//            $table->tinyInteger('unit_unit')->nullable()->comment('单元单位 1: 单元 2: 栋 3: 幢 4: 号 5: 号楼');
             $table->string('house_number',64)->nullable()->comment('房号');
 
             // 基本信息

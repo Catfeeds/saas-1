@@ -17,7 +17,11 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     //退出登录
     Route::get('logout', 'LoginsController@logout');
 
+    // 安全验证
+    Route::group(['middleware' => 'safe.validate'], function () {
 
+
+    // 公司管理
     Route::resource('company', 'CompanyController');
 
     /*
@@ -83,4 +87,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     // 房源管理
     Route::resource('house','HousesController');
+
+    // curl请求接口
+    Route::get('test','HousesController@test');
+    });
+
 });

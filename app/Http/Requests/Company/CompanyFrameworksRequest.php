@@ -52,8 +52,6 @@ class CompanyFrameworksRequest extends FormRequest
      */
     public function rules()
     {
-        // TODO 公司guid 已修改
-
         switch ($this->route()->getActionMethod()) {
             case 'addArea':
                 return [
@@ -84,8 +82,7 @@ class CompanyFrameworksRequest extends FormRequest
                     'parent_guid' => [
                         'nullable',
                         Rule::in(
-                            CompanyFramework::where(['level' => 1, 'company_guid' => Common::user()->company_guid])->pluck('guid')
-                                ->toArray()
+                            CompanyFramework::where(['level' => 1, 'company_guid' => Common::user()->company_guid])->pluck('guid')->toArray()
                         )
                     ]
                 ];

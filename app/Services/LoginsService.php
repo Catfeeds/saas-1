@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Admin;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Hash;
 
 class LoginsService
 {
@@ -116,5 +118,25 @@ class LoginsService
         $key = $this->lock($code);
         return $key;
     }
+
+    // 管理后台登录
+    public function adminLogin(
+        $request
+    )
+    {
+        $admin = Admin::where(['name' => $request->name,])->first();
+        if (empty($admin)) return ['status' => false, 'message' => '用户不存在'];
+
+        // 验证新密码与原密码
+        if (!Hash::check($request->password, $admin->password)) return ['status' => false, 'message' => '密码不正确'];
+
+        // 返回token
+        $token = $admin->createToken($request->name)->accessToken;
+        if (empty($token)) return ['status' => false, 'message' => '获取令牌失败'];
+
+        return ['status' => true, 'token' => $token];
+    }
+
+
 
 }

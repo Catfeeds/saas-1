@@ -87,7 +87,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 安全验证
     Route::group(['middleware' => 'safe.validate'], function () {
         // curl请求接口
-        Route::get('test','HousesController@test');
+        Route::get('get_all_select','HousesController@test');
     });
 
 });

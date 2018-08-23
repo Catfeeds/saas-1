@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\API\Company;
+namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\CompaniesRequest;
@@ -16,7 +16,6 @@ class CompanyController extends APIBaseController
     )
     {
         $res = $repository->addCompany($request);
-        dd($res);
         return $this->sendResponse($res,'添加公司成功');
     }
 

@@ -14,6 +14,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
 
         Route::get('test', 'LoginsController@test');
 
+        //公司管理
+        Route::resource('company', 'CompanyController');
+
     });
 
 

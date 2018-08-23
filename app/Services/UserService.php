@@ -119,13 +119,15 @@ class UserService
     }
 
     // 获取公司下的全部岗位
+
     public function getAllQuarters()
     {
         $res = Role::where('company_guid', Common::user()->company_guid)->get();
         return $res->map(function($v) {
            return [
-              'value' => $v->guid,
-              'name' => $v->name
+                'value' => $v->guid,
+                'name' => $v->name,
+                'level' => $v->level
            ] ;
         });
     }

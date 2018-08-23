@@ -53,7 +53,7 @@ class CompanyFrameworksRepository extends Model
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
                 'level' => 1,
-                'company_guid' => 'asdasdas'    // TODO 获取登录人的公司guid
+                'company_guid' => Common::user()->company_guid,    // TODO 获取登录人的公司guid 已修改
             ]);
             if (empty($area)) throw new \Exception('片区添加失败');
 
@@ -79,7 +79,7 @@ class CompanyFrameworksRepository extends Model
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
                 'level' => 2,
-                'company_guid' => 'asdasdas',    // TODO 获取登录人的公司guid
+                'company_guid' => Common::user()->company_guid,    // TODO 获取登录人的公司guid 已修改
                 'parent_guid' => $request->parent_guid
             ]);
             if (empty($store)) throw new \Exception('门店添加失败');
@@ -106,7 +106,7 @@ class CompanyFrameworksRepository extends Model
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
                 'level' => 3,
-                'company_guid' => 'asdasdas',    // TODO 获取登录人的公司guid
+                'company_guid' => Common::user()->company_guid,    // TODO 获取登录人的公司guid 已修改
                 'parent_guid' => $request->parent_guid
             ]);
             if (empty($group)) throw new \Exception('分组添加失败');

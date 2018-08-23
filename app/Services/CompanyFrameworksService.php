@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Handler\Common;
 use App\Models\CompanyFramework;
 use App\Models\User;
 
@@ -45,10 +46,10 @@ class CompanyFrameworksService
         $request
     )
     {
-        // TODO 公司guid
+        // TODO 公司guid 已修改
 
         if (!in_array($request->level, [1, 2, 3]) && empty($request->level)) return collect();
-        return CompanyFramework::where(['company_guid' => 'asdasdas', 'level' => $request->level])->get();
+        return CompanyFramework::where(['company_guid' => Common::user()->company_guid, 'level' => $request->level])->get();
     }
 
     //通过门店获取分组

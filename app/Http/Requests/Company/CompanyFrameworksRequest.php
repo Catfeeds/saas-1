@@ -78,12 +78,13 @@ class CompanyFrameworksRequest extends FormRequest
                     'userGuid' => 'array',
                     'userGuid.*' => [
                         Rule::in(
-                            User::where(['company_guid' => 'asdasdas' ])->pluck('guid')->toArray()
+                            User::where(['company_guid' => Common::user()->company_guid ])->pluck('guid')->toArray()
                         )
                     ],
                     'parent_guid' => [
                         Rule::in(
-                            CompanyFramework::where(['level' => 1, 'company_guid' => 'asdasdas'])->pluck('guid')->toArray()
+                            CompanyFramework::where(['level' => 1, 'company_guid' => Common::user()->company_guid])->pluck('guid')
+                                ->toArray()
                         )
                     ]
                 ];
@@ -96,13 +97,14 @@ class CompanyFrameworksRequest extends FormRequest
                     'parent_guid' => [
                         'required',
                         Rule::in(
-                            CompanyFramework::where(['level' => 2, 'company_guid' => 'asdasdas'])->pluck('guid')->toArray()
+                            CompanyFramework::where(['level' => 2, 'company_guid' => Common::user()->company_guid])->pluck('guid')
+                                ->toArray()
                         )
                     ],
                     'userGuid' => 'array',
                     'userGuid.*' => [
                         Rule::in(
-                            User::where(['company_guid' => 'asdasdas'])->pluck('guid')->toArray()
+                            User::where(['company_guid' => Common::user()->company_guid])->pluck('guid')->toArray()
                         )
                     ],
                 ];

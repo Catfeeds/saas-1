@@ -42,4 +42,5 @@ class HousesController extends APIBaseController
     {
         return curl('http://192.168.0.198/api/get_all_select','GET');
     }
+
 }

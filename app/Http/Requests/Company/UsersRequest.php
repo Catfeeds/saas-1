@@ -16,6 +16,7 @@ class UsersRequest extends FormRequest
     {
         return true;
     }
+
     //验证错误消息
     public function messages()
     {
@@ -38,6 +39,7 @@ class UsersRequest extends FormRequest
                 ];
         }
     }
+
     /**
      * Get the validation rules that apply to the request.
      *

@@ -8,4 +8,16 @@
 
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
 
+    Route::post('logins', 'LoginsController@Logins');
+
+    Route::group(['middleware' => 'apiAuth:admin'], function () {
+
+        Route::get('test', 'LoginsController@test');
+
+    });
+
+
+
+
+
 });

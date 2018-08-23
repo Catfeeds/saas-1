@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('name', 64)->nullable()->comment('用户姓名');
             $table->string('tel', 16)->nullable()->comment('用户电话');
             $table->string('password')->nullable()->comment('登录密码');
-            $table->tinyInteger('role_id')->nullable()->comment('角色id');
+            $table->char('role_guid')->nullable()->comment('角色guid');
             $table->tinyInteger('status')->default(1)->comment('状态 1: 在职 2: 离职 3: 冻结');
             $table->rememberToken();
             $table->timestamps();

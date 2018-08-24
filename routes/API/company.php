@@ -85,9 +85,14 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::resource('house','HousesController');
 
     // 安全验证
-    Route::group(['middleware' => 'safe.validate'], function () {
+//    Route::group(['middleware' => 'safe.validate'], function () {
         // curl请求接口
         Route::get('get_all_select','HousesController@test');
-    });
+//    });
+        // 获取所有商圈信息
+        Route::get('all_building_blocks','CustomersController@allBuildingBlock');
+
+        // 获取所有楼盘
+        Route::get('buildings_select','CustomersController@buildingBlocksSelect');
 
 });

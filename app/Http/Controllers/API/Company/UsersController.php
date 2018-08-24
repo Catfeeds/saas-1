@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Company;
 use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\UsersRequest;
+use App\Models\Company;
 use App\Models\User;
 use App\Services\LoginsService;
 use App\Services\UserService;
@@ -111,12 +112,13 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res, '岗位获取成功');
     }
 
-    //登录人信息
+    // 登录人信息
     public function show()
     {
         $user = Common::user();
         if (empty($user)) return $this->sendError('登录账户异常');
         $res = $user->toArray();
+        $res['company_name'] = Company::find($res['company_guid'])->name;
         //根据当前登录用户角色,获取所有权限
         $res['permission'] = $user->role->permission->pluck('name')->toArray()??[];
         return $this->sendResponse($res, '用户信息获取成功');
@@ -148,5 +150,20 @@ class UsersController extends APIBaseController
     {
         $res = $service->updatePwd($request);
         return $this->sendResponse($res, '密码修改成功');
+    }
+
+    // 获取公司下所有人员
+    public function getAllUser(
+        UserService $service
+    )
+    {
+        $res = $service->getAllUser();
+        return $this->sendResponse($res->map(function($v) {
+            return [
+                'value' => $v->guid,
+                'label' => $v->name,
+                'tel' => '电话:' . $v->tel
+            ];
+        }),'获取公司下所有人员成功');
     }
 }

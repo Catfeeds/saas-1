@@ -34,6 +34,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('get_all_quarters', 'UsersController@getAllQuarters');
     // 重置密码
     Route::get('reset_pwd', 'UsersController@resetPwd');
+    // 获取所有人员
+    Route::get('get_all_user', 'UsersController@getAllUser');
 
     /*
     |--------------------------------------------------------------------------
@@ -86,13 +88,11 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 房源管理
     Route::resource('house','HousesController');
 
-    // 安全验证
-    Route::group(['middleware' => 'safe.validate'], function () {
-        // curl请求接口
-        Route::get('get_all_select','HousesController@test');
-    });
+    Route::get('get_all_select','HousesController@getAllSelect');
+    // 获取所有商圈信息
+    Route::get('all_block','CustomersController@allBlock');
 
-    //客源管理
-    Route::resource('customers', 'CustomersController');
+    // 获取所有楼盘
+    Route::get('all_building','CustomersController@allBuilding');
 
 });

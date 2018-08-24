@@ -35,9 +35,14 @@ class User extends Authenticatable
         return User::where('tel', $username)->first();
     }
 
-    //用户关联角色
+    // 用户关联角色
     public function role()
     {
         return $this->hasOne(Role::class, 'guid', 'role_guid');
+    }
+
+    public function companyFramework()
+    {
+        return $this->belongsTo('App\Models\CompanyFramework','rel_guid','guid');
     }
 }

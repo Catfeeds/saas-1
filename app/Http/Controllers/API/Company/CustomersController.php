@@ -95,4 +95,18 @@ class CustomersController extends APIBaseController
         if (!$res) return $this->sendError('设置失败');
         return $this->sendResponse($res, '设置成功');
     }
+
+    // 获取所有商圈
+    public function allBlock()
+    {
+        $res =  curl(config('hosts.building').'/api/all_block','GET');
+        return $this->sendResponse($res->data,'获取所有商圈成功');
+    }
+
+    // 获取所有楼盘
+    public function allBuilding()
+    {
+        $res = curl(config('hosts.building').'/api/all_building','GET');
+        return $this->sendResponse($res,'所有楼盘获取成功');
+    }
 }

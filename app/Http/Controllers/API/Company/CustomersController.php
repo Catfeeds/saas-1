@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API\Company;
 
+use App\Http\Controllers\API\APIBaseController;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
-class CustomersController extends Controller
+class CustomersController extends APIBaseController
 {
 
     public function index()
@@ -52,19 +52,15 @@ class CustomersController extends Controller
     // 获取所有商圈
     public function allBuildingBlock()
     {
-        $res = curl('http://192.168.0.198:0908/api/all_building_blocks','GET');
-        return $res->map(function ($v){
-            return [
-                'value' => $v->id,
-                'name' => $v->name,
-            ];
-        }) ;
+        $res =  curl(config('hosts.building').'/api/all_building_blocks','GET');
+        return $this->sendResponse($res->data,'获取所有商圈成功');
     }
 
     // 获取所有楼盘
     public function buildingBlocksSelect()
     {
-        $res = curl('http://192.168.0.198:0908/api/buildings_select','GET');
+        $res = curl('http://192.168.0.142:8888/api/buildings_select','GET');
+        return $this->sendResponse($res,'所有楼盘获取成功');
         return $res->map(function ($v){
             return [
                 'value' => $v->value,

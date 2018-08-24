@@ -131,4 +131,20 @@ class UsersController extends APIBaseController
         $res = $service->resetPwd($request);
         return $this->sendResponse($res,'重置密码成功');
     }
+
+    // 获取公司下所有人员
+    public function getAllUser(
+        UserService $service
+    )
+    {
+        $res = $service->getAllUser();
+        return $this->sendResponse($res->map(function($v) {
+            return [
+                'value' => $v->guid,
+                'label' => $v->name,
+                'tel' => '电话:' . $v->tel
+            ];
+        }),'获取公司下所有人员成功');
+    }
+
 }

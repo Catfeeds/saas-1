@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CompanyFrameworksRepository extends Model
 {
-    //片区,门店,分组 3级菜单
+    // 片区,门店,分组 3级菜单
     public function getList()
     {
         $areas = CompanyFramework::with('framework')->where('parent_guid', null)->get();
@@ -76,7 +76,7 @@ class CompanyFrameworksRepository extends Model
         }
     }
 
-    //新增门店
+    // 新增门店
     public function addStorefront($request)
     {
         \DB::beginTransaction();
@@ -112,7 +112,7 @@ class CompanyFrameworksRepository extends Model
                 'guid' => Common::getUuid(),
                 'name' => $request->name,
                 'level' => 3,
-                'company_guid' => Common::user()->company_guid,    // TODO 获取登录人的公司guid 已修改
+                'company_guid' => Common::user()->company_guid,
                 'parent_guid' => $request->parent_guid
             ]);
             if (empty($group)) throw new \Exception('分组添加失败');
@@ -130,6 +130,7 @@ class CompanyFrameworksRepository extends Model
         }
     }
 
+    // 修改片区、门店、分组
     public function updateData($companyFramework, $request)
     {
         $companyFramework->name = $request->name;

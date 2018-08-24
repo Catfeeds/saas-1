@@ -34,6 +34,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('get_all_quarters', 'UsersController@getAllQuarters');
     // 重置密码
     Route::get('reset_pwd', 'UsersController@resetPwd');
+    // 获取所有人员
+    Route::get('get_all_user', 'UsersController@getAllUser');
 
     /*
     |--------------------------------------------------------------------------

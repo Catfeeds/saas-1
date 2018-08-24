@@ -29,7 +29,7 @@ class CompanyFrameworksService
         } elseif($request->group_guid) {
             return User::where('rel_guid', $request->group_guid)->paginate(10);
         } else {
-            return User::where('company_guid', $request->company_guid)->paginate(10);
+            return User::where('company_guid', Common::user()->company_guid)->paginate(10);
         }
     }
 
@@ -46,8 +46,6 @@ class CompanyFrameworksService
         $request
     )
     {
-        // TODO 公司guid 已修改
-
         if (!in_array($request->level, [1, 2, 3]) && empty($request->level)) return collect();
         return CompanyFramework::where(['company_guid' => Common::user()->company_guid, 'level' => $request->level])->get();
     }

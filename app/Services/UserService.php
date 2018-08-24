@@ -139,6 +139,11 @@ class UserService
         return User::where(['tel' => $request->tel])->update(['password' => bcrypt($request->tel)]);
     }
 
+    // 获取公司下所有人员
+    public function getAllUser()
+    {
+        return User::where(['company_guid' => Common::user()->company_guid])->get();
+    }
 
 
 }

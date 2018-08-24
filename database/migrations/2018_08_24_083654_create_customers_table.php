@@ -15,7 +15,7 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('guid主键');
-            $table->char('company_guid',32)->nullable()->comment('所属公司');
+            $table->char('company_guid',32)->nullable()->comment('公司guid');
             $table->tinyInteger('level')->nullable()->comment('客源等级 1: A 2: B 3: C');
             $table->tinyInteger('guest')->nullable()->comment('客别 1: 公客 2: 私客 3: 抢客');
             $table->json('customer_info')->nullable()->comment('客源信息: json');

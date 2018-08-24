@@ -6,6 +6,7 @@ use App\Handler\Common;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Redis\MasterRedis;
 
 class UserService
 {
@@ -140,7 +141,18 @@ class UserService
     //修改密码
     public function updatePwd($request)
     {
-        return User::where('tel', $request->tel)->update(['password' => bcrypt($request->password)]);
+        $masterRedis = new MasterRedis();
+        $key = config('redisKey.STRING_SMSCODE_') . 'login:' . $request->tel;
+        // 验证手机短信是否正确
+        $telCaptcha = $masterRedis->getString($key, 'old');
+        // 判断验证码是否存在
+        if (empty($telCaptcha)) return ['status' => false, 'message' => '验证码失效,请重新发送'];
+        // 判断验证码是否正确
+        if ($request->code != $telCaptcha) return ['status' => false, 'message' => '手机验证码错误，请重新输入'];
+        // 验证成功，删除验证码
+        $masterRedis->delKey($key);
+        $res =  User::where('tel', $request->tel)->update(['password' => bcrypt($request->password)]);
+        if ($res) return ['status' => true, 'message' => '密码修改成功'];
     }
 
     // 获取公司下所有人员

@@ -134,11 +134,10 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res,'重置密码成功');
     }
 
-
+    //发送短信验证
     public function sendMessage($tel, $temp)
     {
-        $res = $this->sendCode($tel, $temp);
-        
+        return  $this->sendCode($tel, $temp);
     }
 
     //修改密码
@@ -148,6 +147,7 @@ class UsersController extends APIBaseController
         UserService $service
     )
     {
+        //验证短信验证码是否正确
         $res = $service->updatePwd($request);
         return $this->sendResponse($res, '密码修改成功');
     }

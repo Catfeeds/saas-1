@@ -15,8 +15,7 @@ class CreateHousesTable extends Migration
     {
         Schema::create('houses', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('guid主键');
-            $table->char('company_guid', 32)->primary()->comment('公司guid');
-
+            $table->char('company_guid', 32)->nullable()->comment('公司guid');
             // 主要信息
             $table->tinyInteger('house_type')->default(1)->comment('房源类型 1: 写字楼 2: 住宅 3: 别墅 4: 商铺 5: 厂房 6: 仓库 7: 车位 8: 土地');
             $table->tinyInteger('public_private')->default(1)->comment('公私盘 1: 私盘 2: 公盘');

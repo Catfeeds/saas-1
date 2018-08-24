@@ -37,6 +37,11 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 获取所有人员
     Route::get('get_all_user', 'UsersController@getAllUser');
 
+    //发送短信验证码
+    Route::get('send_message/{tel}/{temp}', 'UsersController@sendMessage');
+    //修改密码
+    Route::post('update_pwd', 'UsersController@updatePwd');
+
     /*
     |--------------------------------------------------------------------------
     | 岗位管理

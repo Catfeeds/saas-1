@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Company;
 
+use App\Handler\Common;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -58,6 +60,13 @@ class UsersRequest extends FormRequest
                 return [
                     'name' => 'required|max:64',
                     'tel' => 'required|max:16|unique:users,tel',
+                    'role_guid' => [
+                        'required',
+                        Rule::in(
+                            Role::where(['guid' => $this->rel_guid,'company_guid'=> Common::user()->company_guid])
+                                ->pluck('guid')->toArray()
+                        )
+                    ],
                     'status' => [
                         'integer',
                         'between:1,3',
@@ -79,6 +88,13 @@ class UsersRequest extends FormRequest
                         'required',
                         'max:16',
                         Rule::unique('users')->ignore($this->route('user')->guid,'guid'),
+                    ],
+                    'role_guid' => [
+                        'required',
+                        Rule::in(
+                            Role::where(['guid' => $this->rel_guid,'company_guid'=> Common::user()->company_guid])
+                                ->pluck('guid')->toArray()
+                        )
                     ],
                     'sex' => [
                         'nullable',

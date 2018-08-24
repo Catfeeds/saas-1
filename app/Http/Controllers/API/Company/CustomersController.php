@@ -53,7 +53,7 @@ class CustomersController extends APIBaseController
     public function allBlock()
     {
         $res =  curl(config('hosts.building').'/api/all_block','GET');
-        return $this->sendResponse($res->data,'获取所有商圈成功');
+        return $this->sendResponse($res,'获取所有商圈成功');
     }
 
     // 获取所有楼盘

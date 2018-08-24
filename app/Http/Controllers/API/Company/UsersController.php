@@ -24,6 +24,12 @@ class UsersController extends APIBaseController
         return $this->sendError($res,'添加用户失败');
     }
 
+    //员工修改之前原始数据
+    public function edit(User $user)
+    {
+       return $this->sendResponse($user, '员工修改之前原始数据');
+    }
+
     // 修改用户
     public function update
     (
@@ -122,6 +128,13 @@ class UsersController extends APIBaseController
         //根据当前登录用户角色,获取所有权限
         $res['permission'] = $user->role->permission->pluck('name')->toArray()??[];
         return $this->sendResponse($res, '用户信息获取成功');
+    }
+
+    //用户详细信息
+    public function getUser(UsersRequest $request)
+    {
+        $res = User::with('detailInfo')->where('guid', $request->guid)->first();
+        return $this->sendResponse($res, '获取成功');
     }
 
     // 重置密码

@@ -19,12 +19,12 @@ class QuartersService
     //岗位设置列表
     public function roleHasPermissionList()
     {
-        $res = Role::where('company_guid', $this->user->company_guid)->with('roleHasPermission')->get();
+        $res = Role::where('company_guid', $this->user->company_guid)->with('roleHasPermission')->orderBy('level')->orderBy('created_at', 'asc')->get();
         $datas = array();
         foreach ($res as $k => $v) {
             $datas[$v->guid]['name'] = $v->name;
+            $datas[$v->guid]['level'] = $v->level_cn;
             $permission = array();
-
             foreach ($v->roleHasPermission as $key => $val) {
                 $permission[$val->permission_guid] = $val;
             }

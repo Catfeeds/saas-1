@@ -134,6 +134,24 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res,'重置密码成功');
     }
 
+
+    public function sendMessage($tel, $temp)
+    {
+        $res = $this->sendCode($tel, $temp);
+        
+    }
+
+    //修改密码
+    public function updatePwd
+    (
+        UsersRequest $request,
+        UserService $service
+    )
+    {
+        $res = $service->updatePwd($request);
+        return $this->sendResponse($res, '密码修改成功');
+    }
+
     // 获取公司下所有人员
     public function getAllUser(
         UserService $service
@@ -148,5 +166,4 @@ class UsersController extends APIBaseController
             ];
         }),'获取公司下所有人员成功');
     }
-
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Services\SmsService;
 
 class APIBaseController extends Controller
 {
@@ -25,5 +27,44 @@ class APIBaseController extends Controller
             'message' => $errorMessages,
         ];
         return response()->json($response, $code);
+    }
+
+    //发送短信验证码
+    public function sendCode($tel, $temp)
+    {
+        // 生成6位随机验证码
+        $code = mt_rand(1000, 9999);
+        switch ($temp) {
+            case 'updatePwd':
+                $template = config('sms.clw.updatePwd');
+                $smsTemplate = sprintf($template, $code, config('setting.sms_life_time') / 60);
+                break;
+            case 'register':
+                $template = config('sms.clw.register');
+                $smsTemplate = sprintf($template, $code, config('setting.sms_life_time') / 60);
+                break;
+                default;
+                break;
+        }
+
+        if ($temp == 'updatePwd') {
+            // 查询该用户是否存在
+            $user = User::where('tel', $tel)->first();
+            if (empty($user)) return $this->sendError('该手机号尚未注册');
+        }
+
+        $smsService = new SmsService();
+        if (config('sms.open')) {
+            $smsRes = $smsService->sendSMS($tel, $smsTemplate);
+            if ($smsRes['status'] != true) return $this->sendError($smsRes['message']);
+        } else {
+            Log::debug('短信发送配置关闭，发送给：' . $tel . ' 内容：' . $smsTemplate);
+        }
+//        $masterRedis = new Master();
+        // 写入redis,并且设置有效期
+//        $key = config('redisKey.STRING_SMSCODE_') . $temp . ':' . $tel;
+//        $masterRedis->addString($key, $code, config('setting.sms_life_time'));
+//        return $this->sendResponse(true, '验证码发送成功');
+
     }
 }

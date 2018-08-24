@@ -18,6 +18,8 @@ return [
     //微信请求登录
     'login_url' => env('LOGIN_URL'),
     //微信
-    'wechat_url' => env('WECHAT_URL')
+    'wechat_url' => env('WECHAT_URL'),
+    //短信验证码失效时间（redis存储 单位秒）// 2分钟
+    'sms_life_time' => 60 * 2
 
 ];

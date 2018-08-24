@@ -132,11 +132,15 @@ class UserService
     }
 
     // 重置密码
-    public function resetPwd(
-        $request
-    )
+    public function resetPwd($request)
     {
         return User::where(['tel' => $request->tel])->update(['password' => bcrypt($request->tel)]);
+    }
+
+    //修改密码
+    public function updatePwd($request)
+    {
+        return User::where('tel', $request->tel)->update(['password' => bcrypt($request->password)]);
     }
 
     // 获取公司下所有人员

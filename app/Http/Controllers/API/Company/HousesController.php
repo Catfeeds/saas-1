@@ -38,7 +38,7 @@ class HousesController extends APIBaseController
     }
 
     //  curl请求接口
-    public function test()
+    public function getAllSelect()
     {
         $res = curl(config('hosts.building').'/api/get_all_select','GET');
         return $this->sendResponse($res,'请求成功');

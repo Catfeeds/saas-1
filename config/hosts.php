@@ -6,5 +6,5 @@
  * Time: 上午8:21
  */
 return [
-    'building' => env('HOSTS_BUILDING', 'http://192.168.0.142:8888'),
+    'building' => env('HOSTS_BUILDING', 'http://192.168.0.198:0908'),
 ];

@@ -93,10 +93,10 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 房源管理
     Route::resource('house','HousesController');
 
+    // 获取所有下拉数据
     Route::get('get_all_select','HousesController@getAllSelect');
     // 获取所有商圈信息
     Route::get('all_block','CustomersController@allBlock');
-
     // 获取所有楼盘
     Route::get('all_building','CustomersController@allBuilding');
 

@@ -147,10 +147,11 @@ class UsersController extends APIBaseController
         UserService $service
     )
     {
-        //验证短信验证码是否正确
         $res = $service->updatePwd($request);
-        return $this->sendResponse($res, '密码修改成功');
+        if (!$res['status']) return $this->sendError($res['message']);
+        return $this->sendResponse(true, $res['message']);
     }
+
 
     // 获取公司下所有人员
     public function getAllUser(

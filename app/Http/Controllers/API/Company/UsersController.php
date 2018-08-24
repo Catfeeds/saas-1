@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Company;
 use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\UsersRequest;
+use App\Models\Company;
 use App\Models\User;
 use App\Services\LoginsService;
 use App\Services\UserService;
@@ -117,6 +118,7 @@ class UsersController extends APIBaseController
         $user = Common::user();
         if (empty($user)) return $this->sendError('登录账户异常');
         $res = $user->toArray();
+        $res['company_name'] = Company::find($res['company_guid'])->name;
         //根据当前登录用户角色,获取所有权限
         $res['permission'] = $user->role->permission->pluck('name')->toArray()??[];
         return $this->sendResponse($res, '用户信息获取成功');

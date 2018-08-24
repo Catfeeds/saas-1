@@ -100,13 +100,15 @@ class CustomersController extends APIBaseController
     public function allBlock()
     {
         $res =  curl(config('hosts.building').'/api/all_block','GET');
-        return $this->sendResponse($res,'获取所有商圈成功');
+        if (empty($res->data)) return $this->sendError($res->message);
+        return $this->sendResponse($res->data, '获取所有商圈成功');
     }
 
     // 获取所有楼盘
     public function allBuilding()
     {
         $res = curl(config('hosts.building').'/api/all_building','GET');
-        return $this->sendResponse($res,'所有楼盘获取成功');
+        if (empty($res->data)) return $this->sendError($res->message);
+        return $this->sendResponse($res->data, '获取所有楼盘成功');
     }
 }

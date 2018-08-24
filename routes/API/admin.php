@@ -15,7 +15,6 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
 
     Route::group(['middleware' => 'apiAuth:admin'], function () {
 
-        Route::get('test', 'LoginsController@test');
 
 //        //公司管理
 //        Route::resource('company', 'CompanyController');

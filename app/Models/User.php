@@ -41,8 +41,14 @@ class User extends Authenticatable
         return $this->hasOne(Role::class, 'guid', 'role_guid');
     }
 
+    //用户关联归属
     public function companyFramework()
     {
         return $this->belongsTo('App\Models\CompanyFramework','rel_guid','guid');
+    }
+
+    public function detailInfo()
+    {
+        return $this->hasOne(UserInfo::class, 'user_guid', 'guid');
     }
 }

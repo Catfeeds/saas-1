@@ -41,6 +41,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('send_message/{tel}/{temp}', 'UsersController@sendMessage');
     //修改密码
     Route::post('update_pwd', 'UsersController@updatePwd');
+    //获取员工个人信息
+    Route::get('get_user', 'UsersController@getUser');
 
     /*
     |--------------------------------------------------------------------------

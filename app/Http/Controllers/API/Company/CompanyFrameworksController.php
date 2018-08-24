@@ -117,7 +117,7 @@ class CompanyFrameworksController extends APIBaseController
         CompanyFrameworksService $service
     )
     {
-        $res = $service->getGroup($request->storefrontId);
+            $res = $service->getGroup($request->storefrontId);
         return $this->sendResponse($res, '门店下的分组获取成功');
     }
 
@@ -131,6 +131,5 @@ class CompanyFrameworksController extends APIBaseController
         $res = $service->deleteData($request->data);
         if (!$res['status']) return $this->sendError($res['message']);
         return $this->sendResponse($res['status'], $res['message']);
-
     }
 }

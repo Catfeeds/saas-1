@@ -92,4 +92,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
         Route::get('get_all_select','HousesController@test');
     });
 
+    //客源管理
+    Route::resource('customers', 'CustomersController');
+
 });

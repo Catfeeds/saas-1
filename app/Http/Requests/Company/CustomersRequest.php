@@ -18,7 +18,9 @@ class CustomersRequest extends FormRequest
 
     public function messages()
     {
-        
+        return [
+
+        ];
     }
 
     /**
@@ -28,8 +30,45 @@ class CustomersRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        switch ($this->route()->getActionMethod()) {
+            case 'store':
+                return [
+                    'level' =>'nullable|integer|between:1,3',
+                    'guest' => 'required|integer|between:1,3',
+                    'customer_info' => 'required',
+                    'remarks' => 'nullable',
+                    'intention' => 'nullable',
+                    'block' => 'nullable',
+                    'building' => 'nullable',
+                    'house_type' => 'nullable',
+                    'price' => 'nullable',
+                    'acreage' => 'nullable',
+                    'type' => 'nullable|integer',
+                    'renovation' => 'nullable|integer',
+                    'floor' => 'nullable',
+                    'target' => 'nullable'
+                ];
+                break;
+            case 'update':
+                return [
+                    'level' =>'nullable|integer|between:1,3',
+                    'guest' => 'required|integer|between:1,3',
+                    'customer_info' => 'required',
+                    'remarks' => 'nullable',
+                    'intention' => 'nullable',
+                    'block' => 'nullable',
+                    'building' => 'nullable',
+                    'house_type' => 'nullable',
+                    'price' => 'nullable',
+                    'acreage' => 'nullable',
+                    'type' => 'nullable|integer',
+                    'renovation' => 'nullable|integer',
+                    'floor' => 'nullable',
+                    'target' => 'nullable'
+                ];
+                default;
+                return[
+                ];
+        }
     }
 }

@@ -112,7 +112,7 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res, '岗位获取成功');
     }
 
-    //登录人信息
+    // 登录人信息
     public function show()
     {
         $user = Common::user();

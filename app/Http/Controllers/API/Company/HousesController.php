@@ -40,7 +40,7 @@ class HousesController extends APIBaseController
     //  curl请求接口
     public function test()
     {
-        return curl('http://192.168.0.198/api/get_all_select','GET');
+        return curl('http://192.168.0.198:0908/api/get_all_select','GET');
     }
 
 }

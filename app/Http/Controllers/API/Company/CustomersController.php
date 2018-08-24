@@ -50,22 +50,16 @@ class CustomersController extends APIBaseController
     }
 
     // 获取所有商圈
-    public function allBuildingBlock()
+    public function allBlock()
     {
-        $res =  curl(config('hosts.building').'/api/all_building_blocks','GET');
+        $res =  curl(config('hosts.building').'/api/all_block','GET');
         return $this->sendResponse($res->data,'获取所有商圈成功');
     }
 
     // 获取所有楼盘
-    public function buildingBlocksSelect()
+    public function allBuilding()
     {
-        $res = curl('http://192.168.0.142:8888/api/buildings_select','GET');
+        $res = curl(config('hosts.building').'/api/all_building','GET');
         return $this->sendResponse($res,'所有楼盘获取成功');
-        return $res->map(function ($v){
-            return [
-                'value' => $v->value,
-                'name' => $v->label,
-            ];
-        });
     }
 }

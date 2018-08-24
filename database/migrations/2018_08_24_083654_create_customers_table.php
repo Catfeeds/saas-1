@@ -30,6 +30,9 @@ class CreateCustomersTable extends Migration
             $table->tinyInteger('renovation')->nullable()->comment('装修: 1: 豪华装修 2: 精装修 3: 中装修 4: 间装修 5: 毛坯');
             $table->json('floor')->nullable()->comment('楼层(最低-最高): json');
             $table->string('target',32)->nullable()->comment('目标');
+            $table->tinyInteger('status')->nullable()->comment('状态 1: 正常 2: 无效');
+            $table->char('entry_person',32)->nullable()->comment('录入人');
+            $table->char('guardian_person',32)->nullable()->comment('维护人');
             $table->timestamps();
         });
         \DB::statement("alter table `customers` comment'客源表'");

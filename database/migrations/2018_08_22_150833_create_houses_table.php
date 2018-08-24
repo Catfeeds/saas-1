@@ -65,10 +65,10 @@ class CreateHousesTable extends Migration
 
             // 操作人
             $table->char('entry_person',32)->nullable()->comment('录入人');
-            $table->char('guardian_person')->nullable()->comment('维护人');
-            $table->char('pic_person')->nullable()->comment('图片人');
-            $table->char('key_person')->nullable()->comment('钥匙人');
-            $table->char('client_person')->nullable()->comment('委托人');
+            $table->char('guardian_person',32)->nullable()->comment('维护人');
+            $table->char('pic_person',32)->nullable()->comment('图片人');
+            $table->char('key_person',32)->nullable()->comment('钥匙人');
+            $table->char('client_person',32)->nullable()->comment('委托人');
 
             $table->timestamps();
         });

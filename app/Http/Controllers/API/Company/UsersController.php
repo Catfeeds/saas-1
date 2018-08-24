@@ -121,4 +121,14 @@ class UsersController extends APIBaseController
         $res['permission'] = $user->role->permission->pluck('name')->toArray()??[];
         return $this->sendResponse($res, '用户信息获取成功');
     }
+
+    // 重置密码
+    public function resetPwd(
+        UsersRequest $request,
+        UserService $service
+    )
+    {
+        $res = $service->resetPwd($request);
+        return $this->sendResponse($res,'重置密码成功');
+    }
 }

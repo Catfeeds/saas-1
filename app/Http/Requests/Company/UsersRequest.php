@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Company;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -33,6 +34,10 @@ class UsersRequest extends FormRequest
                     'role_guid.in' => '角色必须存在',
                     'rel_guid.in' => '门店必须存在',
                 ];
+            case 'resetPwd':
+                return [
+                    'tel.in' => '用户必须存在',
+                ];
             default:
                 return [
 
@@ -58,14 +63,14 @@ class UsersRequest extends FormRequest
                         'between:1,3',
                     ],
                     'sex' => [
-                        'required',
+                        'nullable',
                         'integer',
                         'between:1,2',
                     ],
-                    'entry' => 'required',
-                    'birth' => 'required',
-                    'native_place' => 'required|max:32',
-                    'race' => 'required|max:16',
+                    'entry' => 'nullable',
+                    'birth' => 'nullable',
+                    'native_place' => 'nullable|max:32',
+                    'race' => 'nullable|max:16',
                 ];
             case 'update':
                 return [
@@ -76,14 +81,24 @@ class UsersRequest extends FormRequest
                         Rule::unique('users')->ignore($this->route('user')->guid,'guid'),
                     ],
                     'sex' => [
-                        'required',
+                        'nullable',
                         'integer',
                         'between:1,2',
                     ],
-                    'entry' => 'required',
-                    'birth' => 'required',
-                    'native_place' => 'required|max:32',
-                    'race' => 'required|max:16',
+                    'entry' => 'nullable',
+                    'birth' => 'nullable',
+                    'native_place' => 'nullable|max:32',
+                    'race' => 'nullable|max:16',
+                ];
+            case 'resetPwd':
+                return [
+                    'tel' => [
+                        'required',
+                        'max:16',
+                        Rule::in(
+                            User::all()->pluck('tel')->toArray()
+                        )
+                    ]
                 ];
             default:
                 {

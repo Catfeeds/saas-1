@@ -18,9 +18,10 @@ class UserService
                 'guid' => Common::getUuid(),
                 'tel' => $request->tel,
                 'name' => $request->name,
-                'password' => bcrypt($request->password),
+                'password' => bcrypt($request->tel),    // 账号密码默认一样
                 'role_guid' => $request->role_guid,
                 'rel_guid' => $request->rel_guid,
+                'status' => $request->status,
                 'company_guid' => Common::user()->company_guid
             ]);
             if (empty($user)) throw new \Exception('用户添加失败');
@@ -51,7 +52,6 @@ class UserService
         try {
             $user->tel = $request->tel;
             $user->name = $request->name;
-            $user->password = bcrypt($request->password);
             $user->role_guid = $request->role_guid;
             $user->rel_guid = $request->rel_guid;
             if (!$user->save()) throw new \Exception('用户修改失败');
@@ -130,4 +130,15 @@ class UserService
            ] ;
         });
     }
+
+    // 重置密码
+    public function resetPwd(
+        $request
+    )
+    {
+        return User::where(['tel' => $request->tel])->update(['password' => bcrypt($request->tel)]);
+    }
+
+
+
 }

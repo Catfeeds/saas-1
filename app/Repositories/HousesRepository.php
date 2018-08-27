@@ -10,7 +10,7 @@ class HousesRepository extends Model
 
     public function houseList($request)
     {
-        return House::where([])->paginate($request->per_page??10);
+        return House::with('key')->where([])->paginate($request->per_page??10);
     }
 
     // 添加房源

@@ -14,8 +14,15 @@ class House extends BaseModel
         'renovation_cn',
         'orientation_cn',
         'type_cn',
-        'indoor_img_cn'
+        //'indoor_img_cn'
     ];
+
+    //房源关联钥匙
+    public function key()
+    {
+        return $this->hasOne(SeeHouseWay::class,'house_guid', 'guid');
+    }
+    
 
     // 价格单位   price_unit_cn
     public function getPriceUnitCnAttribute()
@@ -37,11 +44,11 @@ class House extends BaseModel
     }
 
 
-    //室内图
-    public function getIndoorImgCnAttribute()
-    {
-        return $this->indoor_img?config('setting.qiniu_url').$this->indoor_img[0]['img']. config('setting.qiniu_suffix'):config('setting.pc_building_house_default_img');
-    }
+//    //室内图
+//    public function getIndoorImgCnAttribute()
+//    {
+//        return $this->indoor_img?config('setting.qiniu_url').$this->indoor_img[0]['img']. config('setting.qiniu_suffix'):config('setting.pc_building_house_default_img');
+//    }
 
     //公私盘中文
     public function getPublicPrivateCnAttribute()

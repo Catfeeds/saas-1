@@ -82,11 +82,10 @@ class QuartersRequest extends FormRequest
                 ];
             case 'updateRolePermission':
                 return [
-                    'role_guid' => 'required|exists:role_has_permissions,role_guid',
-                    'permission_guid' => 'required|exists:role_has_permissions,permission_guid',
-                    'action_scope' => 'required|integer|between:1,6',
-                    'operation_number' => 'required|integer|max:9999',
-                    'follow_up' => 'required|integer|between:1,3'
+                    'guid' => 'required|exists:role_has_permissions,guid',
+                    'action_scope' => 'integer|between:1,6',
+                    'operation_number' => 'integer|max:9999',
+                    'follow_up' => 'integer|between:1,3'
                 ];
             default:
                 {

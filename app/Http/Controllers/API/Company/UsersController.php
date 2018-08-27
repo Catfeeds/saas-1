@@ -27,7 +27,8 @@ class UsersController extends APIBaseController
     //员工修改之前原始数据
     public function edit(User $user)
     {
-       return $this->sendResponse($user, '员工修改之前原始数据');
+        $user->detailInfo;
+        return $this->sendResponse($user, '员工修改之前原始数据');
     }
 
     // 修改用户

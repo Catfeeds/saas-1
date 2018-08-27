@@ -19,14 +19,18 @@ class QuartersService
     //岗位设置列表
     public function roleHasPermissionList()
     {
-        $res = Role::where('company_guid', $this->user->company_guid)->with('roleHasPermission')->orderBy('level')->orderBy('created_at', 'asc')->get();
+        $res = Role::where('company_guid', $this->user->company_guid)->with('roleHasPermission','roleHasPermission.hasPermission')->orderBy('level')->orderBy('created_at', 'asc')->get();
         $datas = array();
         foreach ($res as $k => $v) {
             $datas[$v->guid]['name'] = $v->name;
             $datas[$v->guid]['level'] = $v->level_cn;
             $permission = array();
             foreach ($v->roleHasPermission as $key => $val) {
-                $permission[$val->permission_guid] = $val;
+                $permission[$val->hasPermission->name]['guid'] = $val->guid;
+                $permission[$val->hasPermission->name]['action_scope'] = $val->action_scope_cn;
+                $permission[$val->hasPermission->name]['operation_number'] = $val->operation_number;
+                $permission[$val->hasPermission->name]['follow_up'] = $val->follow_up_cn;
+                $permission[$val->hasPermission->name]['status'] = $val->status;
             }
             $datas[$v->guid]['permission'] = $permission;
         }
@@ -84,10 +88,7 @@ class QuartersService
     // 修改角色权限
     public function updateRolePermission($request)
     {
-        return RoleHasPermission::where([
-            'role_guid' => $request->role_guid,
-            'permission_guid' => $request->permission_guid
-        ])->update([
+        return RoleHasPermission::where('guid', $request->guid)->update([
             'action_scope' => $request->action_scope,
             'operation_number' => $request->operation_number,
             'follow_up' => $request->follow_up,

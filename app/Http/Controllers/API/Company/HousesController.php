@@ -10,6 +10,17 @@ use Illuminate\Http\Request;
 
 class HousesController extends APIBaseController
 {
+    public function index
+    (
+        HousesRequest $request,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->getList($request);
+        return $this->sendResponse($res, '房源列表获取成功');
+    }
+    
+    
     // 添加房源
     public function store
     (

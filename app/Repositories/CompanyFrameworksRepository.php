@@ -12,7 +12,7 @@ class CompanyFrameworksRepository extends Model
     // 片区,门店,分组 3级菜单
     public function getList()
     {
-        $areas = CompanyFramework::with('framework')->where('parent_guid', null)->get();
+        $areas = CompanyFramework::with('framework')->where('parent_guid', null)->orderBy('level','asc')->orderBy('created_at','asc')->get();
         $box = [];
         //循环一级划分,查询下级
         foreach ($areas as $area) {

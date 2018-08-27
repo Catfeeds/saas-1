@@ -122,7 +122,10 @@ class UserService
     // 获取公司下的全部岗位
     public function getAllQuarters()
     {
-        $res = Role::where('company_guid', Common::user()->company_guid)->get();
+        $res = Role::where('company_guid', Common::user()->company_guid)
+                    ->orderBy('level', 'asc')
+                    ->orderBy('created_at','asc')
+                    ->get();
         return $res->map(function($v) {
            return [
                 'value' => $v->guid,
@@ -156,10 +159,10 @@ class UserService
         return ['status' => true, 'message' => '密码修改成功'];
     }
 
-    // 获取公司下所有人员
+    // 获取公司下所有在职人员
     public function getAllUser()
     {
-        return User::where(['company_guid' => Common::user()->company_guid])->get();
+        return User::where(['company_guid' => Common::user()->company_guid, 'status' => 1])->get();
     }
 
 

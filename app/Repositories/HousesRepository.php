@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class HousesRepository extends Model
 {
+
+    
+
     // 添加房源
     public function addHouse($request)
     {

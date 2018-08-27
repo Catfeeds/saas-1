@@ -46,15 +46,17 @@ class LoginsController extends APIBaseController
         //查询用户是否存在
         $user = User::where(['tel' => $request->tel])->first();
         if (empty($user)) return $this->sendError('用户不存在');
-        //查询用户是否绑定微信
-        if (empty($user->openid)) {
-            //如果未绑定,生成用户电话产生的密文
-            $key = $service->cipher($request->getClientIp(), $request->tel);
-            //通过密文获取二维码
-            $res = curl(config('setting.wechat_url').'/qrcode/'.$key,'get');
-            if (empty($res->data)) return $this->sendError('二维码获取失败');
-            return $this->sendResponse($res->data, '二维码获取成功');
-        }
+        //判断用户是否有效
+        if ($user->status !== 1) return $this->sendError('无效账户');
+//        //查询用户是否绑定微信
+//        if (empty($user->openid)) {
+//            //如果未绑定,生成用户电话产生的密文
+//            $key = $service->cipher($request->getClientIp(), $request->tel);
+//            //通过密文获取二维码
+//            $res = curl(config('setting.wechat_url').'/qrcode/'.$key,'get');
+//            if (empty($res->data)) return $this->sendError('二维码获取失败');
+//            return $this->sendResponse($res->data, '二维码获取成功');
+//        }
         //获取token
         $token = $service->getToken($request->tel, $request->password);
         if (empty($token['success'])) return $this->sendError($token['message']);

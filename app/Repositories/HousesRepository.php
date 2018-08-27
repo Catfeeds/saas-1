@@ -22,7 +22,6 @@ class HousesRepository extends Model
             'company_guid' => Common::user()->company_guid,
             'owner_info' => $request->owner_info,//业主电话
             'floor' => $request->floor,//所在楼层
-            'name' => $request->name,//小区
             'house_number' => $request->house_number,//房号
             'building_block_guid' => $request->building_block_guid,//楼座guid
             'grade' => $request->grade,//房源等级
@@ -49,6 +48,8 @@ class HousesRepository extends Model
             'actuality' => $request->actuality,//现状
             'shortest_lease' => $request->shortest_lease,//最短租期
             'remarks' => $request->remarks,//备注
+            'have_key' => $request->have_key,
+            'status' => $request->status,
 
             'entry_person' => Common::user()->guid,
             'guardian_person' => Common::user()->guid,
@@ -61,7 +62,6 @@ class HousesRepository extends Model
         $house->house_type = 1;
         $house->owner_info = $request->owner_info;
         $house->floor = $request->floor;
-        $house->name = $request->name;
         $house->house_number = $request->house_number;
         $house->building_block_guid = $request->building_block_guid;
         $house->grade = $request->grade;
@@ -88,7 +88,8 @@ class HousesRepository extends Model
         $house->actuality = $request->actuality;
         $house->shortest_lease = $request->shortest_lease;
         $house->remarks = $request->remarks;
-
+        $house->have_key = $request->have_key;
+        $house->status = $request->status;
         $house->guardian_person = Common::user()->guid;
         if (!$house->save()) return false;
         return true;
@@ -106,8 +107,12 @@ class HousesRepository extends Model
             'key_person' => $request->key_person,
             'client_person' => $request->client_person,
         ]);
-
-
     }
 
+    // 修改房源图片
+    public function updateImg($guid,$request)
+    {
+        return House::where(['guid' => $guid])->update(['house_type_img' => $request->house_type_img, 'indoor_img' =>
+            $request->indoor_img, 'outdoor_img' => $request->outdoor_img]);
+    }
 }

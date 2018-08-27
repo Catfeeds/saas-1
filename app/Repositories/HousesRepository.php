@@ -40,7 +40,7 @@ class HousesRepository extends Model
             'rent_free' => $request->rent_free,//免租期
             'support_facilities' => $request->support_facilities,//配套
             'source' => $request->source,//渠道来源
-            'status' => $request->status,//现状
+            'actuality' => $request->actuality,//现状
             'shortest_lease' => $request->shortest_lease,//最短租期
             'remarks' => $request->remarks,//备注
 
@@ -79,7 +79,7 @@ class HousesRepository extends Model
         $house->rent_free = $request->rent_free;
         $house->support_facilities = $request->support_facilities;
         $house->source = $request->source;
-        $house->status = $request->status;
+        $house->actuality = $request->actuality;
         $house->shortest_lease = $request->shortest_lease;
         $house->remarks = $request->remarks;
 

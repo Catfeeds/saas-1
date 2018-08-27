@@ -6,7 +6,6 @@ use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\HousesRequest;
 use App\Models\House;
 use App\Repositories\HousesRepository;
-use Illuminate\Http\Request;
 
 class HousesController extends APIBaseController
 {
@@ -50,6 +49,19 @@ class HousesController extends APIBaseController
         $res = curl(config('hosts.building').'/api/get_all_select','GET');
         if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有下拉数据成功');
+    }
+
+    // 修改房源图片
+    public function updateImg
+    (
+        $guid,
+        HousesRequest $request,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->updateImg($guid,$request);
+        if (!$res) return $this->sendError('修改房源图片失败');
+        return $this->sendResponse($res,'修改房源图片成功');
     }
 
 }

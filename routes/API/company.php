@@ -95,6 +95,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 房源管理
     Route::resource('house','HousesController');
 
+    // 修改房源图片
+    Route::get('update_img/{guid}','HousesController@updateImg');
+
     // 获取所有下拉数据
     Route::get('get_all_select','HousesController@getAllSelect');
     // 获取所有商圈信息

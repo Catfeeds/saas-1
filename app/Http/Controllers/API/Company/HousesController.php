@@ -2,14 +2,27 @@
 
 namespace App\Http\Controllers\API\Company;
 
+use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\HousesRequest;
+use App\Models\Company;
 use App\Models\House;
 use App\Repositories\HousesRepository;
+use App\Services\HousesService;
 use Illuminate\Http\Request;
 
 class HousesController extends APIBaseController
 {
+    // 房源列表
+    public function index(
+        Request $request,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->houseList($request);
+        return $this->sendResponse($res,'获取房源列表成功');
+    }
+    
     // 添加房源
     public function store
     (
@@ -52,4 +65,42 @@ class HousesController extends APIBaseController
         return $this->sendResponse($res->data, '获取所有下拉数据成功');
     }
 
+    // 所有的楼座下拉数据
+    public function buildingBlocksSelect()
+    {
+        // 获取登录人公司所在的城市
+        $cityName = Company::find(Common::user()->company_guid)->name;
+        $res = curl(config('hosts.building').'/api/building_blocks_all?city_name='.$cityName,'GET');
+        if (empty($res->data)) return $this->sendError($res->message);
+        return $this->sendResponse($res->data, '获取所有下拉数据成功');
+    }
+
+    // 变更人员
+    public function changePersonnel(
+        HousesRequest $request,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->changePersonnel($request);
+        return $this->sendResponse($res,'变更人员成功');
+    }
+
+    // 通过楼座,楼层获取房源成功
+    public function adoptConditionGetHouse(
+        HousesRequest $request,
+        HousesService $service
+    )
+    {
+        $res = $service->adoptConditionGetHouse($request);
+        return $this->sendResponse($res,'通过楼座,楼层获取房源成功');
+    }
+
+    public function houseNumberValidate(
+        HousesRequest $request,
+        HousesService $service
+    )
+    {
+        $service->houseNumberValidate($request);
+    }
+    
 }

@@ -21,7 +21,7 @@ class CreateHousesTable extends Migration
 
             // 核心信息
             $table->json('owner_info')->nullable()->comment('业主联系方式: json');
-            $table->integer('building_block_guid')->nullable()->comment('楼座guid');
+            $table->char('building_block_guid',32)->nullable()->comment('楼座guid');
             $table->integer('floor')->nullable()->comment('楼层(层)');
             $table->string('house_number',64)->nullable()->comment('房号');
 

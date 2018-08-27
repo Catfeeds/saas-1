@@ -7,6 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class HousesRepository extends Model
 {
+    // 房源列表
+    public function houseList(
+        $request
+    )
+    {
+
+
+
+
+
+
+
+
+
+    }
+
+
     // 添加房源
     public function addHouse($request)
     {
@@ -86,6 +103,22 @@ class HousesRepository extends Model
         $house->guardian_person = Common::user()->guid;
         if (!$house->save()) return false;
         return true;
+    }
+
+    // 变更人员
+    public function changePersonnel(
+        $request
+    )
+    {
+        return House::where(['guid' => $request->house_guid])->update([
+            'entry_person' => $request->entry_person,
+            'guardian_person' => $request->guardian_person,
+            'pic_person' => $request->pic_person,
+            'key_person' => $request->key_person,
+            'client_person' => $request->client_person,
+        ]);
+
+
     }
 
 }

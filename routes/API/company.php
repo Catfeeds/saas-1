@@ -92,9 +92,23 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 删除片区、门店、分组
     Route::get('delete', 'CompanyFrameworksController@delete');
 
-    // 房源管理
-    Route::resource('house','HousesController');
+    /*
+    |--------------------------------------------------------------------------
+    | 房源管理
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('house', 'HousesController');
+    // 变更人员
+    Route::get('change_personnel', 'HousesController@changePersonnel');
+    // 通过楼座,楼层获取房源成功
+    Route::get('adopt_condition_get_house', 'HousesController@adoptConditionGetHouse');
+    // 房号验证
+    Route::get('house_number_validate', 'HousesController@houseNumberValidate');
 
+
+
+    // 所有的楼座下拉数据
+    Route::get('/building_blocks_all', 'HousesController@buildingBlocksSelect');
     // 获取所有下拉数据
     Route::get('get_all_select','HousesController@getAllSelect');
     // 获取所有商圈信息

@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests\Company;
 
+use App\Models\BuildingBlock;
+use App\Models\House;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class HousesRequest extends FormRequest
 {
@@ -14,6 +18,21 @@ class HousesRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    // 中文报错
+    public function messages()
+    {
+        switch ($this->route()->getActionMethod()) {
+            case 'changePersonnel':
+                return [
+                    'house_guid.in' => '房源必须存在',
+                ];
+            default;
+                return [
+
+                ];
+        }
     }
 
     // 验证字段
@@ -108,6 +127,44 @@ class HousesRequest extends FormRequest
                     'pic_person' => 'nullable|max:255',
                     'key_person' => 'nullable|max:255',
                     'client_person' => 'nullable|max:255',
+                ];
+            case 'changePersonnel':
+                return [
+                    'house_guid' => [
+                        'required',
+                        'max:32',
+                        Rule::in(
+                            House::all()->pluck('guid')->toArray()
+                        )
+                    ],
+                    'entry_person' =>  'nullable|max:32',
+                    'guardian_person' => 'nullable|max:32',
+                    'pic_person' => 'nullable|max:32',
+                    'key_person' => 'nullable|max:32',
+                    'client_person' => 'nullable|max:32',
+                ];
+            case 'adoptConditionGetHouse':
+                return [
+                    'building_block_guid' => [
+                        'required',
+                        'max:32',
+                        Rule::in(
+                            BuildingBlock::all()->pluck('guid')->toArray()
+                        )
+                    ],
+                    'floor' => 'required|integer|min:1|max:.'.BuildingBlock::find($this->building_block_guid)->total_floor,
+                ];
+            case 'HouseNumberValidate':
+                return [
+                    'building_block_guid' => [
+                        'required',
+                        'max:32',
+                        Rule::in(
+                            BuildingBlock::all()->pluck('guid')->toArray()
+                        )
+                    ],
+                    'floor' => 'required|integer|min:1|max:.'.BuildingBlock::find($this->building_block_guid)->total_floor,
+                    'house_number' => 'required|max:64'
                 ];
             default:
                 {

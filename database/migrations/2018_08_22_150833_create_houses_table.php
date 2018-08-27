@@ -45,7 +45,7 @@ class CreateHousesTable extends Migration
             $table->tinyInteger('open_bill')->nullable()->comment('可开发票 1: 可以 2: 不可以');
             $table->string('station_number',32)->nullable()->comment('工位数量');
             $table->integer('rent_free')->nullable()->comment('免租期');
-            $table->json('support_facilities')->nullable()->comment('配套设施: 空调；办公家具；沙发；宽带；冰箱source');
+            $table->json('support_facilities')->nullable()->comment('配套设施: 空调；办公家具；沙发；宽带；冰箱');
 
             // 更多信息
             $table->tinyInteger('source')->nullable()->comment('来源渠道: 1: 上门 2: 电话 3: 洗盘 4: 网络 5: 陌拜 6: 转介绍 7: 老客户');

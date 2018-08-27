@@ -63,8 +63,7 @@ class UsersRequest extends FormRequest
                     'role_guid' => [
                         'required',
                         Rule::in(
-                            Role::where(['guid' => $this->rel_guid,'company_guid'=> Common::user()->company_guid])
-                                ->pluck('guid')->toArray()
+                            Role::where(['company_guid'=> Common::user()->company_guid])->pluck('guid')->toArray()
                         )
                     ],
                     'status' => [
@@ -92,8 +91,7 @@ class UsersRequest extends FormRequest
                     'role_guid' => [
                         'required',
                         Rule::in(
-                            Role::where(['guid' => $this->rel_guid,'company_guid'=> Common::user()->company_guid])
-                                ->pluck('guid')->toArray()
+                            Role::where(['company_guid'=> Common::user()->company_guid])->pluck('guid')->toArray()
                         )
                     ],
                     'sex' => [

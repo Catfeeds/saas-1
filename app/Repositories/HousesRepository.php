@@ -59,7 +59,9 @@ class HousesRepository extends Model
             'indoor_img' => $request->indoor_img,
             'outdoor_img' => $request->outdoor_img,
             'entry_person' => $request->entry_person,
-            'guardian_person' => $request->guardian_person,
+            '
+            
+            ' => $request->guardian_person,
             'pic_person' => $request->pic_person,
             'key_person' => $request->key_person,
             'client_person' => $request->client_person,

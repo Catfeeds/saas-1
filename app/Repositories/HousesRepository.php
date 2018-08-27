@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class HousesRepository extends Model
 {
 
-    
+    public function houseList($request)
+    {
+        return House::where([])->paginate($request->per_page??10);
+    }
 
     // 添加房源
     public function addHouse($request)
@@ -43,7 +46,7 @@ class HousesRepository extends Model
             'rent_free' => $request->rent_free,//免租期
             'support_facilities' => $request->support_facilities,//配套
             'source' => $request->source,//渠道来源
-            'status' => $request->status,//现状
+            'actuality' => $request->actuality,//现状
             'shortest_lease' => $request->shortest_lease,//最短租期
             'remarks' => $request->remarks,//备注
 
@@ -82,13 +85,29 @@ class HousesRepository extends Model
         $house->rent_free = $request->rent_free;
         $house->support_facilities = $request->support_facilities;
         $house->source = $request->source;
-        $house->status = $request->status;
+        $house->actuality = $request->actuality;
         $house->shortest_lease = $request->shortest_lease;
         $house->remarks = $request->remarks;
 
         $house->guardian_person = Common::user()->guid;
         if (!$house->save()) return false;
         return true;
+    }
+
+    // 变更人员
+    public function changePersonnel(
+        $request
+    )
+    {
+        return House::where(['guid' => $request->house_guid])->update([
+            'entry_person' => $request->entry_person,
+            'guardian_person' => $request->guardian_person,
+            'pic_person' => $request->pic_person,
+            'key_person' => $request->key_person,
+            'client_person' => $request->client_person,
+        ]);
+
+
     }
 
 }

@@ -21,7 +21,7 @@ class CreateHousesTable extends Migration
 
             // 核心信息
             $table->json('owner_info')->nullable()->comment('业主联系方式: json');
-            $table->integer('building_block_guid')->nullable()->comment('楼座guid');
+            $table->char('building_block_guid',32)->nullable()->comment('楼座guid');
             $table->integer('floor')->nullable()->comment('楼层(层)');
             $table->string('house_number',64)->nullable()->comment('房号');
 
@@ -49,7 +49,7 @@ class CreateHousesTable extends Migration
 
             // 更多信息
             $table->tinyInteger('source')->nullable()->comment('来源渠道: 1: 上门 2: 电话 3: 洗盘 4: 网络 5: 陌拜 6: 转介绍 7: 老客户');
-            $table->tinyInteger('status')->nullable()->comment('现状 1: 空置 2: 自用 3: 在租');
+            $table->tinyInteger('actuality')->nullable()->comment('现状 1: 空置 2: 自用 3: 在租');
             $table->tinyInteger('shortest_lease')->nullable()->comment('最短租期: 1: 1年 2: 2年 3: 3年 4: 5年 5: 5年以上');
             $table->text('remarks')->nullable()->comment('备注');
 
@@ -64,6 +64,11 @@ class CreateHousesTable extends Migration
             $table->char('pic_person',32)->nullable()->comment('图片人');
             $table->char('key_person',32)->nullable()->comment('钥匙人');
             $table->char('client_person',32)->nullable()->comment('委托人');
+
+            // 有无钥匙
+            $table->tinyInteger('have_key')->default(2)->comment('有无钥匙 1: 有 2: 没有');
+            // 房源状态
+            $table->tinyInteger('status')->default(1)->comment('房源状态 1: 有效 2: 无效');
 
             $table->timestamps();
         });

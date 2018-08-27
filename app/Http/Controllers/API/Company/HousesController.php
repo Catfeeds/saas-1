@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Company;
 
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\HousesRequest;
+use App\Models\House;
 use App\Repositories\HousesRepository;
 use Illuminate\Http\Request;
 
@@ -26,10 +27,16 @@ class HousesController extends APIBaseController
         //
     }
 
-
-    public function update(Request $request, $id)
+    // 更新房源信息
+    public function update
+    (
+        HousesRequest $request,
+        House $house,
+        HousesRepository $repository
+    )
     {
-        //
+        $res = $repository->updateHouse($house,$request);
+        return $this->sendResponse($res,'更新房源成功');
     }
 
     public function destroy($id)

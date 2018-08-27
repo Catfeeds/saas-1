@@ -12,6 +12,7 @@ class HousesRepository extends Model
     {
         return House::create([
             'guid' => Common::getUuid(),
+            'house_type' => 1,
             'company_guid' => Common::user()->company_guid,
             'owner_info' => $request->owner_info,//业主电话
             'floor' => $request->floor,//所在楼层
@@ -43,24 +44,15 @@ class HousesRepository extends Model
             'shortest_lease' => $request->shortest_lease,//最短租期
             'remarks' => $request->remarks,//备注
 
-
-            'house_type' => $request->house_type,
-            'house_type_img' => $request->house_type_img,
-            'indoor_img' => $request->indoor_img,
-            'outdoor_img' => $request->outdoor_img,
-            'entry_person' => $request->entry_person,
-            '
-            
-            ' => $request->guardian_person,
-            'pic_person' => $request->pic_person,
-            'key_person' => $request->key_person,
-            'client_person' => $request->client_person,
+            'entry_person' => Common::user()->guid,
+            'guardian_person' => Common::user()->guid,
         ]);
     }
 
     // 更新房源
     public function updateHouse($house, $request)
     {
+        $house->house_type = 1;
         $house->owner_info = $request->owner_info;
         $house->floor = $request->floor;
         $house->name = $request->name;
@@ -91,15 +83,7 @@ class HousesRepository extends Model
         $house->shortest_lease = $request->shortest_lease;
         $house->remarks = $request->remarks;
 
-        $house->house_type = $request->house_type;
-        $house->house_type_img = $request->house_type_img;
-        $house->indoor_img = $request->indoor_img;
-        $house->outdoor_img = $request->outdoor_img;
-        $house->entry_person = $request->entry_person;
-        $house->guardian_person = $request->guardian_person;
-        $house->pic_person = $request->pic_person;
-        $house->key_person = $request->key_person;
-        $house->client_person = $request->client_person;
+        $house->guardian_person = Common::user()->guid;
         if (!$house->save()) return false;
         return true;
     }

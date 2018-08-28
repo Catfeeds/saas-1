@@ -19,6 +19,7 @@ class CreateCompaniesTable extends Migration
             $table->string('slogan',512)->nullable()->comment('公司口号');
             $table->string('license',512)->nullable()->comment('营业执照');
             $table->string('address',256)->nullable()->comment('公司地址');
+            $table->string('city_name',32)->nullable()->comment('公司所在城市');
             $table->timestamps();
         });
         \DB::statement("alter table `companies` comment'公司表'");

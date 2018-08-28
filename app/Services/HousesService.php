@@ -68,7 +68,7 @@ class HousesService
         $houses['name'] = $res->buildingBlock->building->name;  //名称
         $houses['public_private'] = $res->public_private_cn; //公私盘
         $houses['grade'] = $res->grade_cn; //级别
-        $houses['key'] = $res->key ? true : false; //是否有钥匙
+        $houses['key'] = $res->have_key == 1 ? true : false; //是否有钥匙
         $houses['price_unit'] = $res->price . $res->price_unit_cn; //价格单位
         $houses['payment_type'] = $res->payment_type_cn; //付款方式
         $houses['acreage'] = $res->acreage_cn; //面积

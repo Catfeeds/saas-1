@@ -18,6 +18,20 @@ class TracksRequest extends FormRequest
         return true;
     }
 
+    public function messages()
+    {
+        switch ($this->route()->getActionMethod()) {
+            case 'store':
+                return [
+                    'rel_guid.in' => '房源/客源必须存在'
+                ];
+            default:
+                {
+                    return [];
+                }
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -29,9 +43,10 @@ class TracksRequest extends FormRequest
             case 'store':
                 return [
                     'rel_guid' => [
+                        'required',
                         'max:32',
                         Rule::in(
-                            Track::where('model_type',$this->model_type)->pluck('rel_guid')->toArray()
+                            $this->model_type::all()->pluck('guid')->toArray()
                         )
                     ],
                     'tracks_info' => 'required|max:255'

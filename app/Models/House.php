@@ -8,7 +8,8 @@ class House extends BaseModel
     protected $casts = [
         'owner_info' => 'array',
         'cost_detail' => 'array',
-        'support_facilities' => 'array'
+        'support_facilities' => 'array',
+        'indoor_img' => 'array'
     ];
 
     protected $appends = [
@@ -23,10 +24,28 @@ class House extends BaseModel
         'indoor_img_cn'
     ];
 
+    //房源关联钥匙
+    public function key()
+    {
+        return $this->hasOne(SeeHouseWay::class,'house_guid', 'guid');
+    }
+    
     // 楼座
     public function buildingBlock()
     {
         return $this->belongsTo('App\Models\BuildingBlock','building_block_guid','guid');
+    }
+
+    //跟进
+    public function track()
+    {
+        return $this->hasMany(Track::class, 'rel_guid', 'guid');
+    }
+    
+    //录入人
+    public function entryPerson()
+    {
+        return $this->hasOne(User::class, 'guid', 'entry_person');
     }
 
     // 价格单位   price_unit_cn

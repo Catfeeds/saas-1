@@ -9,10 +9,11 @@ class Area extends BaseModel
     protected $guarded = [];
 
     protected $connection = 'buildings';
+
     // 城市
     public function city()
     {
-        return $this->belongsTo(City::class);
+        return $this->belongsTo('App\Models\City','guid','city_guid');
     }
 
     // 区域管理商圈
@@ -24,7 +25,7 @@ class Area extends BaseModel
     // 楼盘
     public function building()
     {
-        return $this->hasMany(Building::class, 'area_guid', 'guid');
+        return $this->hasMany('App\Models\Building', 'area_guid', 'guid');
     }
 
 }

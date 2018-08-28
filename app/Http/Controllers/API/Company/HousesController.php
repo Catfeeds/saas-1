@@ -19,10 +19,11 @@ class HousesController extends APIBaseController
     // 房源列表
     public function index(
         Request $request,
-        HousesRepository $repository
+        HousesRepository $repository,
+        HousesService $service
     )
     {
-        $res = $repository->houseList($request);
+        $res = $repository->houseList($request, $service);
         return $this->sendResponse($res,'房源列表获取成功');
     }
     

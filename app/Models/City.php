@@ -9,6 +9,7 @@ class City extends BaseModel
     protected $guarded = [];
 
     protected $connection = 'buildings';
+
     // 区域
     public function area()
     {

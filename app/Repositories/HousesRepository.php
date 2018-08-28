@@ -7,10 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class HousesRepository extends Model
 {
-
-    public function houseList($request)
+    //房源列表
+    public function houseList($request, $service)
     {
-        return House::where([])->paginate($request->per_page??10);
+        $data = House::with('key','track', 'entryPerson', 'track.user')
+                        ->where([])
+                        ->paginate($request->per_page??10);
+        $houses = [];
+        foreach ($data as $key => $v) {
+            $houses[$key] = $service->getData($v);
+        }
+        return $data->setCollection(collect($houses));
     }
 
     // 添加房源

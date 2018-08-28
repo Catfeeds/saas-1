@@ -19,9 +19,4 @@ class Block extends BaseModel
     {
         return $this->hasMany('App\Models\Building','block_guid', 'guid');
     }
-
-    public function blockLocation()
-    {
-        return $this->belongsTo('App\Models\BlockLocation', 'guid','block_guid');
-    }
 }

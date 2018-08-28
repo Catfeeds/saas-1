@@ -13,7 +13,7 @@ class Area extends BaseModel
     // 城市
     public function city()
     {
-        return $this->belongsTo('App\Models\City','guid','city_guid');
+        return $this->belongsTo('App\Models\City','city_guid','guid');
     }
 
     // 区域管理商圈

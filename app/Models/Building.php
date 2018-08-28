@@ -9,4 +9,11 @@ class Building extends BaseModel
     protected $guarded = [];
 
     protected $connection = 'buildings';
+
+    // 区域
+    public function area()
+    {
+        return $this->belongsTo('App\Models\Area','area_guid','guid');
+    }
+
 }

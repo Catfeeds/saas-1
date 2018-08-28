@@ -74,6 +74,8 @@ class HousesRepository extends Model
 
             'entry_person' => Common::user()->guid,
             'guardian_person' => Common::user()->guid,
+
+            'track_time' => date('Y-m-d H:i:s',time())  // 第一次跟进时间
         ]);
     }
 
@@ -142,4 +144,11 @@ class HousesRepository extends Model
             'outdoor_img' => $request->outdoor_img
         ]);
     }
+
+    // 房源置顶
+    public function setTop($guid)
+    {
+        return House::where(['guid' => $guid])->update(['top' => 1]);
+    }
+
 }

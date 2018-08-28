@@ -20,6 +20,7 @@ class CompaniesRepository extends Model
                 'slogan' => $request->slogan,
                 'license' => $request->license,
                 'address' => $request->address,
+                'city_name' => $request->city_name
             ]);
             if (empty($company)) throw new \Exception('公司添加失败');
 

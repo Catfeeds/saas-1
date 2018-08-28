@@ -64,8 +64,7 @@ class HousesController extends APIBaseController
     )
     {
         // 获取登录人公司所在的城市
-        $cityName = Company::find(Common::user()->company_guid)->name;
-        $cityName = '武汉';
+        $cityName = Company::find(Common::user()->company_guid)->city_name;
         $res = curl(config('hosts.building').'/api/get_all_select?number='.$request->number.'&city_name='.$cityName,'GET');
         if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有下拉数据成功');
@@ -75,7 +74,7 @@ class HousesController extends APIBaseController
     public function buildingBlocksSelect()
     {
         // 获取登录人公司所在的城市
-        $cityName = Company::find(Common::user()->company_guid)->name;
+        $cityName = Company::find(Common::user()->company_guid)->city_name;
         $res = curl(config('hosts.building').'/api/building_blocks_all?city_name='.$cityName,'GET');
         if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有下拉数据成功');
@@ -122,5 +121,16 @@ class HousesController extends APIBaseController
         $res = $repository->updateImg($guid,$request);
         if (!$res) return $this->sendError('修改房源图片失败');
         return $this->sendResponse($res,'修改房源图片成功');
+    }
+    
+    // 房源置顶
+    public function setTop
+    (
+        $guid,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->setTop($guid);
+        return $this->sendResponse($res,'房源置顶成功');
     }
 }

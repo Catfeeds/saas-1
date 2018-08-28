@@ -7,26 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class HousesRepository extends Model
 {
-
+    //房源列表
     public function houseList($request)
     {
         $data = House::with('key')->where([])->paginate($request->per_page??10);
         $houses = [];
-        foreach ($data as $v) {
-            $houses['guid'] = $v->guid;
-            $houses['img'] = $v->indoor_img_cn; //图片
-            $houses['name'] = $v->name;  //名称
-            $houses['public_private'] = $v->public_private_cn; //公私盘
-            $houses['grade'] = $v->grade_cn; //级别
-            $houses['key'] = $v->key ? true : false; //是否有钥匙
-            $houses['price_unit'] = $v->price . $v->price_unit_cn; //价格单位
-            $houses['payment_type'] = $v->payment_type_cn; //付款方式
-            $houses['acreage'] = $v->acreage_cn; //面积
-            $houses['renovation'] = $v->renovation_cn;  //装修程度
-            $houses['orientation'] = $v->orientation_cn; //朝向
-            $houses['type'] = $v->type_cn; //类型
-            $houses['floor'] = $v->floor. '层'; //楼层
-            $houses['total_floor'] = '共' . $v->total_floor . '层'; //总楼层
+        foreach ($data as $key => $v) {
+            $houses[$key]['guid'] = $v->guid;
+            $houses[$key]['img'] = $v->indoor_img_cn; //图片
+            $houses[$key]['name'] = $v->name;  //名称
+            $houses[$key]['public_private'] = $v->public_private_cn; //公私盘
+            $houses[$key]['grade'] = $v->grade_cn; //级别
+            $houses[$key]['key'] = $v->key ? true : false; //是否有钥匙
+            $houses[$key]['price_unit'] = $v->price . $v->price_unit_cn; //价格单位
+            $houses[$key]['payment_type'] = $v->payment_type_cn; //付款方式
+            $houses[$key]['acreage'] = $v->acreage_cn; //面积
+            $houses[$key]['renovation'] = $v->renovation_cn;  //装修程度
+            $houses[$key]['orientation'] = $v->orientation_cn; //朝向
+            $houses[$key]['type'] = $v->type_cn; //类型
+            $houses[$key]['floor'] = $v->floor. '层'; //楼层
+            $houses[$key]['total_floor'] = '共' . $v->total_floor . '层'; //总楼层
             //跟进
         }
         return $data->setCollection(collect($houses));

@@ -72,4 +72,16 @@ class Common
 
         return $res;
     }
+
+    // 数组转对象
+    public static function arrayToObject($e)
+    {
+
+        if (gettype($e) != 'array') return;
+        foreach ($e as $k => $v) {
+            if (gettype($v) == 'array' || getType($v) == 'object')
+                $e[$k] = (object)self::arrayToObject($v);
+        }
+        return (object)$e;
+    }
 }

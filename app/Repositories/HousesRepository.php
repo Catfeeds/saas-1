@@ -10,7 +10,26 @@ class HousesRepository extends Model
 
     public function houseList($request)
     {
-        return House::with('key')->where([])->paginate($request->per_page??10);
+        $data = House::with('key')->where([])->paginate($request->per_page??10);
+        $houses = [];
+        foreach ($data as $v) {
+            $houses['guid'] = $v->guid;
+            $houses['img'] = $v->indoor_img_cn; //图片
+            $houses['name'] = $v->name;  //名称
+            $houses['public_private'] = $v->public_private_cn; //公私盘
+            $houses['grade'] = $v->grade_cn; //级别
+            $houses['key'] = $v->key ? true : false; //是否有钥匙
+            $houses['price_unit'] = $v->price . $v->price_unit_cn; //价格单位
+            $houses['payment_type'] = $v->payment_type_cn; //付款方式
+            $houses['acreage'] = $v->acreage_cn; //面积
+            $houses['renovation'] = $v->renovation_cn;  //装修程度
+            $houses['orientation'] = $v->orientation_cn; //朝向
+            $houses['type'] = $v->type_cn; //类型
+            $houses['floor'] = $v->floor. '层'; //楼层
+            $houses['total_floor'] = '共' . $v->total_floor . '层'; //总楼层
+            //跟进
+        }
+        return $data->setCollection(collect($houses));
     }
 
     // 添加房源

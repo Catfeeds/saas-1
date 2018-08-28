@@ -59,9 +59,11 @@ class HousesController extends APIBaseController
     }
 
     // 获取所有下拉数据
-    public function getAllSelect()
+    public function getAllSelect(
+        Request $request
+    )
     {
-        $res = curl(config('hosts.building').'/api/get_all_select','GET');
+        $res = curl(config('hosts.building').'/api/get_all_select?number='.$request->number,'GET');
         if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有下拉数据成功');
     }

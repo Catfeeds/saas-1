@@ -24,9 +24,29 @@ class HousesRequest extends FormRequest
     public function messages()
     {
         switch ($this->route()->getActionMethod()) {
+            case 'store':
+                return [
+//                    'floor.max' => '所填楼层最高为'.BuildingBlock::find($this->building_block_guid)->total_floor.'层',
+                    'floor.between' => '所填楼层必须在1-99之间',
+                ];
+            case 'update':
+                return [
+//                    'floor.max' => '所填楼层最高为'.BuildingBlock::find($this->building_block_guid)->total_floor.'层',
+                    'floor.between' => '所填楼层必须在1-99之间',
+                ];
             case 'changePersonnel':
                 return [
                     'house_guid.in' => '房源必须存在',
+                ];
+            case 'adoptConditionGetHouse':
+                return [
+                    'floor.between' => '所填楼层必须在1-99之间',
+//                    'floor.max' => '所填楼层最高为'.BuildingBlock::find($this->building_block_guid)->total_floor.'层',
+                ];
+            case 'HouseNumberValidate':
+                return [
+                    'floor.between' => '所填楼层必须在1-99之间',
+//                    'floor.max' => '所填楼层最高为'.BuildingBlock::find($this->building_block_guid)->total_floor.'层',
                 ];
             default;
                 return [
@@ -42,6 +62,7 @@ class HousesRequest extends FormRequest
             case 'store':
                 return [
                     'owner_info' => 'required|array',
+//                    'floor' => 'required|integer|min:1|max:'.BuildingBlock::find($this->building_block_guid)->total_floor,
                     'floor' => 'required|integer|between:1,99',
                     'house_number' => 'required|numeric',
                     'building_block_guid' => 'required',
@@ -73,6 +94,7 @@ class HousesRequest extends FormRequest
             case 'update':
                 return [
                     'owner_info' => 'required|array',
+//                    'floor' => 'required|integer|min:1|max:'.BuildingBlock::find($this->building_block_guid)->total_floor,
                     'floor' => 'required|integer|between:1,99',
                     'house_number' => 'required|numeric',
                     'building_block_guid' => 'required',
@@ -131,7 +153,8 @@ class HousesRequest extends FormRequest
                             BuildingBlock::all()->pluck('guid')->toArray()
                         )
                     ],
-                    'floor' => 'required|integer|min:1|max:'.BuildingBlock::find($this->building_block_guid)->total_floor,
+                    'floor' => 'required|integer|between:1,99',
+//                    'floor' => 'required|integer|min:1|max:'.BuildingBlock::find($this->building_block_guid)->total_floor,
                 ];
             case 'HouseNumberValidate':
                 return [
@@ -142,7 +165,8 @@ class HousesRequest extends FormRequest
                             BuildingBlock::all()->pluck('guid')->toArray()
                         )
                     ],
-                    'floor' => 'required|integer|min:1|max:'.BuildingBlock::find($this->building_block_guid)->total_floor,
+                    'floor' => 'required|integer|between:1,99',
+//                    'floor' => 'required|integer|min:1|max:'.BuildingBlock::find($this->building_block_guid)->total_floor,
                     'house_number' => 'required|max:64'
                 ];
             default:

@@ -16,12 +16,12 @@ class HousesService
     {
         // 通过楼座,楼层获取房号
         $housesNumber = House::where([
-//            'company_guid' => Common::user()->guid,
+            'company_guid' => Common::user()->company_guid,
             'building_block_guid' => $request->building_block_guid,
             'floor' => $request->floor
         ])->pluck('house_number');
 
-        if (empty($housesNumber)) return [];
+        if ($housesNumber->isEmpty()) return (object)[];
 
         // 获取楼盘楼座拼接
         $buildingBlock = BuildingBlock::where('guid', $request->building_block_guid)->with('building')->first();
@@ -41,13 +41,13 @@ class HousesService
     )
     {
         $house = House::where([
-            'company_guid' => Common::user()->guid,
+            'company_guid' => Common::user()->company_guid,
             'building_block_guid' => $request->building_block_guid,
             'floor' => $request->floor,
             'house_number' => $request->house_number
         ])->with('buildingBlock.building')->first();
 
-        if (empty($house)) return [];
+        if (empty($house)) return (object)[];
 
         return [
             'house_img' => $house->indoor_img_cn,
@@ -57,5 +57,19 @@ class HousesService
             'entry_person' => User::find($house->entry_person)->name,
             'created_at' => $house->created_at->format('Y-m-d H:i')
         ];
+    }
+
+    // 通过楼座获取城市
+    public function adoptBuildingBlockGetCity($BuildingBlockGuid)
+    {
+        $temp = BuildingBlock::find($BuildingBlockGuid);
+
+        // 拼接商圈获取城市数据
+        $arr[] = $temp->building->area->city->guid;
+        $arr[] = $temp->building->area->guid;
+        $arr[] = $temp->building->guid;
+        $arr[] = $BuildingBlockGuid;
+
+        return $arr;
     }
 }

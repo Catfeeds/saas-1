@@ -30,7 +30,7 @@ class HousesRepository extends Model
             'price_unit' => $request->price_unit,//租金单位
             'payment_type' => $request->payment_type,//付款方式
             'increasing_situation_remark' => $request->increasing_situation_remark,//递增情况
-            'cost_detail' => $request->cost_detail,//费用明细
+            'cost_detail' => Common::arrayToObject($request->cost_detail),//费用明细
             'acreage' => $request->acreage,//面积
             'split' => $request->split,//可拆分
             'mini_acreage' => $request->mini_acreage,//最小面积
@@ -43,13 +43,11 @@ class HousesRepository extends Model
             'open_bill' => $request->open_bill,//可开发票
             'station_number' => $request->station_number,//工位数量
             'rent_free' => $request->rent_free,//免租期
-            'support_facilities' => $request->support_facilities,//配套
+            'support_facilities' => Common::arrayToObject($request->support_facilities),//配套
             'source' => $request->source,//渠道来源
             'actuality' => $request->actuality,//现状
             'shortest_lease' => $request->shortest_lease,//最短租期
             'remarks' => $request->remarks,//备注
-            'have_key' => $request->have_key,
-            'status' => $request->status,
 
             'entry_person' => Common::user()->guid,
             'guardian_person' => Common::user()->guid,
@@ -90,8 +88,6 @@ class HousesRepository extends Model
         $house->actuality = $request->actuality;
         $house->shortest_lease = $request->shortest_lease;
         $house->remarks = $request->remarks;
-        $house->have_key = $request->have_key;
-        $house->status = $request->status;
         $house->guardian_person = Common::user()->guid;
         if (!$house->save()) return false;
         return true;

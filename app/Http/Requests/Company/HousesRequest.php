@@ -41,10 +41,9 @@ class HousesRequest extends FormRequest
         switch ($this->route()->getActionMethod()) {
             case 'store':
                 return [
-                    'owner_info' => 'required|json',
+                    'owner_info' => 'required|array',
                     'floor' => 'required|integer|between:1,99',
-                    'name' => 'required|max:32',
-                    'house_number' => 'required|max:64|numeric',
+                    'house_number' => 'required|numeric',
                     'building_block_guid' => 'required',
                     'grade' => 'required|integer|between:1,3',
                     'public_private' => 'required|integer|between:1,2',
@@ -70,25 +69,12 @@ class HousesRequest extends FormRequest
                     'status' => 'nullable|integer|between:1,3',
                     'shortest_lease' => 'nullable|integer|between:1,5',
                     'remarks' => 'nullable|max:300',
-
-
-
-                    'house_type' => 'integer|between:1,8',
-                    'house_type_img' => 'nullable|json',
-                    'indoor_img' => 'nullable|json',
-                    'outdoor_img' => 'nullable|json',
-                    'entry_person' =>  'nullable|max:32',
-                    'guardian_person' => 'nullable|max:255',
-                    'pic_person' => 'nullable|max:255',
-                    'key_person' => 'nullable|max:255',
-                    'client_person' => 'nullable|max:255',
                 ];
             case 'update':
                 return [
-                    'owner_info' => 'required|json',
+                    'owner_info' => 'required|array',
                     'floor' => 'required|integer|between:1,99',
-                    'name' => 'required|max:32',
-                    'house_number' => 'required|max:64|numeric',
+                    'house_number' => 'required|numeric',
                     'building_block_guid' => 'required',
                     'grade' => 'required|integer|between:1,3',
                     'public_private' => 'required|integer|between:1,2',
@@ -114,19 +100,12 @@ class HousesRequest extends FormRequest
                     'status' => 'nullable|integer|between:1,3',
                     'shortest_lease' => 'nullable|integer|between:1,5',
                     'remarks' => 'nullable|max:300',
-
-
-
-
-                    'house_type' => 'integer|between:1,8',
-                    'house_type_img' => 'nullable|json',
-                    'indoor_img' => 'nullable|json',
-                    'outdoor_img' => 'nullable|json',
-                    'entry_person' =>  'nullable|max:32',
-                    'guardian_person' => 'nullable|max:255',
-                    'pic_person' => 'nullable|max:255',
-                    'key_person' => 'nullable|max:255',
-                    'client_person' => 'nullable|max:255',
+                ];
+            case 'updateImg':
+                return [
+                    'house_type_img' => 'max:1024',
+                    'indoor_img' => 'max:1024',
+                    'outdoor_img' => 'max:1024',
                 ];
             case 'changePersonnel':
                 return [

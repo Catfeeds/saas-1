@@ -5,6 +5,10 @@ namespace App\Models;
 
 class House extends BaseModel
 {
+    protected $casts = [
+        'owner_info' => 'array',
+    ];
+
     protected $appends = [
         'price_unit_cn',
         'acreage_cn',

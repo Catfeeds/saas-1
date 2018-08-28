@@ -96,6 +96,7 @@ class HousesController extends APIBaseController
         return $this->sendResponse($res,'通过楼座,楼层获取房源成功');
     }
 
+    // 房号验证
     public function houseNumberValidate(
         HousesRequest $request,
         HousesService $service
@@ -103,5 +104,17 @@ class HousesController extends APIBaseController
     {
         $service->houseNumberValidate($request);
     }
-    
+
+    // 修改房源图片
+    public function updateImg
+    (
+        $guid,
+        HousesRequest $request,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->updateImg($guid,$request);
+        if (!$res) return $this->sendError('修改房源图片失败');
+        return $this->sendResponse($res,'修改房源图片成功');
+    }
 }

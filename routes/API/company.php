@@ -104,9 +104,15 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('adopt_condition_get_house', 'HousesController@adoptConditionGetHouse');
     // 房号验证
     Route::get('house_number_validate', 'HousesController@houseNumberValidate');
+    // 修改房源图片
+    Route::get('update_img/{guid}','HousesController@updateImg');
 
 
-
+    /*
+    |--------------------------------------------------------------------------
+    | 基础数据
+    |--------------------------------------------------------------------------
+    */
     // 所有的楼座下拉数据
     Route::get('/building_blocks_all', 'HousesController@buildingBlocksSelect');
     // 获取所有下拉数据

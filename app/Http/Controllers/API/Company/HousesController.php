@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Company;
 
 use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
+use App\Http\Controllers\Traits\QiNiu;
 use App\Http\Requests\Company\HousesRequest;
 use App\Models\Company;
 use App\Models\House;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 
 class HousesController extends APIBaseController
 {
+    use QiNiu;
 
     // 房源列表
     public function index(

@@ -37,7 +37,8 @@ class CustomersRepository extends Model
             'target' => $request->target,
             'status' => 1,
             'entry_person' => Common::user()->guid,
-            'guardian_person' => Common::user()->guid
+            'guardian_person' => Common::user()->guid,
+            'track_time' => date('Y-m-d H:i:s',time())  // 第一次跟进时间
         ]);
     }
 

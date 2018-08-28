@@ -8,6 +8,9 @@
 
 Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
+    // 七牛token
+    Route::get('/get_qi_niu_token', 'HousesController@token');
+
     //手机密码登录
     Route::resource('logins', 'LoginsController');
     //微信扫码登录

@@ -40,9 +40,11 @@ class HousesController extends APIBaseController
     // 获取更新之前原始数据
     public function edit
     (
-        House $house
+        $BuildingBlockGuid,
+        HousesService $service
     )
     {
+        $house = $service->adoptBuildingBlockGetCity($BuildingBlockGuid);
         return $this->sendResponse($house,'获取更新之前原始数据成功');
     }
 

@@ -109,8 +109,7 @@ class HousesRepository extends Model
             'entry_person' => $request->entry_person,
             'guardian_person' => $request->guardian_person,
             'pic_person' => $request->pic_person,
-            'key_person' => $request->key_person,
-            'client_person' => $request->client_person,
+            'key_person' => $request->key_person
         ]);
     }
 

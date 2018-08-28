@@ -109,11 +109,12 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('house_number_validate', 'HousesController@houseNumberValidate');
     // 修改房源图片
     Route::get('update_img/{guid}','HousesController@updateImg');
-    // 写跟进
-    Route::resource('tracks','TracksController');
     // 置顶
     Route::get('set_top/{guid}','HousesController@setTop');
 
+
+    // 写跟进
+    Route::resource('tracks','TracksController');
 
     /*
     |--------------------------------------------------------------------------

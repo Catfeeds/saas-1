@@ -24,29 +24,9 @@ class HousesRequest extends FormRequest
     public function messages()
     {
         switch ($this->route()->getActionMethod()) {
-            case 'store':
-                return [
-//                    'floor.max' => '所填楼层最高为'.BuildingBlock::find($this->building_block_guid)->total_floor.'层',
-                    'floor.between' => '所填楼层必须在1-99之间',
-                ];
-            case 'update':
-                return [
-//                    'floor.max' => '所填楼层最高为'.BuildingBlock::find($this->building_block_guid)->total_floor.'层',
-                    'floor.between' => '所填楼层必须在1-99之间',
-                ];
             case 'changePersonnel':
                 return [
                     'house_guid.in' => '房源必须存在',
-                ];
-            case 'adoptConditionGetHouse':
-                return [
-                    'floor.between' => '所填楼层必须在1-99之间',
-//                    'floor.max' => '所填楼层最高为'.BuildingBlock::find($this->building_block_guid)->total_floor.'层',
-                ];
-            case 'HouseNumberValidate':
-                return [
-                    'floor.between' => '所填楼层必须在1-99之间',
-//                    'floor.max' => '所填楼层最高为'.BuildingBlock::find($this->building_block_guid)->total_floor.'层',
                 ];
             default;
                 return [
@@ -62,8 +42,7 @@ class HousesRequest extends FormRequest
             case 'store':
                 return [
                     'owner_info' => 'required|array',
-//                    'floor' => 'required|integer|min:1|max:'.BuildingBlock::find($this->building_block_guid)->total_floor,
-                    'floor' => 'required|integer|between:1,99',
+                    'floor' => 'required|integer',
                     'house_number' => 'required|numeric',
                     'building_block_guid' => 'required',
                     'grade' => 'required|integer|between:1,3',
@@ -94,8 +73,7 @@ class HousesRequest extends FormRequest
             case 'update':
                 return [
                     'owner_info' => 'required|array',
-//                    'floor' => 'required|integer|min:1|max:'.BuildingBlock::find($this->building_block_guid)->total_floor,
-                    'floor' => 'required|integer|between:1,99',
+                    'floor' => 'required|integer',
                     'house_number' => 'required|numeric',
                     'building_block_guid' => 'required',
                     'grade' => 'required|integer|between:1,3',
@@ -141,8 +119,7 @@ class HousesRequest extends FormRequest
                     'entry_person' =>  'nullable|max:32',
                     'guardian_person' => 'nullable|max:32',
                     'pic_person' => 'nullable|max:32',
-                    'key_person' => 'nullable|max:32',
-                    'client_person' => 'nullable|max:32',
+                    'key_person' => 'nullable|max:32'
                 ];
             case 'adoptConditionGetHouse':
                 return [
@@ -153,8 +130,7 @@ class HousesRequest extends FormRequest
                             BuildingBlock::all()->pluck('guid')->toArray()
                         )
                     ],
-                    'floor' => 'required|integer|between:1,99',
-//                    'floor' => 'required|integer|min:1|max:'.BuildingBlock::find($this->building_block_guid)->total_floor,
+                    'floor' => 'required|integer',
                 ];
             case 'HouseNumberValidate':
                 return [
@@ -165,9 +141,15 @@ class HousesRequest extends FormRequest
                             BuildingBlock::all()->pluck('guid')->toArray()
                         )
                     ],
-                    'floor' => 'required|integer|between:1,99',
-//                    'floor' => 'required|integer|min:1|max:'.BuildingBlock::find($this->building_block_guid)->total_floor,
-                    'house_number' => 'required|max:64'
+                    'floor' => 'required|integer',
+                    'house_number' => 'required|max:64',
+                    'house_guid' => [
+                        'nullable',
+                        'max:32',
+                        Rule::in(
+                            House::all()->pluck('guid')->toArray()
+                        )
+                    ]
                 ];
             default:
                 {

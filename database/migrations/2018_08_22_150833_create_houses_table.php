@@ -63,7 +63,6 @@ class CreateHousesTable extends Migration
             $table->char('guardian_person',32)->nullable()->comment('维护人');
             $table->char('pic_person',32)->nullable()->comment('图片人');
             $table->char('key_person',32)->nullable()->comment('钥匙人');
-            $table->char('client_person',32)->nullable()->comment('委托人');
 
             // 有无钥匙
             $table->tinyInteger('have_key')->default(2)->comment('有无钥匙 1: 有 2: 没有');

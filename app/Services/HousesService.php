@@ -47,7 +47,7 @@ class HousesService
             'house_number' => $request->house_number
         ])->with('buildingBlock.building')->first();
 
-        if (empty($house)) return (object)[];
+        if (empty($house) || $house->guid == $request->house_guid) return (object)[];
 
         return [
             'house_img' => $house->indoor_img_cn,
@@ -73,7 +73,7 @@ class HousesService
         return $arr;
     }
 
-    //提取数据
+    // 提取数据
     public function getData($res)
     {
         $houses = [];

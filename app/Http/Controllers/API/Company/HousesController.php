@@ -102,7 +102,8 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-        $service->houseNumberValidate($request);
+        $res = $service->houseNumberValidate($request);
+        return $this->sendResponse($res,'房号验证操作成功');
     }
 
     // 修改房源图片

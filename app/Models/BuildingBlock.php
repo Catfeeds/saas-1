@@ -1,8 +1,7 @@
 <?php
 namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
 
-class BuildingBlock extends Model
+class BuildingBlock extends BaseModel
 {
     protected $table = 'building_blocks';
 

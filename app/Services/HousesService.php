@@ -58,4 +58,31 @@ class HousesService
             'created_at' => $house->created_at->format('Y-m-d H:i')
         ];
     }
+
+    //提取数据
+    public function getData($res)
+    {
+        $houses = [];
+        $houses['guid'] = $res->guid;
+        $houses['img'] = $res->indoor_img_cn; //图片
+        $houses['name'] = $res->buildingBlock->building->name;  //名称
+        $houses['public_private'] = $res->public_private_cn; //公私盘
+        $houses['grade'] = $res->grade_cn; //级别
+        $houses['key'] = $res->key ? true : false; //是否有钥匙
+        $houses['price_unit'] = $res->price . $res->price_unit_cn; //价格单位
+        $houses['payment_type'] = $res->payment_type_cn; //付款方式
+        $houses['acreage'] = $res->acreage_cn; //面积
+        $houses['renovation'] = $res->renovation_cn;  //装修程度
+        $houses['orientation'] = $res->orientation_cn; //朝向
+        $houses['type'] = $res->type_cn; //类型
+        $houses['floor'] = $res->floor. '层'; //楼层
+        $houses['total_floor'] = '共' . $res->total_floor . '层'; //总楼层
+        $houses['top'] = $res->top == 1 ? true : false; // 置顶
+        $houses['track_user'] = !$res->track->isEmpty() ? $res->track->sortByDesc('created_at')->first()->user->name : $res->entryPerson->name;
+        $houses['track_time'] = $res->track_time; //跟进时间
+        return $houses;
+    }
+
+
+
 }

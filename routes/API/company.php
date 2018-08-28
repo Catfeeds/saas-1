@@ -108,6 +108,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('update_img/{guid}','HousesController@updateImg');
     // 写跟进
     Route::resource('tracks','TracksController');
+    // 置顶
+    Route::get('set_top/{guid}','HousesController@setTop');
 
 
     /*

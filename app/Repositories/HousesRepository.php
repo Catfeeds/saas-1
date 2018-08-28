@@ -121,4 +121,11 @@ class HousesRepository extends Model
             'outdoor_img' => $request->outdoor_img
         ]);
     }
+
+    // 房源置顶
+    public function setTop($guid)
+    {
+        return House::where(['guid' => $guid])->update(['top' => 1]);
+    }
+
 }

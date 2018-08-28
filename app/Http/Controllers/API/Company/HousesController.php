@@ -122,4 +122,15 @@ class HousesController extends APIBaseController
         if (!$res) return $this->sendError('修改房源图片失败');
         return $this->sendResponse($res,'修改房源图片成功');
     }
+    
+    // 房源置顶
+    public function setTop
+    (
+        $guid,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->setTop($guid);
+        return $this->sendResponse($res,'房源置顶成功');
+    }
 }

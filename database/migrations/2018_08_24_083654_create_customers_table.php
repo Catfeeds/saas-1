@@ -33,6 +33,8 @@ class CreateCustomersTable extends Migration
             $table->tinyInteger('status')->nullable()->comment('状态 1: 正常 2: 无效');
             $table->char('entry_person',32)->nullable()->comment('录入人');
             $table->char('guardian_person',32)->nullable()->comment('维护人');
+            // 跟进时间
+            $table->date('track_time')->nullable()->comment('跟进时间');
             $table->timestamps();
         });
         \DB::statement("alter table `customers` comment'客源表'");

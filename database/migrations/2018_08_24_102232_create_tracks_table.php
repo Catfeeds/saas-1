@@ -14,9 +14,13 @@ class CreateTracksTable extends Migration
     public function up()
     {
         Schema::create('tracks', function (Blueprint $table) {
-            $table->increments('id');
+            $table->char('guid', 32)->primary()->comment('guid主键');
+            $table->string('model_type',32)->nullable()->comment('model');
+            $table->char('rel_guid',32)->nullable()->comment('房源/客源guid');
+            $table->string('tracks_info',255)->nullable()->comment('跟进信息');
             $table->timestamps();
         });
+        \DB::statement("alter table `tracks` comment'跟进表'");
     }
 
     /**

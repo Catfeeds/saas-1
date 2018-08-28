@@ -129,9 +129,15 @@ class HousesRepository extends Model
     }
 
     // 修改房源图片
-    public function updateImg($guid,$request)
+    public function updateImg(
+        $guid,
+        $request
+    )
     {
-        return House::where(['guid' => $guid])->update(['house_type_img' => $request->house_type_img, 'indoor_img' =>
-            $request->indoor_img, 'outdoor_img' => $request->outdoor_img]);
+        return House::where(['guid' => $guid])->update([
+            'house_type_img' => $request->house_type_img,
+            'indoor_img' => $request->indoor_img,
+            'outdoor_img' => $request->outdoor_img
+        ]);
     }
 }

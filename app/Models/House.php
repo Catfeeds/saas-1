@@ -28,6 +28,11 @@ class House extends BaseModel
         return $this->hasOne(SeeHouseWay::class,'house_guid', 'guid');
     }
     
+    // 楼座
+    public function buildingBlock()
+    {
+        return $this->belongsTo('App\Models\BuildingBlock','building_block_guid','guid');
+    }
 
     // 价格单位   price_unit_cn
     public function getPriceUnitCnAttribute()
@@ -49,7 +54,7 @@ class House extends BaseModel
     }
 
 
-    //室内图
+    // 室内图
     public function getIndoorImgCnAttribute()
     {
         return $this->indoor_img?config('setting.qiniu_url').$this->indoor_img[0]['img']. config('setting.qiniu_suffix'):config('setting.pc_building_house_default_img');

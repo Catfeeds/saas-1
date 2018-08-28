@@ -131,7 +131,7 @@ class HousesRequest extends FormRequest
                             BuildingBlock::all()->pluck('guid')->toArray()
                         )
                     ],
-                    'floor' => 'required|integer|min:1|max:.'.BuildingBlock::find($this->building_block_guid)->total_floor,
+                    'floor' => 'required|integer|min:1|max:'.BuildingBlock::find($this->building_block_guid)->total_floor,
                 ];
             case 'HouseNumberValidate':
                 return [
@@ -142,7 +142,7 @@ class HousesRequest extends FormRequest
                             BuildingBlock::all()->pluck('guid')->toArray()
                         )
                     ],
-                    'floor' => 'required|integer|min:1|max:.'.BuildingBlock::find($this->building_block_guid)->total_floor,
+                    'floor' => 'required|integer|min:1|max:'.BuildingBlock::find($this->building_block_guid)->total_floor,
                     'house_number' => 'required|max:64'
                 ];
             default:

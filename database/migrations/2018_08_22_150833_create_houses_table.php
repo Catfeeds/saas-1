@@ -72,7 +72,7 @@ class CreateHousesTable extends Migration
             //  置顶
             $table->tinyInteger('top')->default(2)->comment('是否置顶 1: 置顶 2: 不置顶');
             // 跟进时间
-            $table->date('track_time')->nullable()->comment('跟进时间');
+            $table->datetime('track_time')->nullable()->comment('跟进时间');
 
             $table->timestamps();
         });

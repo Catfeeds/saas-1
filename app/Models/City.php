@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-class Building extends BaseModel
+class City extends BaseModel
 {
-    protected $table = 'buildings';
+    protected $table = 'cities';
 
     protected $guarded = [];
 
@@ -13,7 +13,6 @@ class Building extends BaseModel
     // 区域
     public function area()
     {
-        return $this->belongsTo('App\Models\Area','area_guid','guid');
+        return $this->hasMany('App\Models\Area','city_guid','guid');
     }
-
 }

@@ -38,10 +38,15 @@ class HousesController extends APIBaseController
         return $this->sendResponse($res,'添加房源成功');
     }
 
-
-    public function edit($id)
+    // 获取更新之前原始数据
+    public function edit
+    (
+        House $house,
+        HousesService $service
+    )
     {
-        //
+        $house->allGuid = $service->adoptBuildingBlockGetCity($house->building_block_guid);
+        return $this->sendResponse($house,'获取更新之前原始数据成功');
     }
 
     // 更新房源信息

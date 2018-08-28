@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\Company;
 
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\TracksRequest;
-use App\Repositories\TracksRepository;
+use App\Services\TracksService;
 
 class TracksController extends APIBaseController
 {
@@ -12,10 +12,10 @@ class TracksController extends APIBaseController
     public function store
     (
         TracksRequest $request,
-        TracksRepository $repository
+        TracksService $service
     )
     {
-        $res = $repository->addTrack($request);
+        $res = $service->addTrack($request);
         if (!$res) return $this->sendError('写跟进失败');
         return $this->sendResponse($res,'写跟进成功');
     }

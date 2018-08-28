@@ -7,9 +7,9 @@ class House extends BaseModel
 {
     protected $casts = [
         'owner_info' => 'array',
-        'indoor_img' => 'array',
         'cost_detail' => 'array',
-        'support_facilities' => 'array'
+        'support_facilities' => 'array',
+        'indoor_img' => 'array'
     ];
 
     protected $appends = [

@@ -34,9 +34,16 @@ class House extends BaseModel
         return $this->belongsTo('App\Models\BuildingBlock','building_block_guid','guid');
     }
 
-    public function tracks()
+    //跟进
+    public function track()
     {
         return $this->hasMany(Track::class, 'rel_guid', 'guid');
+    }
+    
+    //录入人
+    public function entryPerson()
+    {
+        return $this->hasOne(User::class, 'guid', 'entry_person');
     }
 
     // 价格单位   price_unit_cn

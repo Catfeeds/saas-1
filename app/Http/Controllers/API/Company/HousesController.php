@@ -65,6 +65,7 @@ class HousesController extends APIBaseController
     {
         // 获取登录人公司所在的城市
         $cityName = Company::find(Common::user()->company_guid)->name;
+        $cityName = '武汉';
         $res = curl(config('hosts.building').'/api/get_all_select?number='.$request->number.'&city_name='.$cityName,'GET');
         if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有下拉数据成功');

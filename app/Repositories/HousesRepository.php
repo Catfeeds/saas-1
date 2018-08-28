@@ -27,7 +27,9 @@ class HousesRepository extends Model
             $houses[$key]['type'] = $v->type_cn; //类型
             $houses[$key]['floor'] = $v->floor. '层'; //楼层
             $houses[$key]['total_floor'] = '共' . $v->total_floor . '层'; //总楼层
-            //跟进
+            $houses[$key]['top'] = $v->top == 1 ? true : false; // 置顶
+//            $houses[$key]['track_user'] = $v->track ? $v->track->user : $v->entryPerson;
+            $houses[$key]['track_time'] = $v->track_time; //跟进时间
         }
         return $data->setCollection(collect($houses));
     }

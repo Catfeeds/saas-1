@@ -47,6 +47,8 @@ class RemindsRequest extends FormRequest
            case 'store':
                return [
                    'remind_info' => 'required|max:255',
+                   'model_type' => 'required',
+                   'remind_time' => 'required',
                    'rel_guid' => [
                        'required',
                        'max:32',

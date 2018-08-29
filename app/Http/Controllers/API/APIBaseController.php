@@ -31,7 +31,7 @@ class APIBaseController extends Controller
     }
 
     //发送短信验证码
-    public function sendCode($tel, $temp)
+    public function  sendCode($tel, $temp)
     {
         // 生成6位随机验证码
         $code = mt_rand(100000, 999999);

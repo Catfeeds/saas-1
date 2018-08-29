@@ -115,7 +115,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     // 写跟进
     Route::resource('tracks','TracksController');
-
+     // 写提醒
+    Route::resource('reminds','RemindsController');
     /*
     |--------------------------------------------------------------------------
     | 基础数据

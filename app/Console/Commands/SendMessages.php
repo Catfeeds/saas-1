@@ -43,20 +43,29 @@ class SendMessages extends Command
     {
        //获取当前时间
         $current_time = date('Y-m-d H:i:s', time());
-        //查询已经到期的提醒
-        $res = Remind::where('remind_time', '<' , $current_time)->get();
+        //查询已经到期且未发送消息的提醒
+        $remind = Remind::where('remind_time', '<' , $current_time)->where('status', 1)->get();
         //拼接数据
-        $data = [];
-        foreach ($res as $key => $v) {
-            $data[$key]['name'] = $v->model_type == 'App\Models\House' ? House::where('guid', $v->rel_guid)->value('title') : Customer::where('guid', $v->rel_guid)->value('guid');
-            $data[$key]['info'] = $v->remid_info;
-            $data[$key]['openid'] = User::where('guid', $v->user_guid)->value('openid');
-            $data[$key]['remark'] = $v->model_type == 'App\Models\Houses' ? '点击查看房源详情' : '点击查看客源详情';
-            $data[$key]['model_type'] = $v->model_type;
-            $data[$key]['guid'] = $v->rel_guid;
+        $item = [];
+        if (!$remind->isEmpty()) {
+            foreach ($remind as $key => $v) {
+                $item[$key][0] = $v->remind_info;  //标题
+                $item[$key][1] = $v->model_type == 'App\Models\House' ? House::where('guid', $v->rel_guid)->value('guid') : Customer::where('guid', $v->rel_guid)->value('guid'); //名称
+                $item[$key][2] = User::where('guid', $v->user_guid)->value('openid'); //接收人openid
+                $item[$key][3] = $v->model_type == 'App\Models\House' ? '点击查看房源详情' : '点击查看客源详情'; //备注
+                $item[$key][4] = $v->model_type; //模型
+                $item[$key][5] = $v->rel_guid; //模型guid
+                $item[$key][6] = $v->guid; //提醒guid
+            }
+            //远程请求微信
+            $data['data'] = json_encode($item);
+            $res = curl(config('setting.wechat_url').'/remind_notice','post', $data);
+            //将发送成功的提醒的状态更改为已发送
+            if (!empty($res)) {
+                if ($res->success) {
+                    Remind::whereIn('guid', $res->data)->update(['status' => 2]);
+                }
+            }
         }
-
-        //远程请求微信
-
     }
 }

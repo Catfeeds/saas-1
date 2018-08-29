@@ -177,7 +177,9 @@ class UsersController extends APIBaseController
             return [
                 'value' => $v->guid,
                 'label' => $v->name,
-                'tel' => '电话:' . $v->tel
+                'tel' => '电话:' . $v->tel,
+                'pic' => empty($v->pic)?config('setting.user_default_img'):config('setting.qiniu_url').$v->pic,
+                'storefront' => empty($v->companyFramework)?'':$v->companyFramework->name
             ];
         }),'获取公司下所有人员成功');
     }

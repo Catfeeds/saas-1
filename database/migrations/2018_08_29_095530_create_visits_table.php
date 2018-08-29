@@ -12,6 +12,7 @@ class CreateVisitsTable extends Migration
      * @return void
      */
     public function up()
+
     {
         Schema::create('visits', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('guid主键');

@@ -105,6 +105,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::post('change_personnel', 'HousesController@changePersonnel');
     // 通过楼座,楼层获取房源成功
     Route::get('adopt_condition_get_house', 'HousesController@adoptConditionGetHouse');
+    // 通过楼座，房号获取房源成功
+    Route::get('adopt_association_get_house', 'HousesController@adoptAssociationGetHouse');
     // 房号验证
     Route::get('house_number_validate', 'HousesController@houseNumberValidate');
     // 修改房源图片

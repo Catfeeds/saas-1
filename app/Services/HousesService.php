@@ -201,4 +201,28 @@ class HousesService
 
         return $data;
     }
+
+    // 通过楼座，房号获取房源信息
+    public function adoptAssociationGetHouse($request)
+    {
+        // 通过楼座,房号获取楼层
+        $floor = House::where([
+            'company_guid' => Common::user()->company_guid,
+            'building_block_guid' => $request->building_block_guid,
+            'floor' => $request->house_number
+        ])->pluck('floor');
+
+        if ($floor->isEmpty()) return (object)[];
+
+        // 获取楼盘楼座拼接
+        $buildingBlock = BuildingBlock::where('guid', $request->building_block_guid)->with('building')->first();
+
+        // 楼座名称
+        $buildingBlockName = $buildingBlock->name . $buildingBlock->name_unit . '-' . $buildingBlock->unit . $buildingBlock->unit_unit;
+
+        return [
+            'name' => $buildingBlock->building->name . $buildingBlockName,
+            'floor' => $floor
+        ];
+    }
 }

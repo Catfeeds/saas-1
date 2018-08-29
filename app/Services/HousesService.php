@@ -96,4 +96,41 @@ class HousesService
         $houses['track_time'] = $res->track_time; //跟进时间
         return $houses;
     }
+
+    public function getHouseInfo(
+        $house
+    )
+    {
+        $data = array();
+
+        $data['img'] = $house->indoor_img_cn; // 图片
+        $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
+
+        if (empty($house->buildingBlock->unit)) {
+            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
+        } else {
+            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit;
+        }
+        $data['public_private'] = $house->public_private_cn; // 公私盘
+        $data['grade'] = $house->grade_cn; // 级别
+        $data['price_unit'] = $house->price . $house->price_unit_cn; //价格单位
+        $data['payment_type'] = $house->payment_type_cn; //付款方式
+        $data['acreage'] = $house->acreage_cn; //面积
+
+        if ($house->buildingBlock->total_floor) {
+            $data['floor'] = $house->floor.'-'.$house->buildingBlock->total_floor;
+        } else {
+            $data['floor'] = $house->floor;
+        }
+
+        $data['orientation'] = $house->orientation_cn; //朝向
+        $data['renovation'] = $house->renovation_cn;  //装修程度
+
+
+        dd($data);
+
+
+
+
+    }
 }

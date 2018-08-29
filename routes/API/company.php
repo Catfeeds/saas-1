@@ -102,7 +102,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     */
     Route::resource('houses', 'HousesController');
     // 变更人员
-    Route::get('change_personnel', 'HousesController@changePersonnel');
+    Route::post('change_personnel', 'HousesController@changePersonnel');
     // 通过楼座,楼层获取房源成功
     Route::get('adopt_condition_get_house', 'HousesController@adoptConditionGetHouse');
     // 房号验证

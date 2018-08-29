@@ -105,12 +105,17 @@ class HousesRepository extends Model
         $request
     )
     {
-        return House::where(['guid' => $request->house_guid])->update([
-            'entry_person' => $request->entry_person,
-            'guardian_person' => $request->guardian_person,
-            'pic_person' => $request->pic_person,
-            'key_person' => $request->key_person
-        ]);
+        $house = House::where(['guid' => $request->house_guid]);
+
+        if ($request->entry_person) {
+            return $house->update(['entry_person' => $request->entry_person]);
+        } elseif($request->guardian_person) {
+            return $house->update(['guardian_person' => $request->guardian_person]);
+        } elseif($request->pic_person) {
+            return $house->update(['pic_person' => $request->pic_person]);
+        } elseif($request->key_person) {
+            return $house->update(['key_person' => $request->key_person]);
+        }
     }
 
     // 修改房源图片

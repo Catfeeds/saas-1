@@ -105,7 +105,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::post('change_personnel', 'HousesController@changePersonnel');
     // 通过楼座,楼层获取房源成功
     Route::get('adopt_condition_get_house', 'HousesController@adoptConditionGetHouse');
-    // 通过楼座，房号获取房源成功
+    // 通过楼座，楼层获取房源成功
     Route::get('adopt_association_get_house', 'HousesController@adoptAssociationGetHouse');
     // 房号验证
     Route::get('house_number_validate', 'HousesController@houseNumberValidate');
@@ -113,6 +113,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('update_img/{guid}','HousesController@updateImg');
     // 置顶
     Route::get('set_top/{guid}','HousesController@setTop');
+    // 取消置顶
+    Route::get('cancel_top/{guid}','HousesController@cancelTop');
 
 
     // 写跟进

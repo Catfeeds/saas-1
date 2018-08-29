@@ -137,10 +137,22 @@ class HousesRepository extends Model
         return House::where(['guid' => $guid])->update(['top' => 1]);
     }
     
-   // 通过楼座，房号获取房源信息
+    // 取消置顶
+    public function cancelTop($guid)
+    {
+        return House::where('guid',$guid)->update(['top' => 2]);
+    }
+    
+   // 通过楼座，楼层获取房源信息
     public function adoptAssociationGetHouse($request)
     {
-        return House::where(['building_block_guid' => $request->building_block_guid, 'house_number' =>
-            $request->house_number])->get();
+        if ($request->building_block_guid) {
+            return House::where('building_block_guid',$request->building_block_guid)->get();
+        } elseif ($request->floor) {
+            return House::where('floor', $request->floor)->get();
+        } elseif ($request->building_block_guid && $request->floor) {
+            return House::where(['building_block_guid' => $request->building_block_guid, 'floor' =>
+                $request->floor])->get();
+        }
     }
 }

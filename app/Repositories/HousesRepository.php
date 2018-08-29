@@ -146,13 +146,11 @@ class HousesRepository extends Model
    // 通过楼座，楼层获取房源信息
     public function adoptAssociationGetHouse($request)
     {
-        if ($request->building_block_guid) {
-            return House::where('building_block_guid',$request->building_block_guid)->get();
-        } elseif ($request->floor) {
-            return House::where('floor', $request->floor)->get();
-        } elseif ($request->building_block_guid && $request->floor) {
-            return House::where(['building_block_guid' => $request->building_block_guid, 'floor' =>
-                $request->floor])->get();
+        $house = House::where('building_block_guid',$request->building_block_guid);
+
+        if ($request->floor) {
+            $house = $house->where('floor', $request->floor);
         }
+        return $house->get();
     }
 }

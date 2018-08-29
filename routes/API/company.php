@@ -103,9 +103,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::resource('houses', 'HousesController');
     // 变更人员
     Route::post('change_personnel', 'HousesController@changePersonnel');
-    // 通过楼座,楼层获取房源成功
+    // 通过楼座,楼层获取房源
     Route::get('adopt_condition_get_house', 'HousesController@adoptConditionGetHouse');
-    // 通过楼座，楼层获取房源成功
+    // 通过楼座，楼层获取房源
     Route::get('adopt_association_get_house', 'HousesController@adoptAssociationGetHouse');
     // 房号验证
     Route::get('house_number_validate', 'HousesController@houseNumberValidate');

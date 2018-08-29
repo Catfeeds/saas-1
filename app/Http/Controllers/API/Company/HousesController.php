@@ -152,7 +152,18 @@ class HousesController extends APIBaseController
         return $this->sendResponse($res,'房源置顶成功');
     }
 
-    // 通过楼座和房号获取房源信息
+    // 取消置顶
+    public function cancelTop
+    (
+        $guid,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->cancelTop($guid);
+        return $this->sendResponse($res,'取消置顶成功');
+    }
+
+    // 通过楼座和楼层获取房源信息
     public function adoptAssociationGetHouse
     (
         HousesRequest $request,
@@ -160,6 +171,6 @@ class HousesController extends APIBaseController
     )
     {
         $res = $repository->adoptAssociationGetHouse($request);
-        return $this->sendResponse($res,'通过楼座，房号获取房源成功');
+        return $this->sendResponse($res,'通过楼座,楼层获取房源成功');
     }
 }

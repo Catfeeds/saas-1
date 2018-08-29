@@ -158,10 +158,10 @@ class HousesController extends APIBaseController
     public function adoptAssociationGetHouse
     (
         HousesRequest $request,
-        HousesService $service
+        HousesRepository $repository
     )
     {
-        $res = $service->adoptAssociationGetHouse($request);
+        $res = $repository->adoptAssociationGetHouse($request);
         return $this->sendResponse($res,'通过楼座，房号获取房源成功');
     }
 }

@@ -136,5 +136,11 @@ class HousesRepository extends Model
     {
         return House::where(['guid' => $guid])->update(['top' => 1]);
     }
-
+    
+   // 通过楼座，房号获取房源信息
+    public function adoptAssociationGetHouse($request)
+    {
+        return House::where(['building_block_guid' => $request->building_block_guid, 'house_number' =>
+            $request->house_number])->get();
+    }
 }

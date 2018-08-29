@@ -37,7 +37,13 @@ class RemindsRequest extends FormRequest
      */
     public function rules()
     {
-       switch ($this->route()->getActionMethod()) {
+        if (empty($this->model_type)) {
+            $array = [];
+        } else {
+            $array = $this->model_type::all()->pluck('guid')->toArray();
+        }
+
+        switch ($this->route()->getActionMethod()) {
            case 'store':
                return [
                    'remind_info' => 'required|max:255',
@@ -45,7 +51,7 @@ class RemindsRequest extends FormRequest
                        'required',
                        'max:32',
                        Rule::in(
-                           $this->model_type::all()->pluck('guid')->toArray()
+                           $array
                        )
                    ]
                ];
@@ -53,6 +59,6 @@ class RemindsRequest extends FormRequest
                {
                    return [];
                }
-       }
+        }
     }
 }

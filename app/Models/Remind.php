@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class Remind extends Model
+class Remind extends BaseModel
 {
     //
 }

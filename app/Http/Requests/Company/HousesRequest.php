@@ -151,6 +151,17 @@ class HousesRequest extends FormRequest
                         )
                     ]
                 ];
+            case 'adoptAssociationGetHouse':
+                return [
+                  'building_block_guid' => [
+                      'required',
+                      'max:32',
+                      Rule::in(
+                          BuildingBlock::all()->pluck('guid')->toArray()
+                      )
+                  ],
+                  'floor' => 'integer',
+                ];
             default:
                 {
                    return [];

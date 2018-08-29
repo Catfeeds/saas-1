@@ -105,12 +105,17 @@ class HousesRepository extends Model
         $request
     )
     {
-        return House::where(['guid' => $request->house_guid])->update([
-            'entry_person' => $request->entry_person,
-            'guardian_person' => $request->guardian_person,
-            'pic_person' => $request->pic_person,
-            'key_person' => $request->key_person
-        ]);
+        $house = House::where(['guid' => $request->house_guid]);
+
+        if ($request->entry_person) {
+            return $house->update(['entry_person' => $request->entry_person]);
+        } elseif($request->guardian_person) {
+            return $house->update(['guardian_person' => $request->guardian_person]);
+        } elseif($request->pic_person) {
+            return $house->update(['pic_person' => $request->pic_person]);
+        } elseif($request->key_person) {
+            return $house->update(['key_person' => $request->key_person]);
+        }
     }
 
     // 修改房源图片
@@ -131,5 +136,21 @@ class HousesRepository extends Model
     {
         return House::where(['guid' => $guid])->update(['top' => 1]);
     }
+    
+    // 取消置顶
+    public function cancelTop($guid)
+    {
+        return House::where('guid',$guid)->update(['top' => 2]);
+    }
+    
+   // 通过楼座，楼层获取房源信息
+    public function adoptAssociationGetHouse($request)
+    {
+        $house = House::where('building_block_guid',$request->building_block_guid);
 
+        if ($request->floor) {
+            $house = $house->where('floor', $request->floor);
+        }
+        return $house->get();
+    }
 }

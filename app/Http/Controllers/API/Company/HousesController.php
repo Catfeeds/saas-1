@@ -38,6 +38,16 @@ class HousesController extends APIBaseController
         return $this->sendResponse($res,'添加房源成功');
     }
 
+    // 房源详情
+    public function show(
+        House $house,
+        HousesService $service
+    )
+    {
+        $res = $service->getHouseInfo($house);
+        return $this->sendResponse($res,'房源详情获取成功');
+    }
+
     // 获取更新之前原始数据
     public function edit
     (
@@ -140,5 +150,27 @@ class HousesController extends APIBaseController
     {
         $res = $repository->setTop($guid);
         return $this->sendResponse($res,'房源置顶成功');
+    }
+
+    // 取消置顶
+    public function cancelTop
+    (
+        $guid,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->cancelTop($guid);
+        return $this->sendResponse($res,'取消置顶成功');
+    }
+
+    // 通过楼座和楼层获取房源信息
+    public function adoptAssociationGetHouse
+    (
+        HousesRequest $request,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->adoptAssociationGetHouse($request);
+        return $this->sendResponse($res,'通过楼座,楼层获取房源成功');
     }
 }

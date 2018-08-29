@@ -9,7 +9,7 @@ class House extends BaseModel
         'owner_info' => 'array',
         'cost_detail' => 'array',
         'support_facilities' => 'array',
-        'indoor_img' => 'array'
+        'indoor_img' => 'array',
     ];
 
     protected $appends = [
@@ -21,10 +21,16 @@ class House extends BaseModel
         'renovation_cn',
         'orientation_cn',
         'type_cn',
-        'indoor_img_cn'
+        'indoor_img_cn',
+        'source_cn',
+        'split_cn',
+        'register_company_cn',
+        'open_bill_cn',
+        'shortest_lease_cn',
+        'actuality_cn'
     ];
 
-    //房源关联钥匙
+    // 房源关联钥匙
     public function key()
     {
         return $this->hasOne(SeeHouseWay::class,'house_guid', 'guid');
@@ -36,16 +42,34 @@ class House extends BaseModel
         return $this->belongsTo('App\Models\BuildingBlock','building_block_guid','guid');
     }
 
-    //跟进
+    // 跟进
     public function track()
     {
         return $this->hasMany(Track::class, 'rel_guid', 'guid');
     }
     
-    //录入人
+    // 录入人
     public function entryPerson()
     {
         return $this->hasOne(User::class, 'guid', 'entry_person');
+    }
+
+    // 维护人
+    public function guardianPerson()
+    {
+        return $this->hasOne(User::class, 'guid', 'guardian_person');
+    }
+
+    // 图片人
+    public function picPerson()
+    {
+        return $this->hasOne(User::class, 'guid', 'pic_person');
+    }
+
+    // 要是人
+    public function keyPerson()
+    {
+        return $this->hasOne(User::class, 'guid', 'key_person');
     }
 
     // 价格单位   price_unit_cn
@@ -67,14 +91,13 @@ class House extends BaseModel
         return $this->acreage.'㎡';
     }
 
-
     // 室内图
     public function getIndoorImgCnAttribute()
     {
         return $this->indoor_img?config('setting.qiniu_url').$this->indoor_img[0]['img']. config('setting.qiniu_suffix'):config('setting.pc_building_house_default_img');
     }
 
-    //公私盘中文
+    // 公私盘中文
     public function getPublicPrivateCnAttribute()
     {
         switch ($this->public_private) {
@@ -89,7 +112,7 @@ class House extends BaseModel
         }
     }
 
-    //房源等级中文
+    // 房源等级中文
     public function getGradeCnAttribute()
     {
         switch ($this->grade) {
@@ -107,7 +130,7 @@ class House extends BaseModel
         }
     }
 
-    //付款方式中文
+    // 付款方式中文
     public function getPaymentTypeCnAttribute()
     {
         switch ($this->payment_type) {
@@ -140,7 +163,7 @@ class House extends BaseModel
         }
     }
 
-    //装修程度
+    // 装修程度
     public function getRenovationCnAttribute()
     {
         switch ($this->renovation) {
@@ -165,7 +188,7 @@ class House extends BaseModel
         }
     }
 
-    //朝向中文
+    // 朝向中文
     public function getOrientationCnAttribute()
     {
         switch ($this->orientation) {
@@ -204,7 +227,7 @@ class House extends BaseModel
         }
     }
 
-    //写字楼类型中文
+    // 写字楼类型中文
     public function getTypeCnAttribute()
     {
         switch ($this->type) {
@@ -225,6 +248,96 @@ class House extends BaseModel
                 break;
                 default;
                 break;
+        }
+    }
+
+    // 现状 actuality_cn
+    public function getActualityCnAttribute()
+    {
+        if ($this->actuality == 1) {
+            return '空置';
+        } elseif ($this->actuality == 2) {
+            return '自用';
+        } elseif ($this->actuality == 3) {
+            return '在租';
+        } else {
+            return '暂无';
+        }
+    }
+
+    // 最短租期 shortest_lease_cn
+    public function getShortestLeaseCnAttribute()
+    {
+        if ($this->shortest_lease == 1) {
+            return '1年';
+        } elseif ($this->shortest_lease == 2) {
+            return '2';
+        } elseif ($this->shortest_lease == 3) {
+            return '3';
+        } elseif ($this->shortest_lease == 4) {
+            return '5年';
+        } elseif ($this->shortest_lease == 5) {
+            return '5年以上';
+        } else {
+            return '暂无';
+        }
+    }
+
+    // 可开发票 open_bill_cn
+    public function getOpenBillCnAttribute()
+    {
+        if ($this->open_bill == 1) {
+            return '可开发票';
+        } elseif ($this->open_bill == 2) {
+            return '不可开发票';
+        } else {
+            return '暂无';
+        }
+    }
+
+    // 注册公司 register_company_cn
+    public function getRegisterCompanyCnAttribute()
+    {
+        if ($this->register_company == 1) {
+            return '可以';
+        } elseif ($this->register_company == 2) {
+            return '不可以';
+        } else {
+            return '暂无';
+        }
+    }
+
+    // 是否可以拆分 split_cn
+    public function getSplitCnAttribute()
+    {
+        if ($this->split == 1) {
+            return '可拆分';
+        } elseif ($this->split == 2) {
+            return '不可拆分';
+        } else {
+            return '暂无';
+        }
+    }
+
+    // 来源渠道 source_cn
+    public function getSourceCnAttribute()
+    {
+        if ($this->source == 1) {
+            return '上门';
+        } elseif ($this->source == 2) {
+            return '电话';
+        } elseif ($this->source == 3) {
+            return '洗盘';
+        } elseif ($this->source == 4) {
+            return '网络';
+        } elseif ($this->source == 5) {
+            return '陌拜';
+        } elseif ($this->source == 6) {
+            return '转介绍';
+        } elseif ($this->source == 7) {
+            return '老客户';
+        } else {
+            return '暂无';
         }
     }
 }

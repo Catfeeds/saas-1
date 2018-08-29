@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Handler\Common;
 use App\Models\BuildingBlock;
+use App\Models\CompanyFramework;
 use App\Models\House;
 use App\Models\User;
 
@@ -95,5 +96,109 @@ class HousesService
         $houses['track_user'] = !$res->track->isEmpty() ? $res->track->sortByDesc('created_at')->first()->user->name : $res->entryPerson->name;
         $houses['track_time'] = $res->track_time; //跟进时间
         return $houses;
+    }
+
+    // 房源详情数据处理
+    public function getHouseInfo(
+        $house
+    )
+    {
+        $data = array();
+        $data['img'] = $house->indoor_img_cn; // 图片
+        $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
+        // 门牌号
+        if (empty($house->buildingBlock->unit)) {
+            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
+        } else {
+            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit;
+        }
+        $data['public_private'] = $house->public_private_cn; // 公私盘
+        $data['grade'] = $house->grade_cn; // 级别
+        $data['price_unit'] = $house->price . $house->price_unit_cn; //价格单位
+        $data['payment_type'] = $house->payment_type_cn; //付款方式
+        $data['acreage'] = $house->acreage_cn; //面积
+        // 楼层
+        if ($house->buildingBlock->total_floor) {
+            $data['floor'] = $house->floor.'/'.$house->buildingBlock->total_floor;
+        } else {
+            $data['floor'] = $house->floor;
+        }
+        $data['orientation'] = $house->orientation_cn; //朝向
+        $data['renovation'] = $house->renovation_cn;  //装修程度
+        $data['type'] = $house->type_cn; //类型
+        $data['cost_detail'] = empty($house->cost_detail)?'暂无':implode(',', $house->cost_detail); // 费用明细
+        $data['source'] = $house->source_cn; // 来源渠道
+        $data['increasing_situation_remark'] = $house->increasing_situation_remark; // 递增情况
+        $data['split'] = $house->split_cn; // 拆分
+        $data['mini_acreage'] = empty($house->mini_acreage)?'暂无':$house->mini_acreage.'㎡'; // 最小面积
+        $data['floor_height'] = empty($house->floor_height)?'暂无':$house->floor_height.'米'; // 层高
+        $data['property_fee'] = $house->buildingBlock->property_fee_cn; // 物业费
+        $data['register_company'] = $house->register_company_cn; // 是否注册
+        $data['open_bill'] = $house->open_bill_cn; // 可开发票
+        $data['station_number'] = empty($house->station_number)?'暂无':$house->station_number.'个'; // 工位数量
+        $data['rent_free'] = empty($house->rent_free)?'暂无':$house->rent_free.'天'; // 免租期
+        $data['shortest_lease'] = $house->shortest_lease_cn; // 最短租期
+        $data['actuality'] = $house->actuality_cn; // 现状
+        $data['support_facilities'] = empty($house->support_facilities)?'暂无':implode(',',$house->support_facilities); // 配套设施
+        $data['remarks'] = $house->remarks??'暂无'; // 备注
+
+        // 录入人
+        if ($house->entryPerson) {
+            // 录入人姓名
+            $entryPersonName = $house->entryPerson->name;
+            // 录入人所属门店
+            if ($house->entryPerson->rel_guid) $entryPersonStorefront = CompanyFramework::find($house->entryPerson->rel_guid)->name;
+            // 录入人图像
+            if ($house->entryPerson->pic) $entryPersonPic = config('setting.qiniu_url') . $house->entryPerson->pic;
+        }
+        $entryPersonGuid = $house->entry_person??''; // 录入人guid
+        $data['relevant']['entry_person']['name'] = $entryPersonName??'-';
+        $data['relevant']['entry_person']['storefront'] = $entryPersonStorefront??'';
+        $data['relevant']['entry_person']['pic'] = $entryPersonPic??config('setting.user_default_img');
+        $data['relevant']['entry_person']['guid'] = $entryPersonGuid;
+
+        // 维护人
+        if ($house->guardianPerson) {
+            // 维护人姓名
+            $guardianPersonName = $house->guardianPerson->name;
+            // 维护人所属门店
+            if ($house->guardianPerson->rel_guid) $guardianPersonStorefront = CompanyFramework::find($house->guardianPerson->rel_guid)->name;
+            // 维护人图像
+            if ($house->guardianPerson->pic) $guardianPersonPic = config('setting.qiniu_url') . $house->guardianPerson->pic;
+        }
+        $data['relevant']['guardian_person']['name'] = $guardianPersonName??'-';
+        $data['relevant']['guardian_person']['storefront'] = $guardianPersonStorefront??'';
+        $data['relevant']['guardian_person']['pic'] = $guardianPersonPic??config('setting.user_default_img');
+        $data['relevant']['guardian_person']['guid'] = $house->guardian_person??'';
+
+        // 图片人
+        if ($house->picPerson) {
+            // 图像人姓名
+            $picPersonName = $house->picPerson->name;
+            // 图片人所属门店
+            if ($house->picPerson->rel_guid) $picPersonStorefront = CompanyFramework::find($house->picPerson->rel_guid)->name;
+            // 图片人图像
+            if ($house->picPerson->pic) $picPersonStorePic = config('setting.qiniu_url') . $house->picPerson->pic;
+        }
+        $data['relevant']['pic_person']['name'] = $picPersonName??'-';
+        $data['relevant']['pic_person']['storefront'] = $picPersonStorefront??'';
+        $data['relevant']['pic_person']['pic'] = $picPersonStorePic??config('setting.user_default_img');
+        $data['relevant']['pic_person']['guid'] = $house->pic_person??'';
+
+        // 钥匙人
+        if ($house->keyPerson) {
+            // 钥匙人姓名
+            $keyPersonName = $house->keyPerson->name;
+            // 钥匙人所属门店
+            if ($house->keyPerson->rel_guid) $keyPersonStorefront = CompanyFramework::find($house->keyPerson->rel_guid)->name;
+            // 钥匙人图像
+            if ($house->keyPerson->pic) $keyPersonPic = config('setting.qiniu_url') . $house->keyPerson->pic;
+        }
+        $data['relevant']['key_person']['name'] = $keyPersonName??'-';
+        $data['relevant']['key_person']['storefront'] = $keyPersonStorefront??'';
+        $data['relevant']['key_person']['pic'] = $keyPersonPic??config('setting.user_default_img');
+        $data['relevant']['key_person']['guid'] = $house->key_personGuid??'';
+
+        return $data;
     }
 }

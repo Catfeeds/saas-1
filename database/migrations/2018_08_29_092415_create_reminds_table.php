@@ -20,7 +20,7 @@ class CreateRemindsTable extends Migration
             $table->string('model_type',32)->nullable()->comment('提醒model');
             $table->char('rel_guid',32)->nullable()->comment('提醒房源/客源');
             $table->datetime('remind_time')->nullable()->comment('提醒时间');
-            $table->tinyInteger('status')->nullable()->comment('是否提醒 1: 未提醒 2: 已提醒');
+            $table->tinyInteger('status')->default(1)->comment('是否提醒 1: 未提醒 2: 已提醒');
             $table->timestamps();
         });
         \DB::statement("alter table `reminds` comment'提醒表'");

@@ -38,16 +38,14 @@ class HousesController extends APIBaseController
         return $this->sendResponse($res,'添加房源成功');
     }
 
+    // 房源详情
     public function show(
         House $house,
         HousesService $service
     )
     {
-        $service->getHouseInfo($house);
-
-
-
-
+        $res = $service->getHouseInfo($house);
+        return $this->sendResponse($res,'房源详情获取成功');
     }
 
     // 获取更新之前原始数据

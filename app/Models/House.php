@@ -46,7 +46,7 @@ class House extends BaseModel
     // 跟进
     public function track()
     {
-        return $this->hasMany(Track::class, 'rel_guid', 'guid');
+        return $this->hasMany(Track::class, 'rel_guid', 'guid')->where('model_type', 'App\Models\house');
     }
     
     // 录入人

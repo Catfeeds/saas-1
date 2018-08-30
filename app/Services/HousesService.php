@@ -208,6 +208,23 @@ class HousesService
         // 看房方式
         $data['seeHouseWay'] = $house->seeHouseWay;
 
+        // 跟进
+        $track = array();
+        foreach ($house->track as $k => $v) {
+            $track[$k]['user'] = $v->user->name;
+            $track[$k]['tracks_info'] = $v->tracks_info;
+            $track[$k]['created_at'] = $v->created_at->format('Y-m-d H:i');
+            // 是否允许编辑标识
+            $track[$k]['operation'] = false;
+            if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 10 * 60 * 60) {
+                if ($v->user->guid == Common::user()->guid) {
+                    $track[$k]['operation'] = true;
+                }
+            }
+        }
+
+        $data['track'] = $track;
+
         return $data;
     }
 

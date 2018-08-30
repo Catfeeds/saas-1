@@ -227,6 +227,7 @@ class HousesController extends APIBaseController
     )
     {
         $res = $service->turnedInvalid($request);
+        if (!$res) return $this->sendError('转为无效失败');
         return $this->sendResponse($res,'转为无效成功');
     }
     

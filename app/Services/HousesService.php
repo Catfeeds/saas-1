@@ -270,8 +270,14 @@ class HousesService
         \DB::beginTransaction();
         try {
             // 修改房源状态
-            if ($request->type == 1) $houseStatus = House::where('guid',$request->guid)->update(['status' => 1, 'guardian_person' => Common::user()->guid]);
-            if ($request->type == 2) $houseStatus = House::where('guid',$request->guid)->update(['status' => 1, 'guardian_person' => null]);
+            $data = ['status' => 1];
+            if ($request->type == 1) {
+                $data['guardian_person'] = Common::user()->guid;
+            } elseif ($request->type == 2) {
+                $data['guardian_person'] = '';
+            }
+
+            $houseStatus = House::where('guid',$request->guid)->update($data);
             if (empty($houseStatus)) throw new \Exception('修改房源状态失败');
 
             \DB::commit();

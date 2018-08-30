@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Company;
 
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\VisitsRequest;
+use App\Models\Visit;
 use App\Repositories\VisitsRepository;
 use App\Services\VisitsService;
 
@@ -31,6 +32,13 @@ class VisitsController extends APIBaseController
     {
         $res = $repository->addVisit($request);
         return $this->sendResponse($res, '带看登记成功');
+    }
+
+    //删除客源带看
+    public function destroy(Visit $visit)
+    {
+        $res = $visit->delete();
+        return $this->sendResponse($res, '带看删除成功');
     }
 
 

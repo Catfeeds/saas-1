@@ -172,22 +172,22 @@ class HousesRequest extends FormRequest
                     'type' => 'required|integer|between:1,4',
                     'remarks' => 'nullable|max:128',
                     'storefront_guid' => [
-                        'required',
+                        'nullable',
                         'max:32',
                         Rule::in(
                             CompanyFramework::where('level',2)->pluck('guid')->toArray()
                         )
                     ],
                     'house_guid' => [
-                        'required',
+                        'nullable',
                         'max:32',
                         Rule::in(
                             House::all()->pluck('guid')->toArray()
                         )
                     ],
-                    'key_number' => 'required|max:32',
+                    'key_number' => 'nullable|max:32',
                     'key_single' => 'nullable',
-                    'received_time' => 'required'
+                    'received_time' => 'nullable'
                 ];
             case 'transferHouse':
                 return [

@@ -3,8 +3,8 @@
 namespace App\Http\Requests\Company;
 
 use App\Models\BuildingBlock;
+use App\Models\CompanyFramework;
 use App\Models\House;
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -161,6 +161,28 @@ class HousesRequest extends FormRequest
                       )
                   ],
                   'floor' => 'integer',
+                ];
+            case 'seeHouseWay':
+                return [
+                    'type' => 'required|integer|between:1,4',
+                    'remarks' => 'nullable|max:128',
+                    'storefront_guid' => [
+                        'required',
+                        'max:32',
+                        Rule::in(
+                            CompanyFramework::where('level',2)->pluck('guid')->toArray()
+                        )
+                    ],
+                    'house_guid' => [
+                        'required',
+                        'max:32',
+                        Rule::in(
+                            House::all()->pluck('guid')->toArray()
+                        )
+                    ],
+                    'key_number' => 'required|max:32',
+                    'key_single' => 'nullable',
+                    'received_time' => 'required'
                 ];
             default:
                 {

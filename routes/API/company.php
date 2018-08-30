@@ -116,6 +116,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 取消置顶
     Route::get('cancel_top/{guid}','HousesController@cancelTop');
 
+    // 看房方式
+    Route::post('see_house_way','HousesController@seeHouseWay');
 
     // 写跟进
     Route::resource('tracks','TracksController');

@@ -173,4 +173,15 @@ class HousesController extends APIBaseController
         $res = $repository->adoptAssociationGetHouse($request);
         return $this->sendResponse($res,'通过楼座,楼层获取房源成功');
     }
+
+    public function seeHouseWay(
+        HousesRequest $request,
+        HousesService $service
+    )
+    {
+        $service->seeHouseWay($request);
+
+
+    }
+
 }

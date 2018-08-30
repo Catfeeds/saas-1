@@ -23,7 +23,7 @@ class CreateSeeHouseWaysTable extends Migration
             $table->string('received_remarks',128)->nullable()->comment('收匙备注');
             $table->string('key_single')->nullable()->comment('钥匙单');
             $table->string('key_number')->nullable()->comment('钥匙编号');
-            $table->date('received_time')->nullable()->comment('收匙日期');
+            $table->dateTime('received_time')->nullable()->comment('收匙日期');
 
             $table->timestamps();
         });

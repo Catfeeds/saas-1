@@ -67,7 +67,7 @@ class CreateHousesTable extends Migration
             // 有无钥匙
             $table->tinyInteger('have_key')->default(2)->comment('有无钥匙 1: 有 2: 没有');
             // 房源状态
-            $table->tinyInteger('status')->default(1)->comment('房源状态 1: 有效 2: 无效');
+            $table->tinyInteger('status')->default(1)->comment('房源状态 1: 有效 2: 无效 3: 无效-暂缓 4: 无效-内成交 5: 无效-外成交 6: 无效-信息有误 7: 无效-其他');
             //  置顶
             $table->tinyInteger('top')->default(2)->comment('是否置顶 1: 置顶 2: 不置顶');
             // 跟进时间

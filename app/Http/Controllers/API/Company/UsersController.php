@@ -169,10 +169,11 @@ class UsersController extends APIBaseController
 
     // 获取公司下所有人员
     public function getAllUser(
-        UserService $service
+        UserService $service,
+        UsersRequest $request
     )
     {
-        $res = $service->getAllUser();
+        $res = $service->getAllUser($request);
         return $this->sendResponse($res->map(function($v) {
             return [
                 'value' => $v->guid,

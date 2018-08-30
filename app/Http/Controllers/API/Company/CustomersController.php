@@ -37,6 +37,18 @@ class CustomersController extends APIBaseController
         return $this->sendResponse($customer, '修改之前原始数据');
     }
 
+    //获取客源下拉数据
+    public function create
+    (
+        CustomersRequest $request,
+        CustomersRepository $repository
+    )
+    {
+        $res = $repository->getCustomer($request);
+        return $this->sendResponse($res, '客源下拉数据获取成功');
+    }
+    
+
     //更新客源
     public function update
     (
@@ -111,4 +123,5 @@ class CustomersController extends APIBaseController
         if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有楼盘成功');
     }
+    
 }

@@ -108,6 +108,13 @@ class HousesRequest extends FormRequest
                 ];
             case 'updateImg':
                 return [
+                    'guid' => [
+                        'required',
+                        'max:32',
+                        Rule::in(
+                            House::all()->pluck('guid')->toArray()
+                        )
+                    ],
                     'house_type_img' => 'max:1024',
                     'indoor_img' => 'max:1024',
                     'outdoor_img' => 'max:1024',
@@ -223,36 +230,19 @@ class HousesRequest extends FormRequest
                     'type' => 'required|integer|between:1,2',
                 ];
             case 'setTop':
-                return [
-                    'guid' => [
-                        'required',
-                        'max:32',
-                        Rule::in(
-                            House::all()->pluck('guid')->toArray()
-                        )
-                    ]
-                ];
-            case 'cancelTop':
-                return [
-                    'guid' => [
-                        'required',
-                        'max:32',
-                        Rule::in(
-                            House::all()->pluck('guid')->toArray()
-                        )
-                    ]
-                ];
             case 'switchToPrivate':
-                return [
-                    'guid' => [
-                        'required',
-                        'max:32',
-                        Rule::in(
-                            House::all()->pluck('guid')->toArray()
-                        )
+            case 'cancelTop':
+            case 'changeToPublic':
+            return [
+                'guid' => [
+                    'required',
+                    'max:32',
+                    Rule::in(
+                        House::all()->pluck('guid')->toArray()
+                    )
                     ]
                 ];
-            case 'changeToPublic':
+            case 'relevantProves':
                 return [
                     'guid' => [
                         'required',
@@ -260,7 +250,8 @@ class HousesRequest extends FormRequest
                         Rule::in(
                             House::all()->pluck('guid')->toArray()
                         )
-                    ]
+                    ],
+                    'relevant_proves_img' => 'max:1024'
                 ];
             default:
                 {

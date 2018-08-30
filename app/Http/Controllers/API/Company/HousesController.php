@@ -131,12 +131,11 @@ class HousesController extends APIBaseController
     // 修改房源图片
     public function updateImg
     (
-        $guid,
         HousesRequest $request,
         HousesRepository $repository
     )
     {
-        $res = $repository->updateImg($guid,$request);
+        $res = $repository->updateImg($request);
         if (!$res) return $this->sendError('修改房源图片失败');
         return $this->sendResponse($res,'修改房源图片成功');
     }
@@ -243,5 +242,17 @@ class HousesController extends APIBaseController
         $res = $service->turnEffective($request);
         if (!$res) return $this->sendError('转为有效失败');
         return $this->sendResponse($res,'转为有效成功');
+    }
+
+    // 修改证件图片
+    public function relevantProves
+    (
+        HousesRequest $request,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->relevantProves($request);
+        if (!$res) return $this->sendError('修改证件图片失败');
+        return $this->sendResponse($res,'修改证件图片成功');
     }
 }

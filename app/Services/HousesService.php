@@ -104,10 +104,15 @@ class HousesService
         $house
     )
     {
+        // 房源
+        $house = $house->with(['buildingBlock', 'entryPerson.companyFramework', 'guardianPerson.companyFramework', 'picPerson.companyFramework', 'keyPerson.companyFramework'])->first();
+
         $data = array();
-        $data['top'] = 1 ? true : false; // 置顶
+        $data['top'] = $house->top == 1 ? true : false; // 置顶
         $data['img'] = $house->indoor_img_cn; // 图片
+        $data['relevant_proves_img'] = $house->relevant_proves_img_cn??array(); // 相关证件
         $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
+        $data['owner_info'] = $house->owner_info; // 业主信息
         // 门牌号
         if (empty($house->buildingBlock->unit)) {
             $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
@@ -149,7 +154,7 @@ class HousesService
             // 录入人姓名
             $entryPersonName = $house->entryPerson->name;
             // 录入人所属门店
-            if ($house->entryPerson->rel_guid) $entryPersonStorefront = CompanyFramework::find($house->entryPerson->rel_guid)->name;
+            if ($house->entryPerson->rel_guid) $entryPersonStorefront = $house->entryPerson->companyFramework->name;
             // 录入人图像
             if ($house->entryPerson->pic) $entryPersonPic = config('setting.qiniu_url') . $house->entryPerson->pic;
         }
@@ -164,7 +169,7 @@ class HousesService
             // 维护人姓名
             $guardianPersonName = $house->guardianPerson->name;
             // 维护人所属门店
-            if ($house->guardianPerson->rel_guid) $guardianPersonStorefront = CompanyFramework::find($house->guardianPerson->rel_guid)->name;
+            if ($house->guardianPerson->rel_guid) $guardianPersonStorefront = $house->entryPerson->companyFramework->name;
             // 维护人图像
             if ($house->guardianPerson->pic) $guardianPersonPic = config('setting.qiniu_url') . $house->guardianPerson->pic;
         }
@@ -178,7 +183,7 @@ class HousesService
             // 图像人姓名
             $picPersonName = $house->picPerson->name;
             // 图片人所属门店
-            if ($house->picPerson->rel_guid) $picPersonStorefront = CompanyFramework::find($house->picPerson->rel_guid)->name;
+            if ($house->picPerson->rel_guid) $picPersonStorefront = $house->entryPerson->companyFramework->name;
             // 图片人图像
             if ($house->picPerson->pic) $picPersonStorePic = config('setting.qiniu_url') . $house->picPerson->pic;
         }
@@ -192,7 +197,7 @@ class HousesService
             // 钥匙人姓名
             $keyPersonName = $house->keyPerson->name;
             // 钥匙人所属门店
-            if ($house->keyPerson->rel_guid) $keyPersonStorefront = CompanyFramework::find($house->keyPerson->rel_guid)->name;
+            if ($house->keyPerson->rel_guid) $keyPersonStorefront = $house->entryPerson->companyFramework->name;
             // 钥匙人图像
             if ($house->keyPerson->pic) $keyPersonPic = config('setting.qiniu_url') . $house->keyPerson->pic;
         }
@@ -200,6 +205,27 @@ class HousesService
         $data['relevant']['key_person']['storefront'] = $keyPersonStorefront??'';
         $data['relevant']['key_person']['pic'] = $keyPersonPic??config('setting.user_default_img');
         $data['relevant']['key_person']['guid'] = $house->key_personGuid??'';
+
+        // 看房方式
+        $data['seeHouseWay'] = $house->seeHouseWay;
+        // 七牛url
+        $data['qiNiuUrl'] = config('setting.qiniu_url');
+
+        // 跟进
+        $track = array();
+        foreach ($house->track as $k => $v) {
+            $track[$k]['user'] = $v->user->name;
+            $track[$k]['tracks_info'] = $v->tracks_info;
+            $track[$k]['created_at'] = $v->created_at->format('Y-m-d H:i');
+            // 是否允许编辑标识  十分钟内  添加人必须是登录人
+            $track[$k]['operation'] = false;
+            if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 10 * 60) {
+                if ($v->user_guid == Common::user()->guid) {
+                    $track[$k]['operation'] = true;
+                }
+            }
+        }
+        $data['track'] = $track;
 
         return $data;
     }
@@ -275,10 +301,12 @@ class HousesService
             $data = ['status' => 1];
             if ($request->type == 1) {
                 $data['guardian_person'] = Common::user()->guid;
+                $data['public_private'] = 1;
             } elseif ($request->type == 2) {
                 $data['guardian_person'] = '';
+                $data['public_private'] = 2;
             }
-
+            dd($data);
             $houseStatus = House::where('guid',$request->guid)->update($data);
             if (empty($houseStatus)) throw new \Exception('修改房源状态失败');
 
@@ -288,5 +316,24 @@ class HousesService
             \DB::rollBack();
             return false;
         }
+    }
+    
+    // 获取业主信息
+    public function getOwnerInfo($request)
+    {
+        return House::where('guid',$request->guid)->pluck('owner_info')->first();
+    }
+
+    // 获取门牌号
+    public function getHouseNumber($request)
+    {
+        $house = House::where('guid',$request->guid)->first();
+        $data = [];
+        if (empty($house->buildingBlock->unit)) {
+            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
+        } else {
+            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit;
+        }
+        return $data;
     }
 }

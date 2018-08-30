@@ -5,6 +5,7 @@
  */
 namespace App\Handler;
 
+use App\Models\HouseOperationRecord;
 use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
 use Ramsey\Uuid\Uuid;
@@ -76,12 +77,30 @@ class Common
     // 数组转对象
     public static function arrayToObject($e)
     {
-
         if (gettype($e) != 'array') return;
         foreach ($e as $k => $v) {
             if (gettype($v) == 'array' || getType($v) == 'object')
                 $e[$k] = (object)self::arrayToObject($v);
         }
         return (object)$e;
+    }
+
+    // 添加操作记录
+    public  static function houseOperationRecords(
+        $house_guid,
+        $type,
+        $remarks,
+        $img
+    )
+    {
+        $houseOperationRecord = HouseOperationRecord::create([
+            'house_guid' => $house_guid,
+            'type' => $type,
+            'user_guid' => self::user()->guid,
+            'remarks' => $remarks,
+            'img' => $img
+        ]);
+        if (empty($houseOperationRecord)) return false;
+        return true;
     }
 }

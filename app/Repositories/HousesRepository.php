@@ -10,9 +10,7 @@ class HousesRepository extends Model
     //房源列表
     public function houseList($request, $service)
     {
-        $data = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')
-                        ->where([])
-                        ->paginate($request->per_page??10);
+        $data = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->where([])->paginate($request->per_page??10);
         $houses = [];
         foreach ($data as $key => $v) {
             $houses[$key] = $service->getData($v);
@@ -120,11 +118,10 @@ class HousesRepository extends Model
 
     // 修改房源图片
     public function updateImg(
-        $guid,
         $request
     )
     {
-        return House::where(['guid' => $guid])->update([
+        return House::where(['guid' =>$request->guid])->update([
             'house_type_img' => $request->house_type_img,
             'indoor_img' => $request->indoor_img,
             'outdoor_img' => $request->outdoor_img
@@ -132,15 +129,15 @@ class HousesRepository extends Model
     }
 
     // 房源置顶
-    public function setTop($guid)
+    public function setTop($request)
     {
-        return House::where(['guid' => $guid])->update(['top' => 1]);
+        return House::where(['guid' => $request->guid])->update(['top' => 1]);
     }
     
     // 取消置顶
-    public function cancelTop($guid)
+    public function cancelTop($request)
     {
-        return House::where('guid',$guid)->update(['top' => 2]);
+        return House::where('guid',$request->guid)->update(['top' => 2]);
     }
     
    // 通过楼座，楼层获取房源信息
@@ -161,14 +158,22 @@ class HousesRepository extends Model
     }
 
     // 转为公盘
-    public function changeToPublic($guid)
+    public function changeToPublic($request)
     {
-        return House::where('guid',$guid)->update(['guardian_person' => null]);
+        return House::where('guid',$request->guid)->update(['guardian_person' => null, 'public_private' => 2]);
     }
     
     // 转为私盘
-    public function switchToPrivate($guid)
+    public function switchToPrivate($request)
     {
-        return House::where('guid',$guid)->update(['guardian_person' => Common::user()->guid]);
+        return House::where('guid',$request->guid)->update(['guardian_person' => Common::user()->guid, 'public_private' => 1]);
+    }
+    
+    // 修改证件图片
+    public function relevantProves($request)
+    {
+        $res = House::where('guid',$request->guid)->update(['relevant_proves_img' => json_encode($request->relevant_proves_img)]);
+        if (empty($res)) return false;
+        return true;
     }
 }

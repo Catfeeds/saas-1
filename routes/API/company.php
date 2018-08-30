@@ -110,24 +110,31 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 房号验证
     Route::get('house_number_validate', 'HousesController@houseNumberValidate');
     // 修改房源图片
-    Route::get('update_img/{guid}','HousesController@updateImg');
+    Route::get('update_img','HousesController@updateImg');
     // 置顶
-    Route::get('set_top/{guid}','HousesController@setTop');
+    Route::get('set_top','HousesController@setTop');
     // 取消置顶
-    Route::get('cancel_top/{guid}','HousesController@cancelTop');
+    Route::get('cancel_top','HousesController@cancelTop');
     // 转移房源
     Route::get('transfer_house','HousesController@transferHouse');
     // 转为公盘
-    Route::get('change_to_public/{guid}','HousesController@changeToPublic');
+    Route::get('change_to_public','HousesController@changeToPublic');
     // 转为私盘
-    Route::get('switch_to_private/{guid}','HousesController@switchToPrivate');
+    Route::get('switch_to_private','HousesController@switchToPrivate');
     // 转为无效
     Route::get('turned_invalid','HousesController@turnedInvalid');
     // 转为有效
     Route::get('turn_effective','HousesController@turnEffective');
+    // 修改证件图片
+    Route::get('relevant_proves','HousesController@relevantProves');
 
     // 看房方式
     Route::post('see_house_way','HousesController@seeHouseWay');
+    // 获取业主信息
+    Route::get('get_owner_info','HousesController@getOwnerInfo');
+    // 获取门牌号
+    Route::get('get_house_number','HousesController@getHouseNumber');
+
 
     // 写跟进
     Route::resource('tracks','TracksController');
@@ -138,12 +145,14 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
 
     /*
-   |--------------------------------------------------------------------------
-   | 客源管理
-   |--------------------------------------------------------------------------
-   */
-
+    |--------------------------------------------------------------------------
+    | 客源管理
+    |--------------------------------------------------------------------------
+    */
     Route::resource('customers', 'CustomersController');
+
+    // 获取正常状态客源下拉数据
+    Route::get('normal_customer','CustomersController@normalCustomer');
 
     /*
     |--------------------------------------------------------------------------

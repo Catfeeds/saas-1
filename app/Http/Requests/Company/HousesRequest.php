@@ -108,6 +108,13 @@ class HousesRequest extends FormRequest
                 ];
             case 'updateImg':
                 return [
+                    'guid' => [
+                        'required',
+                        'max:32',
+                        Rule::in(
+                            House::all()->pluck('guid')->toArray()
+                        )
+                    ],
                     'house_type_img' => 'max:1024',
                     'indoor_img' => 'max:1024',
                     'outdoor_img' => 'max:1024',
@@ -208,13 +215,45 @@ class HousesRequest extends FormRequest
                 ];
             case 'turnedInvalid':
                 return [
-                  'guid' => 'required',
+                  'guid' => [
+                      'required',
+                      'max:32',
+                      Rule::in(
+                          House::all()->pluck('guid')->toArray()
+                      )
+                      ],
                   'status' => 'required|integer|between:3,7'
                 ];
             case 'turnEffective':
                 return [
                     'guid' => 'required',
                     'type' => 'required|integer|between:1,2',
+                ];
+            case 'setTop':
+            case 'switchToPrivate':
+            case 'cancelTop':
+            case 'changeToPublic':
+            case 'getHouseNumber':
+            case 'getOwnerInfo':
+            return [
+                'guid' => [
+                    'required',
+                    'max:32',
+                    Rule::in(
+                        House::all()->pluck('guid')->toArray()
+                    )
+                ]
+            ];
+            case 'relevantProves':
+                return [
+                    'guid' => [
+                        'required',
+                        'max:32',
+                        Rule::in(
+                            House::all()->pluck('guid')->toArray()
+                        )
+                    ],
+                    'relevant_proves_img' => 'required'
                 ];
             default:
                 {

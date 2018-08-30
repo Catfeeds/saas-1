@@ -10,6 +10,7 @@ class House extends BaseModel
         'cost_detail' => 'array',
         'support_facilities' => 'array',
         'indoor_img' => 'array',
+        'relevant_proves_img' => 'array'
     ];
 
     protected $appends = [
@@ -27,7 +28,8 @@ class House extends BaseModel
         'register_company_cn',
         'open_bill_cn',
         'shortest_lease_cn',
-        'actuality_cn'
+        'actuality_cn',
+        'relevant_proves_img_cn'
     ];
 
     // 房源关联钥匙
@@ -45,7 +47,7 @@ class House extends BaseModel
     // 跟进
     public function track()
     {
-        return $this->hasMany(Track::class, 'rel_guid', 'guid');
+        return $this->hasMany(Track::class, 'rel_guid', 'guid')->where('model_type', 'App\Models\house');
     }
     
     // 录入人
@@ -66,10 +68,16 @@ class House extends BaseModel
         return $this->hasOne(User::class, 'guid', 'pic_person');
     }
 
-    // 要是人
+    // 钥匙人
     public function keyPerson()
     {
         return $this->hasOne(User::class, 'guid', 'key_person');
+    }
+
+    // 看房方式
+    public function seeHouseWay()
+    {
+        return $this->belongsTo('App\Models\SeeHouseWay','guid','house_guid');
     }
 
     // 价格单位   price_unit_cn
@@ -339,5 +347,16 @@ class House extends BaseModel
         } else {
             return '暂无';
         }
+    }
+
+    // 相关证件图片 relevant_proves_img_cn
+    public function getRelevantProvesImgCnAttribute()
+    {
+        return collect($this->relevant_proves_img)->map(function ($img) {
+            return [
+                'name' => $img,
+                'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
+            ];
+        })->values();
     }
 }

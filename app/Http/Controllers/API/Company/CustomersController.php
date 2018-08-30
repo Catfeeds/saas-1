@@ -9,7 +9,7 @@ use App\Repositories\CustomersRepository;
 
 class CustomersController extends APIBaseController
 {
-    //客源类表
+    // 客源类表
     public function index
     (
         CustomersRequest $request,
@@ -20,7 +20,7 @@ class CustomersController extends APIBaseController
         return $this->sendResponse($res, '客源列表获取成功');
     }
 
-    //添加客源
+    // 添加客源
     public function store
     (
         CustomersRequest $request,
@@ -31,13 +31,13 @@ class CustomersController extends APIBaseController
         return $this->sendResponse($res, '客源添加成功');
     }
 
-    //客源修改之前原始数据
+    // 客源修改之前原始数据
     public function edit(Customer $customer)
     {
         return $this->sendResponse($customer, '修改之前原始数据');
     }
 
-    //获取客源下拉数据
+    // 获取客源下拉数据
     public function create
     (
         CustomersRequest $request,
@@ -47,9 +47,8 @@ class CustomersController extends APIBaseController
         $res = $repository->getCustomer($request);
         return $this->sendResponse($res, '客源下拉数据获取成功');
     }
-    
 
-    //更新客源
+    // 更新客源
     public function update
     (
         Customer $customer,
@@ -123,5 +122,15 @@ class CustomersController extends APIBaseController
         if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有楼盘成功');
     }
-    
+
+    // 获取正常状态客源下拉数据
+    public function normalCustomer
+    (
+        CustomersRepository $repository
+    )
+    {
+        $res = $repository->normalCustomer();
+        return $this->sendResponse($res,'正常状态客源下拉数据获取成功');
+    }
+
 }

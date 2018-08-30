@@ -110,7 +110,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 房号验证
     Route::get('house_number_validate', 'HousesController@houseNumberValidate');
     // 修改房源图片
-    Route::get('update_img/{guid}','HousesController@updateImg');
+    Route::get('update_img','HousesController@updateImg');
     // 置顶
     Route::get('set_top','HousesController@setTop');
     // 取消置顶
@@ -125,6 +125,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('turned_invalid','HousesController@turnedInvalid');
     // 转为有效
     Route::get('turn_effective','HousesController@turnEffective');
+    // 修改证件图片
+    Route::get('relevant_proves','HousesController@relevantProves');
 
     // 看房方式
     Route::post('see_house_way','HousesController@seeHouseWay');

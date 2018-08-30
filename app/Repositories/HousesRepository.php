@@ -120,11 +120,10 @@ class HousesRepository extends Model
 
     // 修改房源图片
     public function updateImg(
-        $guid,
         $request
     )
     {
-        return House::where(['guid' => $guid])->update([
+        return House::where(['guid' =>$request->guid])->update([
             'house_type_img' => $request->house_type_img,
             'indoor_img' => $request->indoor_img,
             'outdoor_img' => $request->outdoor_img
@@ -170,5 +169,11 @@ class HousesRepository extends Model
     public function switchToPrivate($request)
     {
         return House::where('guid',$request->guid)->update(['guardian_person' => Common::user()->guid]);
+    }
+    
+    // 修改证件图片
+    public function relevantProves($request)
+    {
+        return House::where('guid',$request->guid)->update(['relevant_proves_img' => $request->relevant_proves_img]);
     }
 }

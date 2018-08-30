@@ -255,4 +255,28 @@ class HousesController extends APIBaseController
         if (!$res) return $this->sendError('修改证件图片失败');
         return $this->sendResponse($res,'修改证件图片成功');
     }
+
+    // 获取业主信息
+    public function getOwnerInfo
+    (
+        HousesRequest $request,
+        HousesService $service
+    )
+    {
+        $res = $service->getOwnerInfo($request);
+        if (!$res) return $this->sendError('获取业主信息失败');
+        return $this->sendResponse($res,'获取业主信息成功');
+    }
+    
+    // 获取门牌号
+    public function getHouseNumber
+    (
+        HousesRequest $request,
+        HousesService $service
+    )
+    {
+        $res = $service->getHouseNumber($request);
+        if (!$res) return $this->sendError('获取门牌号失败');
+        return $this->sendResponse($res,'获取门牌号成功');
+    }
 }

@@ -317,4 +317,23 @@ class HousesService
             return false;
         }
     }
+    
+    // 获取业主信息
+    public function getOwnerInfo($request)
+    {
+        return House::where('guid',$request->guid)->pluck('owner_info')->first();
+    }
+
+    // 获取门牌号
+    public function getHouseNumber($request)
+    {
+        $house = House::where('guid',$request->guid)->first();
+        $data = [];
+        if (empty($house->buildingBlock->unit)) {
+            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
+        } else {
+            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit;
+        }
+        return $data;
+    }
 }

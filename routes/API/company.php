@@ -130,6 +130,11 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     // 看房方式
     Route::post('see_house_way','HousesController@seeHouseWay');
+    // 获取业主信息
+    Route::get('getOwnerInfo','HousesController@getOwnerInfo');
+    // 获取门牌号
+    Route::get('getHouseNumber','HousesController@getHouseNumber');
+
 
     // 写跟进
     Route::resource('tracks','TracksController');

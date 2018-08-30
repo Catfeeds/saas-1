@@ -219,4 +219,27 @@ class HousesController extends APIBaseController
         return $this->sendResponse($res,'转为公盘成功');
     }
 
+    // 转为无效
+    public function turnedInvalid
+    (
+        HousesRequest $request,
+        HousesService $service
+    )
+    {
+        $res = $service->turnedInvalid($request);
+        if (!$res) return $this->sendError('转为无效失败');
+        return $this->sendResponse($res,'转为无效成功');
+    }
+    
+    // 转为有效
+    public function turnEffective
+    (
+        HousesRequest $request,
+        HousesService $service
+    )
+    {
+        $res = $service->turnEffective($request);
+        if (!$res) return $this->sendError('转为有效失败');
+        return $this->sendResponse($res,'转为有效成功');
+    }
 }

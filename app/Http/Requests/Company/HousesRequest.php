@@ -197,7 +197,24 @@ class HousesRequest extends FormRequest
                         Rule::in(
                             User::all()->pluck('guid')->toArray()
                         )
+                    ],
+                    'guid' => [
+                        'required',
+                        'max:32',
+                        Rule::in(
+                            House::all()->pluck('guid')->toArray()
+                        )
                     ]
+                ];
+            case 'turnedInvalid':
+                return [
+                  'guid' => 'required',
+                  'status' => 'required|integer|between:3,7'
+                ];
+            case 'turnEffective':
+                return [
+                    'guid' => 'required',
+                    'type' => 'required|integer|between:1,2',
                 ];
             default:
                 {

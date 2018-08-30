@@ -223,6 +223,8 @@ class HousesService
                 if (!$seeHouseWay->save()) throw new \Exception('看房方式修改失败');
             } else {
                 $seeHouseWay = SeeHouseWay::create([
+                    'guid' => Common::getUuid(),
+                    'house_guid' => $request->house_guid,
                     'type' => $request->type,
                     'remarks' => $request->remarks,
                     'storefront_guid' => $request->storefront_guid,
@@ -247,4 +249,44 @@ class HousesService
         }
     }
 
+    // 转为无效
+    public function turnedInvalid($request)
+    {
+        \DB::beginTransaction();
+        try {
+            // 修改房源状态
+            $houseStatus = House::where('guid',$request->guid)->update(['status' => $request->status]);
+            if (empty($houseStatus)) throw new \Exception('修改房源状态失败');
+
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollBack();
+            return false;
+        }
+    }
+
+    // 转为有效
+    public function turnEffective($request)
+    {
+        \DB::beginTransaction();
+        try {
+            // 修改房源状态
+            $data = ['status' => 1];
+            if ($request->type == 1) {
+                $data['guardian_person'] = Common::user()->guid;
+            } elseif ($request->type == 2) {
+                $data['guardian_person'] = '';
+            }
+
+            $houseStatus = House::where('guid',$request->guid)->update($data);
+            if (empty($houseStatus)) throw new \Exception('修改房源状态失败');
+
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollBack();
+            return false;
+        }
+    }
 }

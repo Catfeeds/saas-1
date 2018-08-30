@@ -12,13 +12,13 @@ class CreateVisitsTable extends Migration
      * @return void
      */
     public function up()
-
     {
         Schema::create('visits', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('guid主键');
             $table->char('visit_user',32)->nullable()->comment('带看人');
             $table->char('accompany',32)->nullable()->comment('陪看人');
             $table->string('model_type',32)->nullable()->comment('model');
+            $table->char('cover_rel_guid',32)->nullable()->comment('被带看房源/客源');
             $table->char('rel_guid',32)->nullable()->comment('带看的客源/房源');
             $table->string('remarks',255)->nullable()->comment('带看备注');
             $table->string('visit_img',32)->nullable()->comment('带看单');

@@ -121,6 +121,10 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('change_to_public/{guid}','HousesController@changeToPublic');
     // 转为私盘
     Route::get('switch_to_private/{guid}','HousesController@switchToPrivate');
+    // 转为无效
+    Route::get('turned_invalid','HousesController@turnedInvalid');
+    // 转为有效
+    Route::get('turn_effective','HousesController@turnEffective');
 
     // 看房方式
     Route::post('see_house_way','HousesController@seeHouseWay');

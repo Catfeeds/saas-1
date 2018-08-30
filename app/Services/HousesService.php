@@ -110,7 +110,7 @@ class HousesService
         $data = array();
         $data['top'] = $house->top == 1 ? true : false; // 置顶
         $data['img'] = $house->indoor_img_cn; // 图片
-        $data['relevant_proves_img'] = $house->relevant_proves_img??array(); // 相关证件
+        $data['relevant_proves_img'] = $house->relevant_proves_img_cn??array(); // 相关证件
         $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
         $data['owner_info'] = $house->owner_info; // 业主信息
         // 门牌号
@@ -208,6 +208,8 @@ class HousesService
 
         // 看房方式
         $data['seeHouseWay'] = $house->seeHouseWay;
+        // 七牛url
+        $data['qiNiuUrl'] = config('setting.qiniu_url');
 
         // 跟进
         $track = array();
@@ -223,7 +225,6 @@ class HousesService
                 }
             }
         }
-
         $data['track'] = $track;
 
         return $data;

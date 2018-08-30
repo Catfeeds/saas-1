@@ -28,7 +28,8 @@ class House extends BaseModel
         'register_company_cn',
         'open_bill_cn',
         'shortest_lease_cn',
-        'actuality_cn'
+        'actuality_cn',
+        'relevant_proves_img_cn'
     ];
 
     // 房源关联钥匙
@@ -346,5 +347,16 @@ class House extends BaseModel
         } else {
             return '暂无';
         }
+    }
+
+    // 相关证件图片 relevant_proves_img_cn
+    public function getRelevantProvesImgCnAttribute()
+    {
+        return collect($this->relevant_proves_img)->map(function ($img) {
+            return [
+                'name' => $img,
+                'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
+            ];
+        })->values();
     }
 }

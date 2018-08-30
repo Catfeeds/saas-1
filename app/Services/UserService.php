@@ -162,7 +162,6 @@ class UserService
     // 获取公司下所有在职人员
     public function getAllUser($request)
     {
-
         $res = User::where(['company_guid' => Common::user()->company_guid, 'status' => 1]);
         if (!empty($request->name)) $res = $res->where('name', 'like', '%'. $request->name.'%');
         return $res->get();

@@ -48,10 +48,12 @@ class VisitsRequest extends FormRequest
            case 'store':
                return [
                    'accompany' => 'nullable|exists:users,guid',
-                   'rel_guid' => [
+                   'model_type' => 'required',
+                   'cover_rel_guid' => [
                        'required',
                        Rule::in($array)
                    ],
+                   'rel_guid' => 'required',
                    'remarks' => 'required|max:255',
                    'visit_img' => 'nullable',
                    'visit_date' => 'required',

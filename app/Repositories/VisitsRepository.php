@@ -11,7 +11,7 @@ class VisitsRepository extends Model
     //获取房源或者客源带看列表
     public function visitsList($request, $service)
     {
-        $res = Visit::where('rel_guid', $request->rel_guid)->latest()->paginate($request->per_page??10);
+        $res = Visit::where('cover_rel_guid', $request->cover_rel_guid)->latest()->paginate($request->per_page??10);
         $visit = [];
         foreach ($res as $key =>  $v) {
             $visit[$key] = $service->getData($v);
@@ -27,11 +27,12 @@ class VisitsRepository extends Model
             'visit_user' => Common::user()->guid,
             'accompany' => $request->accompany,
             'model_type' => $request->model_type,
+            'cover_rel_guid' => $request->cover_rel_guid,
             'rel_guid' => $request->rel_guid,
             'remarks' => $request->remarks,
             'visit_img' => $request->visit_img,
             'visit_date' => $request->visit_date,
-            'visit_time' => $request->visit_time
+            'visit_time' => $request->visit_time,
         ]);
     }
 

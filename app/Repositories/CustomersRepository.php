@@ -84,10 +84,15 @@ class CustomersRepository extends Model
         return Customer::where('guid', $guid)->update(['guardian_person' => $request->guardian_person]);
     }
 
-    //获取客源下拉数据
+    //获取客源下拉数据kan
     public function getCustomer($request)
     {
-        $res = Customer::where('name', 'like', '%'. $request->name.'%')->orWhere('tel', $request->name)->get();
+        //如果全部是数字,则为电话号码
+        if(preg_match("/^\d*$/",$request->param)) {
+            $res = Customer::where('company_guid', Common::user()->company_guid)->where('tel', $request->param)->get();
+        } else {
+            $res = Customer::where('company_guid', Common::user()->company_guid)->where('name', 'like', '%'.$request->param. '%')->get();
+        }
         return $res->map(function($v) {
            return  [
                'value' => $v->guid,

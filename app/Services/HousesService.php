@@ -112,6 +112,7 @@ class HousesService
         $data['img'] = $house->indoor_img_cn; // 图片
         $data['relevant_proves_img'] = $house->relevant_proves_img??array(); // 相关证件
         $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
+        $data['owner_info'] = $house->owner_info; // 业主信息
         // 门牌号
         if (empty($house->buildingBlock->unit)) {
             $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
@@ -214,10 +215,10 @@ class HousesService
             $track[$k]['user'] = $v->user->name;
             $track[$k]['tracks_info'] = $v->tracks_info;
             $track[$k]['created_at'] = $v->created_at->format('Y-m-d H:i');
-            // 是否允许编辑标识
+            // 是否允许编辑标识  十分钟内  添加人必须是登录人
             $track[$k]['operation'] = false;
-            if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 10 * 60 * 60) {
-                if ($v->user->guid == Common::user()->guid) {
+            if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 10 * 60) {
+                if ($v->user_guid == Common::user()->guid) {
                     $track[$k]['operation'] = true;
                 }
             }

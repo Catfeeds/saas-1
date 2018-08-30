@@ -48,17 +48,6 @@ class CustomersController extends APIBaseController
         return $this->sendResponse($res, '客源下拉数据获取成功');
     }
 
-    // 获取正常状态客源下拉数据
-    public function normalCustomer
-    (
-        CustomersRepository $repository
-    )
-    {
-        $res = $repository->normalCustomer();
-        return $this->sendResponse($res,'正常状态客源下拉数据获取成功');
-    }
-
-
     // 更新客源
     public function update
     (
@@ -133,5 +122,15 @@ class CustomersController extends APIBaseController
         if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有楼盘成功');
     }
-    
+
+    // 获取正常状态客源下拉数据
+    public function normalCustomer
+    (
+        CustomersRepository $repository
+    )
+    {
+        $res = $repository->normalCustomer();
+        return $this->sendResponse($res,'正常状态客源下拉数据获取成功');
+    }
+
 }

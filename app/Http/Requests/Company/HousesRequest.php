@@ -233,6 +233,8 @@ class HousesRequest extends FormRequest
             case 'switchToPrivate':
             case 'cancelTop':
             case 'changeToPublic':
+            case 'getHouseNumber':
+            case 'getoOwnerInfo':
             return [
                 'guid' => [
                     'required',

@@ -58,6 +58,9 @@ class CreateHousesTable extends Migration
             $table->json('indoor_img')->nullable()->comment('室内图:json   图片,介绍');
             $table->json('outdoor_img')->nullable()->comment('室外图:json  图片,介绍');
 
+            // 相关证件
+            $table->json('relevant_proves_img')->nullable()->comment('证件图片: json');
+
             // 操作人
             $table->char('entry_person',32)->nullable()->comment('录入人');
             $table->char('guardian_person',32)->nullable()->comment('维护人');

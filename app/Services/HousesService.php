@@ -223,6 +223,8 @@ class HousesService
                 if (!$seeHouseWay->save()) throw new \Exception('看房方式修改失败');
             } else {
                 $seeHouseWay = SeeHouseWay::create([
+                    'guid' => Common::getUuid(),
+                    'house_guid' => $request->house_guid,
                     'type' => $request->type,
                     'remarks' => $request->remarks,
                     'storefront_guid' => $request->storefront_guid,

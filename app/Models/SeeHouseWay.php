@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class SeeHouseWay extends Model
+class SeeHouseWay extends BaseModel
 {
     //
 }

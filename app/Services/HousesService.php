@@ -6,6 +6,7 @@ use App\Handler\Common;
 use App\Models\BuildingBlock;
 use App\Models\CompanyFramework;
 use App\Models\House;
+use App\Models\SeeHouseWay;
 use App\Models\User;
 
 class HousesService
@@ -104,6 +105,7 @@ class HousesService
     )
     {
         $data = array();
+        $data['top'] = 1 ? true : false; // 置顶
         $data['img'] = $house->indoor_img_cn; // 图片
         $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
         // 门牌号
@@ -201,4 +203,48 @@ class HousesService
 
         return $data;
     }
+
+    // 看房方式
+    public function seeHouseWay(
+        $request
+    )
+    {
+        \DB::beginTransaction();
+        try {
+            // 查询是否有看房记录数据
+            $seeHouseWay = SeeHouseWay::where('house_guid', $request->house_guid)->first();
+            if ($seeHouseWay) {
+                $seeHouseWay->type = $request->type;
+                $seeHouseWay->remarks = $request->remarks;
+                $seeHouseWay->storefront_guid = $request->storefront_guid;
+                $seeHouseWay->key_number = $request->key_number;
+                $seeHouseWay->key_single = $request->key_single;
+                $seeHouseWay->received_time = $request->received_time;
+                if (!$seeHouseWay->save()) throw new \Exception('看房方式修改失败');
+            } else {
+                $seeHouseWay = SeeHouseWay::create([
+                    'type' => $request->type,
+                    'remarks' => $request->remarks,
+                    'storefront_guid' => $request->storefront_guid,
+                    'key_number' => $request->key_number,
+                    'key_single' => $request->key_single,
+                    'received_time' => $request->received_time,
+                ]);
+                if (empty($seeHouseWay)) throw new \Exception('看房方式添加失败');
+            }
+
+            // 修改房源钥匙人
+            $house = House::where(['guid' => $request->house_guid])->update(['key_person' => Common::user()->guid]);
+            if (empty($house)) throw new \Exception('房源钥匙人修改失败');
+
+            // TODO 操作记录
+
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollBack();
+            return false;
+        }
+    }
+
 }

@@ -131,9 +131,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 看房方式
     Route::post('see_house_way','HousesController@seeHouseWay');
     // 获取业主信息
-    Route::get('getOwnerInfo','HousesController@getOwnerInfo');
+    Route::get('get_owner_info','HousesController@getOwnerInfo');
     // 获取门牌号
-    Route::get('getHouseNumber','HousesController@getHouseNumber');
+    Route::get('get_house_number','HousesController@getHouseNumber');
 
 
     // 写跟进

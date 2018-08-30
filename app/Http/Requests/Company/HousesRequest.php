@@ -234,7 +234,7 @@ class HousesRequest extends FormRequest
             case 'cancelTop':
             case 'changeToPublic':
             case 'getHouseNumber':
-            case 'getoOwnerInfo':
+            case 'getOwnerInfo':
             return [
                 'guid' => [
                     'required',
@@ -242,8 +242,8 @@ class HousesRequest extends FormRequest
                     Rule::in(
                         House::all()->pluck('guid')->toArray()
                     )
-                    ]
-                ];
+                ]
+            ];
             case 'relevantProves':
                 return [
                     'guid' => [

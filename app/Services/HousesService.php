@@ -107,6 +107,7 @@ class HousesService
         $data = array();
         $data['top'] = 1 ? true : false; // 置顶
         $data['img'] = $house->indoor_img_cn; // 图片
+        $data['relevant_proves_img'] = $house->relevant_proves_img; // 相关证件
         $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
         // 门牌号
         if (empty($house->buildingBlock->unit)) {
@@ -200,6 +201,9 @@ class HousesService
         $data['relevant']['key_person']['storefront'] = $keyPersonStorefront??'';
         $data['relevant']['key_person']['pic'] = $keyPersonPic??config('setting.user_default_img');
         $data['relevant']['key_person']['guid'] = $house->key_personGuid??'';
+
+        // 看房方式
+        $data['seeHouseWay'] = $house->seeHouseWay;
 
         return $data;
     }

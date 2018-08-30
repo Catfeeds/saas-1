@@ -24,5 +24,17 @@ class Visit extends BaseModel
                 break;
         }
     }
+
+    //带看人员
+    public function user()
+    {
+        return $this->hasOne(User::class,'guid', 'visit_user');
+    }
+
+    //陪看人员
+    public function accompanyUser()
+    {
+        return $this->hasOne(User::class,'guid', 'accompany');
+    }
     
 }

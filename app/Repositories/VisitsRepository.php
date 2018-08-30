@@ -9,10 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 class VisitsRepository extends Model
 {
     //获取房源或者客源带看列表
-    public function visitsList($request)
+    public function visitsList($request, $service)
     {
-        $res = Visit::where('rel_guid', $request->rel_guid)->latest()->get();
-
+        $res = Visit::where('rel_guid', $request->rel_guid)->latest()->paginate($request->per_page??10);
+        $visit = [];
+        foreach ($res as $key =>  $v) {
+            $visit[$key] = $service->getData($v);
+        }
+        return $res->setCollection(collect($visit));
     }
 
     //添加房源客源带看
@@ -22,6 +26,7 @@ class VisitsRepository extends Model
             'guid' => Common::getUuid(),
             'visit_user' => Common::user()->guid,
             'accompany' => $request->accompany,
+            'model_type' => $request->model_type,
             'rel_guid' => $request->rel_guid,
             'remarks' => $request->remarks,
             'visit_img' => $request->visit_img,

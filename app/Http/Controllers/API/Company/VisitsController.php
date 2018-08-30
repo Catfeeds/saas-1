@@ -6,6 +6,7 @@ namespace App\Http\Controllers\API\Company;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\VisitsRequest;
 use App\Repositories\VisitsRepository;
+use App\Services\VisitsService;
 
 class VisitsController extends APIBaseController
 {
@@ -13,10 +14,11 @@ class VisitsController extends APIBaseController
     public function index
     (
         VisitsRepository $repository,
-        VisitsRequest $request
+        VisitsRequest $request,
+        VisitsService $service
     )
     {
-        $res = $repository->visitsList($request);
+        $res = $repository->visitsList($request, $service);
         return $this->sendResponse($res, '带看获取成功');
     }
 

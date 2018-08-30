@@ -23,7 +23,8 @@ class VisitsRequest extends FormRequest
         switch ($this->route()->getActionMethod()) {
             case 'store':
                 return [
-                    'rel_guid.in' => '房源/客源必须存在'
+                    'rel_guid.in' => '房源/客源必须存在',
+                    'accompany.exists' => '陪看人员必须存在'
                 ];
                 default;
                 return [];
@@ -46,7 +47,7 @@ class VisitsRequest extends FormRequest
        switch ($this->route()->getActionMethod()) {
            case 'store':
                return [
-                   'accompany' => 'nullable',
+                   'accompany' => 'nullable|exists:users,guid',
                    'rel_guid' => [
                        'required',
                        Rule::in($array)

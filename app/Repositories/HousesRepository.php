@@ -153,4 +153,22 @@ class HousesRepository extends Model
         }
         return $house->get();
     }
+    
+    // 转移房源
+    public function transferHouse($request)
+    {
+        return House::where('guid',$request->guid)->update(['guardian_person' => $request->user_guid]);
+    }
+
+    // 转为公盘
+    public function changeToPublic($guid)
+    {
+        return House::where('guid',$guid)->update(['guardian_person' => null]);
+    }
+    
+    // 转为私盘
+    public function switchToPrivate($guid)
+    {
+        return House::where('guid',$guid)->update(['guardian_person' => Common::user()->guid]);
+    }
 }

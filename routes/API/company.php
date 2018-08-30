@@ -115,6 +115,12 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('set_top/{guid}','HousesController@setTop');
     // 取消置顶
     Route::get('cancel_top/{guid}','HousesController@cancelTop');
+    // 转移房源
+    Route::get('transfer_house','HousesController@transferHouse');
+    // 转为公盘
+    Route::get('change_to_public/{guid}','HousesController@changeToPublic');
+    // 转为私盘
+    Route::get('switch_to_private/{guid}','HousesController@switchToPrivate');
 
 
     // 写跟进

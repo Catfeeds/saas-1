@@ -173,4 +173,38 @@ class HousesController extends APIBaseController
         $res = $repository->adoptAssociationGetHouse($request);
         return $this->sendResponse($res,'通过楼座,楼层获取房源成功');
     }
+
+    // 转移房源
+    public function transferHouse
+    (
+        HousesRequest $request,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->transferHouse($request);
+        if (!$res) return $this->sendError('转移房源失败');
+        return $this->sendResponse($res,'转移房源成功');
+    }
+    
+    // 转为公盘
+    public function changeToPublic
+    (
+        $guid,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->changeToPublic($guid);
+        return $this->sendResponse($res,'转为公盘成功');
+    }
+    
+    // 转为私盘
+    public function switchToPrivate
+    (
+        $guid,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->switchToPrivate($guid);
+        return $this->sendResponse($res,'转为公盘成功');
+    }
 }

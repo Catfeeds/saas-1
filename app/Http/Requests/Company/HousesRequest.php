@@ -28,6 +28,10 @@ class HousesRequest extends FormRequest
                 return [
                     'house_guid.in' => '房源必须存在',
                 ];
+            case 'transferHouse' :
+                return [
+                    'user_guid.in' => '用户必须存在',
+                ];
             default;
                 return [
 
@@ -161,6 +165,14 @@ class HousesRequest extends FormRequest
                       )
                   ],
                   'floor' => 'integer',
+                ];
+            case 'transferHouse':
+                return [
+                    'user_guid' => [
+                        Rule::in(
+                            User::all()->pluck('guid')->toArray()
+                        )
+                    ]
                 ];
             default:
                 {

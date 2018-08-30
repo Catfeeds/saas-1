@@ -10,6 +10,7 @@ class House extends BaseModel
         'cost_detail' => 'array',
         'support_facilities' => 'array',
         'indoor_img' => 'array',
+        'relevant_proves_img' => 'array',
     ];
 
     protected $appends = [

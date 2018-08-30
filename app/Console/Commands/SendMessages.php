@@ -50,7 +50,7 @@ class SendMessages extends Command
         if (!$remind->isEmpty()) {
             foreach ($remind as $key => $v) {
                 $item[$key][0] = $v->remind_info;  //标题
-                $item[$key][1] = $v->model_type == 'App\Models\House' ? House::where('guid', $v->rel_guid)->value('guid') : Customer::where('guid', $v->rel_guid)->value('guid'); //业务内容
+                $item[$key][1] = $v->model_type == 'App\Models\House' ? House::where('guid', $v->rel_guid)->value('title') : Customer::where('guid', $v->rel_guid)->value('name'); //业务内容
                 $item[$key][2] = User::where('guid', $v->user_guid)->value('openid'); //接收人openid
                 $item[$key][3] = $v->model_type == 'App\Models\House' ? '点击查看房源详情' : '点击查看客源详情'; //备注
                 $item[$key][4] = $v->model_type; //模型

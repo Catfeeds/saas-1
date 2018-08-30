@@ -192,6 +192,8 @@ class HousesRequest extends FormRequest
             case 'transferHouse':
                 return [
                     'user_guid' => [
+                        'required',
+                        'max:32',
                         Rule::in(
                             User::all()->pluck('guid')->toArray()
                         )

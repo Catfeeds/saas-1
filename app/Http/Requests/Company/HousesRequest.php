@@ -5,6 +5,7 @@ namespace App\Http\Requests\Company;
 use App\Models\BuildingBlock;
 use App\Models\CompanyFramework;
 use App\Models\House;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,6 +28,10 @@ class HousesRequest extends FormRequest
             case 'changePersonnel':
                 return [
                     'house_guid.in' => '房源必须存在',
+                ];
+            case 'transferHouse' :
+                return [
+                    'user_guid.in' => '用户必须存在',
                 ];
             default;
                 return [
@@ -183,6 +188,14 @@ class HousesRequest extends FormRequest
                     'key_number' => 'required|max:32',
                     'key_single' => 'nullable',
                     'received_time' => 'required'
+                ];
+            case 'transferHouse':
+                return [
+                    'user_guid' => [
+                        Rule::in(
+                            User::all()->pluck('guid')->toArray()
+                        )
+                    ]
                 ];
             default:
                 {

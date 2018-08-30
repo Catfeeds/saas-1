@@ -174,14 +174,49 @@ class HousesController extends APIBaseController
         return $this->sendResponse($res,'通过楼座,楼层获取房源成功');
     }
 
+    // 看房方式
     public function seeHouseWay(
         HousesRequest $request,
         HousesService $service
     )
     {
-        $service->seeHouseWay($request);
+        $res = $service->seeHouseWay($request);
+        if (empty($res)) return $this->sendError('看房方式添加失败');
+        return $this->sendResponse($res,'看房方式添加成功');
+    }
 
-
+    // 转移房源
+    public function transferHouse
+    (
+        HousesRequest $request,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->transferHouse($request);
+        if (!$res) return $this->sendError('转移房源失败');
+        return $this->sendResponse($res,'转移房源成功');
+    }
+    
+    // 转为公盘
+    public function changeToPublic
+    (
+        $guid,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->changeToPublic($guid);
+        return $this->sendResponse($res,'转为公盘成功');
+    }
+    
+    // 转为私盘
+    public function switchToPrivate
+    (
+        $guid,
+        HousesRepository $repository
+    )
+    {
+        $res = $repository->switchToPrivate($guid);
+        return $this->sendResponse($res,'转为公盘成功');
     }
 
 }

@@ -121,6 +121,18 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::resource('tracks','TracksController');
      // 写提醒
     Route::resource('reminds','RemindsController');
+    //带看登记
+    Route::resource('visits', 'VisitsController');
+
+
+    /*
+   |--------------------------------------------------------------------------
+   | 客源管理
+   |--------------------------------------------------------------------------
+   */
+
+    Route::resource('customers', 'CustomersController');
+
     /*
     |--------------------------------------------------------------------------
     | 基础数据

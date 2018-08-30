@@ -84,4 +84,17 @@ class CustomersRepository extends Model
         return Customer::where('guid', $guid)->update(['guardian_person' => $request->guardian_person]);
     }
 
+    //获取客源下拉数据
+    public function getCustomer($request)
+    {
+        $res = Customer::where('name', 'like', '%'. $request->name.'%')->orWhere('tel', $request->name)->get();
+        return $res->map(function($v) {
+           return  [
+               'value' => $v->guid,
+               'label' => $v->name,
+               'tel' => $v->tel
+           ];
+        });
+    }
+
 }

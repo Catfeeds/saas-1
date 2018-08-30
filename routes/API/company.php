@@ -147,6 +147,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     Route::resource('customers', 'CustomersController');
 
+    // 获取正常状态客源下拉数据
+    Route::get('normal_customer','CustomersController@normalCustomer');
+
     /*
     |--------------------------------------------------------------------------
     | 基础数据

@@ -160,13 +160,13 @@ class HousesRepository extends Model
     // 转为公盘
     public function changeToPublic($request)
     {
-        return House::where('guid',$request->guid)->update(['guardian_person' => null,'public_private' => 2]);
+        return House::where('guid',$request->guid)->update(['guardian_person' => null, 'public_private' => 2]);
     }
     
     // 转为私盘
     public function switchToPrivate($request)
     {
-        return House::where('guid',$request->guid)->update(['guardian_person' => Common::user()->guid,'public_private' => 1]);
+        return House::where('guid',$request->guid)->update(['guardian_person' => Common::user()->guid, 'public_private' => 1]);
     }
     
     // 修改证件图片

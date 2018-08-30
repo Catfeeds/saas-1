@@ -102,4 +102,15 @@ class CustomersRepository extends Model
         });
     }
 
+    // 获取正常状态的客源下拉数据
+    public function normalCustomer()
+    {
+        $res = Customer::where(['company_guid' => Common::user()->company_guid, 'status' => 1])->get();
+        return $res->map(function ($v){
+            return [
+                'value' => $v->guid,
+                'label' => $v->customer_info
+            ];
+        });
+    }
 }

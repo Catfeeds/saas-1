@@ -172,6 +172,8 @@ class HousesRepository extends Model
     // 修改证件图片
     public function relevantProves($request)
     {
-        return House::where('guid',$request->guid)->update(['relevant_proves_img' => json_encode($request->relevant_proves_img)]);
+        $res = House::where('guid',$request->guid)->update(['relevant_proves_img' => json_encode($request->relevant_proves_img)]);
+        if (empty($res)) return false;
+        return true;
     }
 }

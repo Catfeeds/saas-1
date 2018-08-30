@@ -253,6 +253,11 @@ class HousesController extends APIBaseController
     {
         $res = $repository->relevantProves($request);
         if (!$res) return $this->sendError('修改证件图片失败');
-        return $this->sendResponse($res,'修改证件图片成功');
+        return $this->sendResponse(collect($request->relevant_proves_img)->map(function($img) {
+            return [
+                'name' => $img,
+                'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
+            ];
+        }),'修改证件图片成功');
     }
 }

@@ -104,10 +104,13 @@ class HousesService
         $house
     )
     {
+        // 房源
+        $house = $house->with(['buildingBlock', 'entryPerson.companyFramework', 'guardianPerson.companyFramework', 'picPerson.companyFramework', 'keyPerson.companyFramework'])->first();
+
         $data = array();
-        $data['top'] = 1 ? true : false; // 置顶
+        $data['top'] = $house->top == 1 ? true : false; // 置顶
         $data['img'] = $house->indoor_img_cn; // 图片
-        $data['relevant_proves_img'] = $house->relevant_proves_img; // 相关证件
+        $data['relevant_proves_img'] = $house->relevant_proves_img??array(); // 相关证件
         $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
         // 门牌号
         if (empty($house->buildingBlock->unit)) {
@@ -151,9 +154,6 @@ class HousesService
             $entryPersonName = $house->entryPerson->name;
             // 录入人所属门店
             if ($house->entryPerson->rel_guid) $entryPersonStorefront = $house->entryPerson->companyFramework->name;
-
-
-//            if ($house->entryPerson->rel_guid) $entryPersonStorefront = CompanyFramework::find($house->entryPerson->rel_guid)->name;
             // 录入人图像
             if ($house->entryPerson->pic) $entryPersonPic = config('setting.qiniu_url') . $house->entryPerson->pic;
         }
@@ -169,8 +169,6 @@ class HousesService
             $guardianPersonName = $house->guardianPerson->name;
             // 维护人所属门店
             if ($house->guardianPerson->rel_guid) $guardianPersonStorefront = $house->entryPerson->companyFramework->name;
-
-//            if ($house->guardianPerson->rel_guid) $guardianPersonStorefront = CompanyFramework::find($house->guardianPerson->rel_guid)->name;
             // 维护人图像
             if ($house->guardianPerson->pic) $guardianPersonPic = config('setting.qiniu_url') . $house->guardianPerson->pic;
         }
@@ -185,8 +183,6 @@ class HousesService
             $picPersonName = $house->picPerson->name;
             // 图片人所属门店
             if ($house->picPerson->rel_guid) $picPersonStorefront = $house->entryPerson->companyFramework->name;
-
-//            if ($house->picPerson->rel_guid) $picPersonStorefront = CompanyFramework::find($house->picPerson->rel_guid)->name;
             // 图片人图像
             if ($house->picPerson->pic) $picPersonStorePic = config('setting.qiniu_url') . $house->picPerson->pic;
         }
@@ -201,8 +197,6 @@ class HousesService
             $keyPersonName = $house->keyPerson->name;
             // 钥匙人所属门店
             if ($house->keyPerson->rel_guid) $keyPersonStorefront = $house->entryPerson->companyFramework->name;
-
-//            if ($house->keyPerson->rel_guid) $keyPersonStorefront = CompanyFramework::find($house->keyPerson->rel_guid)->name;
             // 钥匙人图像
             if ($house->keyPerson->pic) $keyPersonPic = config('setting.qiniu_url') . $house->keyPerson->pic;
         }

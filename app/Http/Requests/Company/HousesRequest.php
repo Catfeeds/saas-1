@@ -251,7 +251,7 @@ class HousesRequest extends FormRequest
                             House::all()->pluck('guid')->toArray()
                         )
                     ],
-                    'relevant_proves_img' => 'max:1024'
+                    'relevant_proves_img' => 'required'
                 ];
             default:
                 {

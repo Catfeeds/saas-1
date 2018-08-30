@@ -112,15 +112,15 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 修改房源图片
     Route::get('update_img/{guid}','HousesController@updateImg');
     // 置顶
-    Route::get('set_top/{guid}','HousesController@setTop');
+    Route::get('set_top','HousesController@setTop');
     // 取消置顶
-    Route::get('cancel_top/{guid}','HousesController@cancelTop');
+    Route::get('cancel_top','HousesController@cancelTop');
     // 转移房源
     Route::get('transfer_house','HousesController@transferHouse');
     // 转为公盘
-    Route::get('change_to_public/{guid}','HousesController@changeToPublic');
+    Route::get('change_to_public','HousesController@changeToPublic');
     // 转为私盘
-    Route::get('switch_to_private/{guid}','HousesController@switchToPrivate');
+    Route::get('switch_to_private','HousesController@switchToPrivate');
     // 转为无效
     Route::get('turned_invalid','HousesController@turnedInvalid');
     // 转为有效

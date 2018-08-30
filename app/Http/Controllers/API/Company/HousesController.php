@@ -144,22 +144,22 @@ class HousesController extends APIBaseController
     // 房源置顶
     public function setTop
     (
-        $guid,
+        HousesRequest $request,
         HousesRepository $repository
     )
     {
-        $res = $repository->setTop($guid);
+        $res = $repository->setTop($request);
         return $this->sendResponse($res,'房源置顶成功');
     }
 
     // 取消置顶
     public function cancelTop
     (
-        $guid,
+        HousesRequest $request,
         HousesRepository $repository
     )
     {
-        $res = $repository->cancelTop($guid);
+        $res = $repository->cancelTop($request);
         return $this->sendResponse($res,'取消置顶成功');
     }
 
@@ -200,23 +200,25 @@ class HousesController extends APIBaseController
     // 转为公盘
     public function changeToPublic
     (
-        $guid,
+        HousesRequest $request,
         HousesRepository $repository
     )
     {
-        $res = $repository->changeToPublic($guid);
+        $res = $repository->changeToPublic($request);
+        if (!$res) return $this->sendError('转为公盘失败');
         return $this->sendResponse($res,'转为公盘成功');
     }
     
     // 转为私盘
     public function switchToPrivate
     (
-        $guid,
+        HousesRequest $request,
         HousesRepository $repository
     )
     {
-        $res = $repository->switchToPrivate($guid);
-        return $this->sendResponse($res,'转为公盘成功');
+        $res = $repository->switchToPrivate($request);
+        if (!$res) return $this->sendError('转为私盘成功');
+        return $this->sendResponse($res,'转为私盘成功');
     }
 
     // 转为无效

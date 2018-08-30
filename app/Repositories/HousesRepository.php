@@ -132,15 +132,15 @@ class HousesRepository extends Model
     }
 
     // 房源置顶
-    public function setTop($guid)
+    public function setTop($request)
     {
-        return House::where(['guid' => $guid])->update(['top' => 1]);
+        return House::where(['guid' => $request->guid])->update(['top' => 1]);
     }
     
     // 取消置顶
-    public function cancelTop($guid)
+    public function cancelTop($request)
     {
-        return House::where('guid',$guid)->update(['top' => 2]);
+        return House::where('guid',$request->guid)->update(['top' => 2]);
     }
     
    // 通过楼座，楼层获取房源信息
@@ -161,14 +161,14 @@ class HousesRepository extends Model
     }
 
     // 转为公盘
-    public function changeToPublic($guid)
+    public function changeToPublic($request)
     {
-        return House::where('guid',$guid)->update(['guardian_person' => null]);
+        return House::where('guid',$request->guid)->update(['guardian_person' => null]);
     }
     
     // 转为私盘
-    public function switchToPrivate($guid)
+    public function switchToPrivate($request)
     {
-        return House::where('guid',$guid)->update(['guardian_person' => Common::user()->guid]);
+        return House::where('guid',$request->guid)->update(['guardian_person' => Common::user()->guid]);
     }
 }

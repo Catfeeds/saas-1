@@ -282,7 +282,6 @@ class HousesService
             } elseif ($request->type == 2) {
                 $data['guardian_person'] = '';
             }
-
             $houseStatus = House::where('guid',$request->guid)->update($data);
             if (empty($houseStatus)) throw new \Exception('修改房源状态失败');
 

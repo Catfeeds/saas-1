@@ -282,9 +282,12 @@ class HousesService
             $data = ['status' => 1];
             if ($request->type == 1) {
                 $data['guardian_person'] = Common::user()->guid;
+                $data['public_private'] = 1;
             } elseif ($request->type == 2) {
                 $data['guardian_person'] = '';
+                $data['public_private'] = 2;
             }
+            dd($data);
             $houseStatus = House::where('guid',$request->guid)->update($data);
             if (empty($houseStatus)) throw new \Exception('修改房源状态失败');
 

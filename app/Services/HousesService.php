@@ -6,6 +6,7 @@ use App\Handler\Common;
 use App\Models\BuildingBlock;
 use App\Models\CompanyFramework;
 use App\Models\House;
+use App\Models\HouseOperationRecord;
 use App\Models\SeeHouseWay;
 use App\Models\User;
 
@@ -335,5 +336,15 @@ class HousesService
             $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit;
         }
         return $data;
+    }
+
+
+    //获取房源动态
+    public function getDynamic($request)
+    {
+        $res = HouseOperationRecord::with('user:guid,name,tel')->where('house_guid', $request->house_guid);
+        if (!empty($request->type)) $res = $res->where('type', $request->type);
+        $res = $res->latest()->get();
+        return $res;
     }
 }

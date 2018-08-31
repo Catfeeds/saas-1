@@ -34,5 +34,20 @@ class TracksService
 
     }
 
+    // 修改跟进信息
+    public function updateTrack($request, $track)
+    {
+        \DB::beginTransaction();
+        try {
+            $track->tracks_info = $request->tracks_info;
+            if (!$track->save()) throw new \Exception('修改跟进失败');
+
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            return false;
+        }
+    }
 
 }

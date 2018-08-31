@@ -25,6 +25,12 @@ class TracksService
             $update = $request->model_type::where('guid', $request->rel_guid)->update(['track_time' => $track->created_at->format('Y-m-d H:i')]);
             if (empty($update)) throw new \Exception('修改房源/客源跟进时间失败');
 
+            // 写入跟进
+            if ($request->model_type == 'App\Models\House') {
+                $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->rel_guid, 1, $request->tracks_info);
+                if (empty($houseOperationRecords)) throw new \Exception('房源跟进操作记录添加失败');
+            }
+
             \DB::commit();
             return true;
         } catch (\Exception $exception) {

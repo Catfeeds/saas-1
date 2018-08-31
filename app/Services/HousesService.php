@@ -331,14 +331,14 @@ class HousesService
     {
         \DB::beginTransaction();
         try {
-            $ownerinfo = House::where('guid',$request->guid)->pluck('owner_info')->first();
-            if (empty($ownerinfo)) throw new \Exception('获取业主信息失败');
+            $ownerInfo = House::where('guid',$request->guid)->pluck('owner_info')->first();
+            if (empty($ownerInfo)) throw new \Exception('获取业主信息失败');
 
-            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid,4,'','');
-            if (empty($houseOperationRecords)) throw  new \Exception('查看业主信息操作记录失败');
+            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid,4,'查看了房源的业主信息');
+            if (empty($houseOperationRecords)) throw  new \Exception('查看业主信息添加操作记录失败');
 
             \DB::commit();
-            return $ownerinfo;
+            return true;
         } catch (\Exception $exception) {
             \DB::roolback();
             return false;
@@ -359,11 +359,11 @@ class HousesService
             }
             if (empty($data)) throw new \Exception('获取门牌号失败');
 
-            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,4,'','');
-            if (empty($houseOperationRecords)) throw new \Exception('查看门牌号操作记录失败');
+            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,4,'查看了房源的业门牌号信息');
+            if (empty($houseOperationRecords)) throw new \Exception('查看门牌号添加操作记录失败');
 
             \DB::commit();
-            return $data;
+            return true;
         } catch (\Exception $exception) {
             \DB::roolback();
             return false;

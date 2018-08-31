@@ -54,7 +54,7 @@ class VisitsRequest extends FormRequest
                        Rule::in($array)
                    ],
                    'rel_guid' => 'required',
-                   'remarks' => 'required|max:255',
+                   'remarks' => 'nullable|max:255',
                    'visit_img' => 'nullable',
                    'visit_date' => 'required',
                    'visit_time' => 'required'

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Company;
 
+use App\Models\House;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class HouseOperationRecordsRequest extends FormRequest
 {
@@ -41,7 +43,13 @@ class HouseOperationRecordsRequest extends FormRequest
         switch ($this->route()->getActionMethod()) {
             case 'index':
                 return [
-                    'house_guid' => 'required|exists:house_operation_records,house_guid',
+                    'house_guid' => [
+                        'required',
+                        'max:32',
+                        Rule::in(
+                            House::all()->pluck('guid')->toArray()
+                        )
+                    ],
                     'type' => 'nullable|integer|between:1,6'
                 ];
                 default;

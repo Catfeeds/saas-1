@@ -112,7 +112,7 @@ class CustomersRepository extends Model
         return $res->map(function ($v){
             return [
                 'value' => $v->guid,
-                'label' => $v->customer_info
+                'label' => '客户:'.$v->customer_info[0]['name'].'  电话:'.$v->customer_info[0]['tel']
             ];
         });
     }

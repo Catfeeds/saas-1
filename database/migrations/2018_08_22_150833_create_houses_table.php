@@ -28,7 +28,7 @@ class CreateHousesTable extends Migration
             // 基础信息
             $table->tinyInteger('grade')->nullable()->comment('房源等级 1: A类 2: B类 3: C类');
             $table->tinyInteger('public_private')->default(1)->comment('公私盘 1: 私盘 2: 公盘');
-            $table->decimal('price',10,2)->nullable()->comment('租金');
+            $table->decimal('price',10)->nullable()->comment('租金');
             $table->tinyInteger('price_unit')->nullable()->comment('租金单位 1: 元/月 2: 元/平/月 3: 元/平/天');
             $table->tinyInteger('payment_type')->nullable()->comment('付款方式: 1: 押一付三 2: 押一付二 3: 押一付一 4: 押二付一 5: 押三付一 6: 半年付 7: 年付 8: 面谈');
             $table->string('increasing_situation_remark', 256)->nullable()->comment('递增情况');

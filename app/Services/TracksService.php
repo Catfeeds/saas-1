@@ -49,7 +49,7 @@ class TracksService
             if (!$track->save()) throw new \Exception('修改跟进失败');
 
             \DB::commit();
-            return true;
+            return $track;
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;

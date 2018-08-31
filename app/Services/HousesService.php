@@ -329,20 +329,45 @@ class HousesService
     // 获取业主信息
     public function getOwnerInfo($request)
     {
-        return House::where('guid',$request->guid)->pluck('owner_info')->first();
+        \DB::beginTransaction();
+        try {
+            $ownerinfo = House::where('guid',$request->guid)->pluck('owner_info')->first();
+            if (empty($ownerinfo)) throw new \Exception('获取业主信息失败');
+
+            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid,4,'','');
+            if (empty($houseOperationRecords)) throw  new \Exception('查看业主信息操作记录失败');
+
+            \DB::commit();
+            return $ownerinfo;
+        } catch (\Exception $exception) {
+            \DB::roolback();
+            return false;
+        }
     }
 
     // 获取门牌号
     public function getHouseNumber($request)
     {
-        $house = House::where('guid',$request->guid)->first();
-        $data = [];
-        if (empty($house->buildingBlock->unit)) {
-            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
-        } else {
-            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit;
+        \DB::beginTransaction();
+        try {
+            $house = House::where('guid',$request->guid)->first();
+            $data = [];
+            if (empty($house->buildingBlock->unit)) {
+                $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
+            } else {
+                $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit;
+            }
+            if (empty($data)) throw new \Exception('获取门牌号失败');
+
+            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,4,'','');
+            if (empty($houseOperationRecords)) throw new \Exception('查看门牌号操作记录失败');
+
+            \DB::commit();
+            return $data;
+        } catch (\Exception $exception) {
+            \DB::roolback();
+            return false;
         }
-        return $data;
     }
 
 

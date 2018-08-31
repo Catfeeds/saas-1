@@ -86,17 +86,19 @@ class Common
     }
 
     // 添加操作记录
-    public  static function houseOperationRecords(
+    public static function houseOperationRecords(
+        $user_guid,
         $house_guid,
         $type,
         $remarks,
-        $img
+        $img=null
     )
     {
         $houseOperationRecord = HouseOperationRecord::create([
+            'guid' => self::getUuid(),
+            'user_guid' => $user_guid,
             'house_guid' => $house_guid,
             'type' => $type,
-            'user_guid' => self::user()->guid,
             'remarks' => $remarks,
             'img' => $img
         ]);

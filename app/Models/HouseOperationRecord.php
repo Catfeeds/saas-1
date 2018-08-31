@@ -4,22 +4,15 @@ namespace App\Models;
 
 class HouseOperationRecord extends BaseModel
 {
+    
+    protected $casts = [
+        'img' => 'array'
+    ];
 
-    protected $appends = ['img_cn'];
-
-    //关联user
+    // 用户
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_guid', 'guid');
+        return $this->belongsTo('App\Models\User','user_guid','guid');
     }
 
-    public function getImgCnAttribute()
-    {
-        return collect($this->img)->map(function($img) {
-            return [
-                'value' => $img,
-                'url' => config('setting.qiniu_url'). $img. config('setting.qiniu_suffix')
-            ];
-        });
-    }
 }

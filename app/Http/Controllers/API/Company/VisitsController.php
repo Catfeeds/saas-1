@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\Company;
 
-
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\VisitsRequest;
 use App\Models\Visit;
@@ -26,11 +25,11 @@ class VisitsController extends APIBaseController
     //添加房源或客源带看
     public function store
     (
-        VisitsRepository $repository,
+        VisitsService $service,
         VisitsRequest $request
     )
     {
-        $res = $repository->addVisit($request);
+        $res = $service->addVisit($request);
         return $this->sendResponse($res, '带看登记成功');
     }
 

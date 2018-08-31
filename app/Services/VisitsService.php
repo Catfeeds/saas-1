@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Handler\Common;
+use App\Models\Visit;
+
 class VisitsService
 {
     //房源或客源跟进列表
@@ -22,5 +25,42 @@ class VisitsService
         }
         return $data;
     }
-    
+
+    //添加房源客源带看
+    public function addVisit($request)
+    {
+        \DB::beginTransaction();
+        try {
+            $visit = Visit::create([
+                'guid' => Common::getUuid(),
+                'visit_user' => Common::user()->guid,
+                'accompany' => $request->accompany,
+                'model_type' => $request->model_type,
+                'cover_rel_guid' => $request->cover_rel_guid,
+                'rel_guid' => $request->rel_guid,
+                'remarks' => $request->remarks,
+
+                'visit_img' => $request->visit_img,
+                'visit_date' => $request->visit_date,
+                'visit_time' => $request->visit_time,
+            ]);
+            if (empty($visit)) throw new \Exception('房源/客源带看失败');
+
+            // 添加操作记录
+            if ($request->model_type == 'App\Models\House') {
+                // 备注
+                $remarks = $request->remarks.';'.$visit->accompanyUser->name.'陪看';
+                $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->rel_guid, 2, $remarks, $request->visit_img);
+                if (empty($houseOperationRecords)) throw new \Exception('房源/客源带看操作记录添加失败');
+            }
+
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            return false;
+        }
+    }
+
+
 }

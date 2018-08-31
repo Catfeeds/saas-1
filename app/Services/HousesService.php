@@ -101,10 +101,9 @@ class HousesService
     }
 
     // 房源详情动态说明
-    public function getDynamicInfo($guid, $type)
+    public function getDynamicInfo($house, $type)
     {
-        $res = House::where('guid', $guid)->first();
-        $res->load(['record' => function($query) use ($type) {
+        $res = $house->load(['record' => function($query) use ($type) {
             $query->where('type', $type);
         }]);
         $user = ($res->record->pluck('name')->toArray());
@@ -148,11 +147,11 @@ class HousesService
         // 房源
         $house = House::where('guid', $house->guid)->with(['buildingBlock', 'entryPerson.companyFramework', 'guardianPerson.companyFramework', 'picPerson.companyFramework', 'keyPerson.companyFramework'])->first();
         // 查看核心信息
-        $data['see_info'] = $this->getDynamicInfo($house->guid, 4);
+        $data['see_info'] = $this->getDynamicInfo($house, 4);
         // 跟进信息
-        $data['track_info'] = $this->getDynamicInfo($house->guid, 1);
+        $data['track_info'] = $this->getDynamicInfo($house, 1);
         // 上传图片信息
-        $data['img_info'] = $this->getDynamicInfo($house->guid, 3);
+        $data['img_info'] = $this->getDynamicInfo($house, 3);
         $data['top'] = $house->top == 1 ? true : false; // 置顶
         $data['img'] = $house->indoor_img_cn; // 图片
         $data['indoor_img'] = $house->indoor_img; // 室内图未处理

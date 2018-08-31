@@ -23,8 +23,9 @@ class VisitsRequest extends FormRequest
         switch ($this->route()->getActionMethod()) {
             case 'store':
                 return [
-                    'rel_guid.in' => '房源/客源必须存在',
-                    'accompany.exists' => '陪看人员必须存在'
+                    'cover_rel_guid.in' => '房源/客源必须存在',
+                    'accompany.exists' => '陪看人员必须存在',
+                    'rel_guid' => '带看房源或客源必须填写'
                 ];
                 default;
                 return [];
@@ -43,7 +44,6 @@ class VisitsRequest extends FormRequest
         } else {
             $array = $this->model_type::all()->pluck('guid')->toArray();
         }
-
        switch ($this->route()->getActionMethod()) {
            case 'store':
                return [
@@ -63,7 +63,6 @@ class VisitsRequest extends FormRequest
                return [
 
                ];
-
        }
     }
 }

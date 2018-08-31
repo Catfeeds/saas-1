@@ -4,6 +4,7 @@ namespace App\Models;
 
 class HouseOperationRecord extends BaseModel
 {
+
     protected $casts = [
         'img' => 'array'
     ];

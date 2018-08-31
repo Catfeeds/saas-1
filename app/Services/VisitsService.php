@@ -52,7 +52,6 @@ class VisitsService
                 $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->rel_guid, 2, $remarks, $request->visit_img);
                 if (empty($houseOperationRecords)) throw new \Exception('房源/客源带看操作记录添加失败');
             }
-
             \DB::commit();
             return true;
         } catch (\Exception $exception) {

@@ -143,6 +143,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     //带看登记
     Route::resource('visits', 'VisitsController');
 
+    //获取房源动态
+    Route::resource('house_operation_records', 'HouseOperationRecordsController');
+
 
     /*
     |--------------------------------------------------------------------------

@@ -55,6 +55,12 @@ class House extends BaseModel
         return $this->hasMany(Track::class, 'rel_guid', 'guid')->where('model_type', 'App\Models\House');
     }
     
+    // 动态
+    public function record()
+    {
+        return $this->hasManyThrough(User::class,HouseOperationRecord::class,'house_guid', 'guid', 'guid', 'user_guid');
+    }
+    
     // 录入人
     public function entryPerson()
     {

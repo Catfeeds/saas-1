@@ -21,6 +21,9 @@ class User extends Authenticatable
 
     protected $guarded = [];
 
+    protected $appends = [
+        'pic_cn'
+    ];
 
     //获取token
     public function getAccessTokenAttribute()
@@ -50,6 +53,18 @@ class User extends Authenticatable
     public function detailInfo()
     {
         return $this->hasOne(UserInfo::class, 'user_guid', 'guid');
+    }
+
+    // 公司
+    public function company()
+    {
+        return $this->belongsTo('App\Models\Company','company_guid','guid');
+    }
+
+    // 用户头像
+    public function getPicCnAttribute()
+    {
+        return empty($this->pic) ? config('setting.user_default_img') : config('setting.qiniu_url') . $this->pic;
     }
 
 }

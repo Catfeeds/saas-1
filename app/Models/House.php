@@ -29,7 +29,10 @@ class House extends BaseModel
         'open_bill_cn',
         'shortest_lease_cn',
         'actuality_cn',
-        'relevant_proves_img_cn'
+        'relevant_proves_img_cn',
+        'indoor_img_url',
+        'house_type_img_url',
+        'outdoor_img_url'
     ];
 
     // 房源关联钥匙
@@ -353,6 +356,39 @@ class House extends BaseModel
     public function getRelevantProvesImgCnAttribute()
     {
         return collect($this->relevant_proves_img)->map(function ($img) {
+            return [
+                'name' => $img,
+                'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
+            ];
+        })->values();
+    }
+
+    // 室内图  indoor_img_url
+    public function getIndoorImgUrlAttribute()
+    {
+        return collect($this->indoor_img)->map(function ($img) {
+            return [
+                'name' => $img,
+                'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
+            ];
+        })->values();
+    }
+
+    // 户型图 house_type_img_url
+    public function getHouseTypeImgUrlAttribute()
+    {
+        return collect($this->house_type_img)->map(function ($img) {
+            return [
+                'name' => $img,
+                'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
+            ];
+        })->values();
+    }
+
+    // 室外图 outdoor_img_url
+    public function getOutdoorImgUrlAttribute()
+    {
+        return collect($this->outdoor_img)->map(function ($img) {
             return [
                 'name' => $img,
                 'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),

@@ -110,7 +110,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 房号验证
     Route::get('house_number_validate', 'HousesController@houseNumberValidate');
     // 修改房源图片
-    Route::get('update_img','HousesController@updateImg');
+    Route::post('update_img','HousesController@updateImg');
     // 置顶
     Route::get('set_top','HousesController@setTop');
     // 取消置顶

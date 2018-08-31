@@ -125,7 +125,11 @@ class UsersController extends APIBaseController
         $user = Common::user();
         if (empty($user)) return $this->sendError('登录账户异常');
         $res = $user->toArray();
-        $res['company_name'] = Company::find($res['company_guid'])->name;
+        $res['company_name'] = $user->company->name; // 公司名
+        $res['company_guid'] = $user->company->guid; // 公司guid
+        $res['role_name'] = $user->role->name;  // 角色名称
+        $res['storefront'] = empty($user->companyFramework)?$user->company->name:$user->companyFramework->name;
+
         //根据当前登录用户角色,获取所有权限
         $res['permission'] = $user->role->permission->pluck('name')->toArray()??[];
         return $this->sendResponse($res, '用户信息获取成功');

@@ -111,6 +111,9 @@ class HousesService
         $data = array();
         $data['top'] = $house->top == 1 ? true : false; // 置顶
         $data['img'] = $house->indoor_img_cn; // 图片
+        $data['indoor_img'] = $house->indoor_img_url; // 室内图
+        $data['house_type_img'] = $house->house_type_img_url; // 户型图
+        $data['outdoor_img'] = $house->outdoor_img_url; // 室外图
         $data['relevant_proves_img'] = $house->relevant_proves_img_cn??array(); // 相关证件
         $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
         $data['owner_info'] = $house->owner_info; // 业主信息
@@ -271,7 +274,10 @@ class HousesService
             }
 
             // 修改房源钥匙人
-            $house = House::where(['guid' => $request->house_guid])->update(['key_person' => Common::user()->guid, 'have_key' => $haveKey]);
+            $house = House::where(['guid' => $request->house_guid])->update([
+                'key_person' => Common::user()->guid,
+                'have_key' => $haveKey
+            ]);
             if (empty($house)) throw new \Exception('房源钥匙人修改失败');
 
             // TODO 操作记录
@@ -369,7 +375,6 @@ class HousesService
             return false;
         }
     }
-
 
     //获取房源动态
     public function getDynamic($request)

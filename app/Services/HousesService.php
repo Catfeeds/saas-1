@@ -348,4 +348,31 @@ class HousesService
         $res = $res->latest()->get();
         return $res;
     }
+
+    // 修改房源图片
+    public function updateImg(
+        $request
+    )
+    {
+        \DB::beginTransaction();
+        try {
+            $house = House::where(['guid' => $request->guid])->update([
+                'house_type_img' => $request->house_type_img,
+                'indoor_img' => $request->indoor_img,
+                'outdoor_img' => $request->outdoor_img
+            ]);
+            if (empty($house)) throw new \Exception('房源编辑图片失败');
+
+            $img = array_merge($request->house_type_img, $request->indoor_img, $request->outdoor_img);
+            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'', $img);
+            if (empty($houseOperationRecords)) throw new \Exception('编辑图片添加操作记录失败');
+
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            return false;
+        }
+    }
+
 }

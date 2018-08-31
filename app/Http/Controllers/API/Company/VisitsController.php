@@ -30,6 +30,7 @@ class VisitsController extends APIBaseController
     )
     {
         $res = $service->addVisit($request);
+        if (empty($res)) return $this->sendError('带看登记失败');
         return $this->sendResponse($res, '带看登记成功');
     }
 

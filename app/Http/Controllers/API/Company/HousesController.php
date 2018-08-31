@@ -132,10 +132,10 @@ class HousesController extends APIBaseController
     public function updateImg
     (
         HousesRequest $request,
-        HousesRepository $repository
+        HousesService $service
     )
     {
-        $res = $repository->updateImg($request);
+        $res = $service->updateImg($request);
         if (!$res) return $this->sendError('修改房源图片失败');
         return $this->sendResponse($res,'修改房源图片成功');
     }

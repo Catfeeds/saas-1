@@ -106,7 +106,7 @@ class HousesService
     )
     {
         // 房源
-        $house = $house->with(['buildingBlock', 'entryPerson.companyFramework', 'guardianPerson.companyFramework', 'picPerson.companyFramework', 'keyPerson.companyFramework'])->first();
+        $house = House::where('guid', $house->guid)->with(['buildingBlock', 'entryPerson.companyFramework', 'guardianPerson.companyFramework', 'picPerson.companyFramework', 'keyPerson.companyFramework'])->first();
 
         $data = array();
         $data['top'] = $house->top == 1 ? true : false; // 置顶
@@ -263,8 +263,15 @@ class HousesService
                 if (empty($seeHouseWay)) throw new \Exception('看房方式添加失败');
             }
 
+            // 是否有钥匙
+            if ($request->type == 4) {
+                $haveKey = 1;
+            } else {
+                $haveKey = 2;
+            }
+
             // 修改房源钥匙人
-            $house = House::where(['guid' => $request->house_guid])->update(['key_person' => Common::user()->guid]);
+            $house = House::where(['guid' => $request->house_guid])->update(['key_person' => Common::user()->guid, 'have_key' => $haveKey]);
             if (empty($house)) throw new \Exception('房源钥匙人修改失败');
 
             // TODO 操作记录

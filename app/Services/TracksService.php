@@ -32,7 +32,7 @@ class TracksService
             }
 
             \DB::commit();
-            return true;
+            return $track;
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;

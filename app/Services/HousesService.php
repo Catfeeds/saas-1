@@ -214,6 +214,7 @@ class HousesService
         // 跟进
         $track = array();
         foreach ($house->track as $k => $v) {
+            $track[$k]['guid'] = $v->guid;
             $track[$k]['user'] = $v->user->name;
             $track[$k]['tracks_info'] = $v->tracks_info;
             $track[$k]['created_at'] = $v->created_at->format('Y-m-d H:i');

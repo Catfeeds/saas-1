@@ -16,7 +16,7 @@ class TracksController extends APIBaseController
     )
     {
         $res = $service->addTrack($request);
-        if (!$res) return $this->sendError('写跟进失败');
+        if (!$res) return $this->sendError('跟进添加失败');
         return $this->sendResponse($res,'写跟进成功');
     }
 }

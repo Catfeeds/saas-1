@@ -5,7 +5,10 @@ namespace App\Models;
 
 class Visit extends BaseModel
 {
-    protected $appends = [ 'time_cn', 'visit_img_cn'];
+    protected $appends = [
+        'time_cn',
+        'visit_img_cn'
+    ];
 
     //带看人员
     public function user()

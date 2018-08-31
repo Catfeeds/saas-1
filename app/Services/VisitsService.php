@@ -39,7 +39,6 @@ class VisitsService
                 'cover_rel_guid' => $request->cover_rel_guid,
                 'rel_guid' => $request->rel_guid,
                 'remarks' => $request->remarks,
-
                 'visit_img' => $request->visit_img,
                 'visit_date' => $request->visit_date,
                 'visit_time' => $request->visit_time,

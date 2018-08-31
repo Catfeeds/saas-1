@@ -10,6 +10,8 @@ class House extends BaseModel
         'cost_detail' => 'array',
         'support_facilities' => 'array',
         'indoor_img' => 'array',
+        'house_type_img' => 'array',
+        'outdoor_img' => 'array',
         'relevant_proves_img' => 'array'
     ];
 
@@ -105,7 +107,7 @@ class House extends BaseModel
     // 室内图
     public function getIndoorImgCnAttribute()
     {
-        return $this->indoor_img?config('setting.qiniu_url').$this->indoor_img[0]['img']. config('setting.qiniu_suffix'):config('setting.pc_building_house_default_img');
+        return $this->indoor_img?config('setting.qiniu_url').$this->indoor_img[0]. config('setting.qiniu_suffix'):config('setting.pc_building_house_default_img');
     }
 
     // 公私盘中文

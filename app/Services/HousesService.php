@@ -111,9 +111,12 @@ class HousesService
         $data = array();
         $data['top'] = $house->top == 1 ? true : false; // 置顶
         $data['img'] = $house->indoor_img_cn; // 图片
-        $data['indoor_img'] = $house->indoor_img_url; // 室内图
-        $data['house_type_img'] = $house->house_type_img_url; // 户型图
-        $data['outdoor_img'] = $house->outdoor_img_url; // 室外图
+        $data['indoor_img'] = $house->indoor_img; // 室内图未处理
+        $data['house_type_img'] = $house->house_type_img; // 户型图未处理
+        $data['outdoor_img'] = $house->outdoor_img; // 室外图未处理
+        $data['indoor_img_url'] = $house->indoor_img_url; // 室内图
+        $data['house_type_img_url'] = $house->house_type_img_url; // 户型图
+        $data['outdoor_img_url'] = $house->outdoor_img_url; // 室外图
         $data['relevant_proves_img'] = $house->relevant_proves_img_cn??array(); // 相关证件
         $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
         $data['owner_info'] = $house->owner_info; // 业主信息
@@ -137,7 +140,8 @@ class HousesService
         $data['orientation'] = $house->orientation_cn; //朝向
         $data['renovation'] = $house->renovation_cn;  //装修程度
         $data['type'] = $house->type_cn; //类型
-        $data['cost_detail'] = empty($house->cost_detail)?'暂无':implode(',', $house->cost_detail); // 费用明细
+        // 费用明细
+        $data['cost_detail'] = empty($house->cost_detail)?'暂无':implode(',', $house->cost_detail);
         $data['source'] = $house->source_cn; // 来源渠道
         $data['increasing_situation_remark'] = $house->increasing_situation_remark; // 递增情况
         $data['split'] = $house->split_cn; // 拆分
@@ -146,7 +150,8 @@ class HousesService
         $data['property_fee'] = $house->buildingBlock->property_fee_cn; // 物业费
         $data['register_company'] = $house->register_company_cn; // 是否注册
         $data['open_bill'] = $house->open_bill_cn; // 可开发票
-        $data['station_number'] = empty($house->station_number)?'暂无':$house->station_number.'个'; // 工位数量
+        // 工位数量
+        $data['station_number'] = empty($house->station_number)?'暂无':$house->station_number.'个';
         $data['rent_free'] = empty($house->rent_free)?'暂无':$house->rent_free.'天'; // 免租期
         $data['shortest_lease'] = $house->shortest_lease_cn; // 最短租期
         $data['actuality'] = $house->actuality_cn; // 现状
@@ -393,9 +398,9 @@ class HousesService
         \DB::beginTransaction();
         try {
             $house = House::where(['guid' => $request->guid])->update([
-                'house_type_img' => $request->house_type_img,
-                'indoor_img' => $request->indoor_img,
-                'outdoor_img' => $request->outdoor_img
+                'house_type_img' => json_encode($request->house_type_img),
+                'indoor_img' => json_encode($request->indoor_img),
+                'outdoor_img' => json_encode($request->outdoor_img)
             ]);
             if (empty($house)) throw new \Exception('房源编辑图片失败');
 

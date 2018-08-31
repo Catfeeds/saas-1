@@ -122,9 +122,9 @@ class HousesService
         $data['owner_info'] = $house->owner_info; // 业主信息
         // 门牌号
         if (empty($house->buildingBlock->unit)) {
-            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
+            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number.' '.$house->house_number;
         } else {
-            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit;
+            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit.' '.$house->house_number;
         }
         $data['public_private'] = $house->public_private_cn; // 公私盘
         $data['grade'] = $house->grade_cn; // 级别
@@ -349,7 +349,7 @@ class HousesService
             if (empty($houseOperationRecords)) throw  new \Exception('查看业主信息添加操作记录失败');
 
             \DB::commit();
-            return true;
+            return $ownerInfo;
         } catch (\Exception $exception) {
             \DB::roolback();
             return false;
@@ -364,9 +364,9 @@ class HousesService
             $house = House::where('guid',$request->guid)->first();
             $data = [];
             if (empty($house->buildingBlock->unit)) {
-                $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
+                $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number.' '.$house->house_number;
             } else {
-                $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit;
+                $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit.' '.$house->house_number;
             }
             if (empty($data)) throw new \Exception('获取门牌号失败');
 
@@ -374,7 +374,7 @@ class HousesService
             if (empty($houseOperationRecords)) throw new \Exception('查看门牌号添加操作记录失败');
 
             \DB::commit();
-            return true;
+            return $data;
         } catch (\Exception $exception) {
             \DB::roolback();
             return false;

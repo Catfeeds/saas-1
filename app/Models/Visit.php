@@ -10,24 +10,23 @@ class Visit extends BaseModel
         'visit_img_cn'
     ];
 
-    //带看人员
+    // 带看人员
     public function user()
     {
         return $this->hasOne(User::class,'guid', 'visit_user');
     }
 
-    //陪看人员
+    // 陪看人员
     public function accompanyUser()
     {
         return $this->hasOne(User::class,'guid', 'accompany');
     }
 
-    //关联房源
+    // 关联房源
     public function house()
     {
         return $this->belongsTo(House::class,'rel_guid', 'guid');
     }
-
 
     //带看单
     public function getVisitImgCnAttribute()

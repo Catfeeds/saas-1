@@ -308,7 +308,6 @@ class HousesService
                 $data['guardian_person'] = '';
                 $data['public_private'] = 2;
             }
-            dd($data);
             $houseStatus = House::where('guid',$request->guid)->update($data);
             if (empty($houseStatus)) throw new \Exception('修改房源状态失败');
 

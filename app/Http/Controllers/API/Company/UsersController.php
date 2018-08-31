@@ -131,7 +131,7 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res, '用户信息获取成功');
     }
 
-    //用户详细信息
+    // 用户详细信息
     public function getUser(UsersRequest $request)
     {
         $res = User::with('detailInfo')->where('guid', $request->guid)->first();
@@ -148,13 +148,13 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res,'重置密码成功');
     }
 
-    //发送短信验证
+    // 发送短信验证
     public function sendMessage($tel, $temp)
     {
         return  $this->sendCode($tel, $temp);
     }
 
-    //修改密码
+    // 修改密码
     public function updatePwd
     (
         UsersRequest $request,

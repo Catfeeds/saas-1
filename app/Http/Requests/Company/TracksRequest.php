@@ -51,6 +51,10 @@ class TracksRequest extends FormRequest
                     ],
                     'tracks_info' => 'required|max:255'
                 ];
+            case 'update':
+                return [
+                    'tracks_info' => 'required|max:255'
+                ];
             default:
                 {
                     return [];

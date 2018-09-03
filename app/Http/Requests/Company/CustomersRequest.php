@@ -72,6 +72,14 @@ class CustomersRequest extends FormRequest
                     'max_floor' => 'nullable',
                     'track_time' => 'nullable'
                 ];
+           case 'invalid':
+                 return [
+                   'customer_guid' => 'required|exists:customer,guid'
+                 ];
+            case 'updateGuest':
+                return [
+                    'customer_guid' => 'required|exists:customer,guid'
+                ];
                 default;
                 return[
                 ];

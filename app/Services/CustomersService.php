@@ -68,16 +68,13 @@ class CustomersService
     }
 
     // 客源转为无效/有效
-    public function invalid($guid, $request)
+    public function invalid($request)
     {
         \DB::beginTransaction();
         try {
-            $suc =  Customer::where('guid', $guid)->update([
-                'status' => $request->status,
-                'reason' => $request->reason
-            ]);
+            $suc =  Customer::where('guid', $request->guid)->update(['status' => $request->status]);
             if (!$suc) throw new \Exception('客源转为有效/无效失败');
-            $res = $this->addRecord($guid,4,Common::user()->guid,$request->remarks);
+            $res = $this->addRecord($request->guid,4, $request->remarks);
             if (!$res) throw new \Exception('客源操作记录添加失败');
             \DB::commit();
             return true;
@@ -89,13 +86,13 @@ class CustomersService
     }
 
     // 更改客源类型(公私盘)
-    public function updateGuest($guid, $request)
+    public function updateGuest($request)
     {
         \DB::beginTransaction();
         try {
-           $suc =  Customer::where('guid', $guid)->update(['guest' => $request->guest]);
+           $suc =  Customer::where('guid', $request->guid)->update(['guest' => $request->guest]);
            if (!$suc) throw new \Exception('房源类型更改失败');
-           $res = $this->addRecord($guid,4,Common::user()->guid,$request->remarks);
+           $res = $this->addRecord($request->guid,4, $request->remarks);
            if (!$res) throw new \Exception('客源操作记录添加失败');
             \DB::commit();
             return true;
@@ -121,13 +118,13 @@ class CustomersService
     }
 
     // 添加操作记录
-    public function addRecord($customer_guid, $type, $user_guid,$remarks)
+    public function addRecord($customer_guid, $type, $remarks)
     {
         return CustomerOperationRecord::create([
             'guid' => Common::getUuid(),
             'customer_guid' => $customer_guid,
             'type' => $type,
-            'user_guid' => $user_guid,
+            'user_guid' => Common::user()->guid,
             'remarks' => $remarks
         ]);
     }

@@ -106,13 +106,15 @@ class HousesService
         $res = $house->load(['record' => function($query) use ($type) {
             $query->where('type', $type);
         }]);
-        $user = ($res->record->pluck('name')->toArray());
+        $user = $res->record->pluck('name')->toArray();
         $count = count($user);
         switch ($type) {
             case 4:
                 if ($count == 0) {
                     return '最近暂无查看信息';
-                } elseif ($count < 3) {
+                } elseif ($count == 1) {
+                    return $user[0] .'最近查看核心信息';
+                } elseif ($count < 3 && $count > 1 ) {
                     return $user[0]. '、' . $user[1] . '最近查看核心信息';
                 } else {
                     return $user[0]. '、' . $user[1] . $user[2]. '等'.$count.'人最近查看核心信息';
@@ -121,6 +123,8 @@ class HousesService
             case 1:
                 if ($count == 0) {
                     return '最近暂无跟进信息';
+                } elseif ($count == 1) {
+                    return $user[0] .'最近跟进';
                 } elseif ($count < 3) {
                     return $user[0]. '、' . $user[1] . '最近跟进';
                 } else {
@@ -130,6 +134,8 @@ class HousesService
             case 3:
                 if ($count == 0) {
                     return '最近无图片上传';
+                } elseif ($count == 1) {
+                    return $user[0] .'最近上传图片';
                 } elseif ($count < 3) {
                     return $count[0]. '、' . $count[1] . '最近上传图片';
                 } else {

@@ -37,17 +37,6 @@ class CustomersController extends APIBaseController
         return $this->sendResponse($customer, '修改之前原始数据');
     }
 
-    // 获取客源下拉数据
-    public function create
-    (
-        CustomersRequest $request,
-        CustomersRepository $repository
-    )
-    {
-        $res = $repository->getCustomer($request);
-        return $this->sendResponse($res, '客源下拉数据获取成功');
-    }
-
     // 更新客源
     public function update
     (
@@ -61,14 +50,14 @@ class CustomersController extends APIBaseController
         return $this->sendResponse($res, '客源修改成功');
     }
 
-    //删除客源
+    // 删除客源
     public function destroy(Customer $customer)
     {
         $res = $customer->delete();
         return $this->sendResponse($res, '客源删除成功');
     }
 
-    //客源转为无效
+    // 客源转为无效
     public function invalid
     (
         $guid,
@@ -81,7 +70,7 @@ class CustomersController extends APIBaseController
         return $this->sendResponse($res, '设置成功');
     }
 
-    //更改客源类型(公私盘)
+    // 更改客源类型(公私盘)
     public function updateGuest
     (
         $guid,
@@ -94,7 +83,7 @@ class CustomersController extends APIBaseController
         return $this->sendResponse($res, '设置成功');
     }
 
-    //转移客源
+    // 转移客源
     public function transfer
     (
         $guid,

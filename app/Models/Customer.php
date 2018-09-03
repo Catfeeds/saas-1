@@ -11,8 +11,5 @@ class Customer extends BaseModel
         'block' => 'array',
         'building' => 'array',
         'house_type' => 'array',
-        'price' => 'array',
-        'acreage' => 'array',
-        'floor' => 'array'
     ];
 }

@@ -34,37 +34,43 @@ class CustomersRequest extends FormRequest
             case 'store':
                 return [
                     'level' =>'nullable|integer|between:1,3',
-                    'guest' => 'required|integer|between:1,3',
+                    'guest' => 'required|integer|between:1,2',
                     'customer_info' => 'required',
                     'remarks' => 'nullable',
                     'intention' => 'nullable',
                     'block' => 'nullable',
                     'building' => 'nullable',
                     'house_type' => 'nullable',
-                    'price' => 'nullable',
-                    'acreage' => 'nullable',
-                    'type' => 'nullable|integer',
+                    'min_price' => 'nullable',
+                    'max_price' => 'nullable',
+                    'min_acreage' => 'nullable',
+                    'max_acreage' => 'nullable',
+                    'type' => 'nullable|integer|between:1,5',
                     'renovation' => 'nullable|integer',
-                    'floor' => 'nullable',
-                    'target' => 'nullable'
+                    'min_floor' => 'nullable',
+                    'max_floor' => 'nullable',
+                    'track_time' => 'nullable'
                 ];
                 break;
             case 'update':
                 return [
                     'level' =>'nullable|integer|between:1,3',
-                    'guest' => 'required|integer|between:1,3',
+                    'guest' => 'required|integer|between:1,2',
                     'customer_info' => 'required',
                     'remarks' => 'nullable',
                     'intention' => 'nullable',
                     'block' => 'nullable',
                     'building' => 'nullable',
                     'house_type' => 'nullable',
-                    'price' => 'nullable',
-                    'acreage' => 'nullable',
-                    'type' => 'nullable|integer',
+                    'min_price' => 'nullable',
+                    'max_price' => 'nullable',
+                    'min_acreage' => 'nullable',
+                    'max_acreage' => 'nullable',
+                    'type' => 'nullable|integer|between:1,5',
                     'renovation' => 'nullable|integer',
-                    'floor' => 'nullable',
-                    'target' => 'nullable'
+                    'min_floor' => 'nullable',
+                    'max_floor' => 'nullable',
+                    'track_time' => 'nullable'
                 ];
                 default;
                 return[

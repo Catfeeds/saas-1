@@ -32,7 +32,7 @@ class CreateCustomersTable extends Migration
             $table->tinyInteger('renovation')->nullable()->comment('装修: 1: 豪华装修 2: 精装修 3: 中装修 4: 间装修 5: 毛坯');
             $table->string('min_floor',32)->nullable()->comment('最低楼层/层');
             $table->string('max_floor',32)->nullable()->comment('最高楼层/层');
-            $table->tinyInteger('status')->nullable()->comment('状态 1: 正常 2: 无效');
+            $table->tinyInteger('status')->nullable()->comment('状态 1: 正常 2: 无效 3: 暂缓 4: 内成交 5: 外成交 6: 电话错误 7: 其他');
             $table->char('entry_person',32)->nullable()->comment('录入人');
             $table->char('guardian_person',32)->nullable()->comment('维护人');
             // 跟进时间

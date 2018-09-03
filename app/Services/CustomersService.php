@@ -62,9 +62,10 @@ class CustomersService
         return true;
     }
 
-    public function getCustomerInfo($customer)
+    public function getCustomerInfo($guid)
     {
-        dd(123);
+        $res = Customer::with('entryPerson:guid,name,tel', 'guardianPerson:guid,name,tel', 'track', 'remind')->where('guid', $guid)->first();
+        return $res;
     }
 
     // 客源转为无效/有效

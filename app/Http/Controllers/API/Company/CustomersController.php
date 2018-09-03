@@ -33,11 +33,11 @@ class CustomersController extends APIBaseController
 
     public function show
     (
-        Customer $customer,
+        $guid,
         CustomersService $service
     )
     {
-        $res = $service->getCustomerInfo($customer);
+        $res = $service->getCustomerInfo($guid);
         return $this->sendResponse($res, '客源详情获取成功');
     }
 

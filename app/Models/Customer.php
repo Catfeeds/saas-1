@@ -86,13 +86,13 @@ class Customer extends BaseModel
     // 录入人
     public function entryPerson()
     {
-        return $this->belongsTo(User::class, 'guid', 'entry_person');
+        return $this->belongsTo(User::class, 'entry_person', 'guid');
     }
     
     // 维护人 
     public function guardianPerson()
     {
-        return $this->belongsTo(User::class, 'guid', 'guardian_person');
+        return $this->belongsTo(User::class, 'guardian_person', 'guid');
     }
 
     // 跟进

@@ -77,7 +77,7 @@ class CustomersService
                 'reason' => $request->reason
             ]);
             if (!$suc) throw new \Exception('客源转为有效/无效失败');
-            $res = $this->addRecord($guid,4,Common::user()->guid,$request->remarks);
+            $res = Common::customerOperationRecords(Common::user()->guid,$guid,4,)
             if (!$res) throw new \Exception('客源操作记录添加失败');
             \DB::commit();
             return true;

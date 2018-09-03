@@ -93,7 +93,7 @@ class CustomersController extends APIBaseController
         return $this->sendResponse($res, '设置成功');
     }
 
-    // 转移客源
+    // 转移客源,变更人员
     public function transfer
     (
         CustomersRequest $request,

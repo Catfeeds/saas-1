@@ -5,6 +5,7 @@
  */
 namespace App\Handler;
 
+use App\Models\CustomerOperationRecord;
 use App\Models\HouseOperationRecord;
 use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
@@ -85,7 +86,7 @@ class Common
         return (object)$e;
     }
 
-    // 添加操作记录
+    // 添加房源操作记录
     public static function houseOperationRecords(
         $user_guid,
         $house_guid,
@@ -103,6 +104,25 @@ class Common
             'img' => $img
         ]);
         if (empty($houseOperationRecord)) return false;
+        return true;
+    }
+
+    // 添加客源操作记录
+    public static function customerOperationRecords(
+        $user_guid,
+        $customer_guid,
+        $type,
+        $remarks
+    )
+    {
+        $customerOperationRecords = CustomerOperationRecord::create([
+            'guid' => self::getUuid(),
+            'user_guid' => $user_guid,
+            'customer_guid' => $customer_guid,
+            'type' => $type,
+            'remarks' => $remarks,
+        ]);
+        if (empty($customerOperationRecords)) return false;
         return true;
     }
 }

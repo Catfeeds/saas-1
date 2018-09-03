@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CustomersRepository extends Model
 {
-    //客源列表
+    // 客源列表
     public function getList($request)
     {
         return Customer::where('company_guid', Common::user()->company_guid)->paginate($request->per_page??10);
@@ -67,28 +67,6 @@ class CustomersRepository extends Model
         if (!$customer->save()) return false;
         return true;
     }
-
-    // 客源转为无效
-    public function invalid($guid, $request)
-    {
-        return Customer::where('guid', $guid)->update([
-            'status' => $request->status,
-            'reason' => $request->reason
-        ]);
-    }
-
-    // 更改客源类型(公私盘)
-    public function updateGuest($guid, $request)
-    {
-        return Customer::where('guid', $guid)->update(['guest' => $request->guest]);
-    }
-
-    // 转移客源
-    public function transfer($guid, $request)
-    {
-        return Customer::where('guid', $guid)->update(['guardian_person' => $request->guardian_person]);
-    }
-
 
     // 获取正常状态的客源下拉数据
     public function normalCustomer()

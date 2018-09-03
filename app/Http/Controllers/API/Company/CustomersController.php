@@ -5,18 +5,18 @@ namespace App\Http\Controllers\API\Company;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\CustomersRequest;
 use App\Models\Customer;
-use App\Repositories\CustomersRepository;
+use App\Services\CustomersService;
 
 class CustomersController extends APIBaseController
 {
-    // 客源类表
+    // 客源列表
     public function index
     (
         CustomersRequest $request,
-        CustomersRepository $repository
+        CustomersService $service
     )
     {
-        $res = $repository->getList($request);
+        $res = $service->getList($request);
         return $this->sendResponse($res, '客源列表获取成功');
     }
 
@@ -24,11 +24,21 @@ class CustomersController extends APIBaseController
     public function store
     (
         CustomersRequest $request,
-        CustomersRepository $repository
+        CustomersService $service
     )
     {
-        $res = $repository->addCustomer($request);
+        $res = $service->addCustomer($request);
         return $this->sendResponse($res, '客源添加成功');
+    }
+
+    public function show
+    (
+        Customer $customer,
+        CustomersService $service
+    )
+    {
+        $res = $service->getCustomerInfo($customer);
+        return $this->sendResponse($res, '客源详情获取成功');
     }
 
     // 客源修改之前原始数据
@@ -41,11 +51,11 @@ class CustomersController extends APIBaseController
     public function update
     (
         Customer $customer,
-        CustomersRepository $repository,
+        CustomersService $service,
         CustomersRequest $request
     )
     {
-        $res = $repository->updateCustomer($customer, $request);
+        $res = $service->updateCustomer($customer, $request);
         if (!$res) return $this->sendError('客源修改失败');
         return $this->sendResponse($res, '客源修改成功');
     }
@@ -62,10 +72,10 @@ class CustomersController extends APIBaseController
     (
         $guid,
         CustomersRequest $request,
-        CustomersRepository $repository
+        CustomersService $service
     )
     {
-        $res = $repository->invalid($guid, $request);
+        $res = $service->invalid($guid, $request);
         if (!$res) return $this->sendError('设置失败');
         return $this->sendResponse($res, '设置成功');
     }
@@ -75,10 +85,10 @@ class CustomersController extends APIBaseController
     (
         $guid,
         CustomersRequest $request,
-        CustomersRepository $repository
+        CustomersService $service
     )
     {
-        $res = $repository->updateGuest($guid, $request);
+        $res = $service->updateGuest($guid, $request);
         if (!$res) return $this->sendError('设置失败');
         return $this->sendResponse($res, '设置成功');
     }
@@ -88,10 +98,10 @@ class CustomersController extends APIBaseController
     (
         $guid,
         CustomersRequest $request,
-        CustomersRepository $repository
+        CustomersService $service
     )
     {
-        $res = $repository->transfer($guid, $request);
+        $res = $service->transfer($guid, $request);
         if (!$res) return $this->sendError('设置失败');
         return $this->sendResponse($res, '设置成功');
     }
@@ -115,10 +125,10 @@ class CustomersController extends APIBaseController
     // 获取正常状态客源下拉数据
     public function normalCustomer
     (
-        CustomersRepository $repository
+        CustomersService $service
     )
     {
-        $res = $repository->normalCustomer();
+        $res = $service->normalCustomer();
         return $this->sendResponse($res,'正常状态客源下拉数据获取成功');
     }
     

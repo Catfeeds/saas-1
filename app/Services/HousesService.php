@@ -93,7 +93,7 @@ class HousesService
         $houses['orientation'] = $res->orientation_cn; //朝向
         $houses['type'] = $res->type_cn; //类型
         $houses['floor'] = $res->floor. '层'; //楼层
-        $houses['total_floor'] = '共' . $res->total_floor . '层'; //总楼层
+        $houses['total_floor'] = $res->total_floor?'共' . $res->total_floor . '层': '共' . '-' . '层'; //总楼层
         $houses['top'] = $res->top == 1 ? true : false; // 置顶
         $houses['track_user'] = !$res->track->isEmpty() ? $res->track->sortByDesc('created_at')->first()->user->name : $res->entryPerson->name;
         $houses['track_time'] = $res->track_time; //跟进时间
@@ -156,7 +156,6 @@ class HousesService
         $data['see_info'] = $this->getDynamicInfo($house, 4);
         // 跟进信息
         $data['track_info'] = $this->getDynamicInfo($house, 1);
-
         // 上传图片信息
         $data['img_info'] = $this->getDynamicInfo($house, 3);
         $data['top'] = $house->top == 1 ? true : false; // 置顶

@@ -75,7 +75,7 @@ class HousesRepository extends Model
         $house->price_unit = $request->price_unit;
         $house->payment_type = $request->payment_type;
         $house->increasing_situation_remark = $request->increasing_situation_remark;
-        $house->cost_detail = $request->cost_detail;
+        $house->cost_detail = Common::arrayToObject($request->cost_detail);
         $house->acreage = $request->acreage;
         $house->split = $request->split;
         $house->mini_acreage = $request->mini_acreage;
@@ -88,7 +88,7 @@ class HousesRepository extends Model
         $house->open_bill = $request->open_bill;
         $house->station_number = $request->station_number;
         $house->rent_free = $request->rent_free;
-        $house->support_facilities = $request->support_facilities;
+        $house->support_facilities = Common::arrayToObject($request->support_facilities);
         $house->source = $request->source;
         $house->actuality = $request->actuality;
         $house->shortest_lease = $request->shortest_lease;

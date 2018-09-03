@@ -101,19 +101,20 @@ class HousesService
     }
 
     // 房源详情动态说明
-    public function getDynamicInfo($guid, $type)
+    public function getDynamicInfo($house, $type)
     {
-        $res = House::where('guid', $guid)->first();
-        $res->load(['record' => function($query) use ($type) {
+        $res = $house->load(['record' => function($query) use ($type) {
             $query->where('type', $type);
         }]);
-        $user = ($res->record->pluck('name')->toArray());
+        $user = $res->record->pluck('name')->toArray();
         $count = count($user);
         switch ($type) {
             case 4:
                 if ($count == 0) {
                     return '最近暂无查看信息';
-                } elseif ($count < 3) {
+                } elseif ($count == 1) {
+                    return $user[0] .'最近查看核心信息';
+                } elseif ($count < 3 && $count > 1 ) {
                     return $user[0]. '、' . $user[1] . '最近查看核心信息';
                 } else {
                     return $user[0]. '、' . $user[1] . $user[2]. '等'.$count.'人最近查看核心信息';
@@ -122,6 +123,8 @@ class HousesService
             case 1:
                 if ($count == 0) {
                     return '最近暂无跟进信息';
+                } elseif ($count == 1) {
+                    return $user[0] .'最近跟进';
                 } elseif ($count < 3) {
                     return $user[0]. '、' . $user[1] . '最近跟进';
                 } else {
@@ -131,6 +134,8 @@ class HousesService
             case 3:
                 if ($count == 0) {
                     return '最近无图片上传';
+                } elseif ($count == 1) {
+                    return $user[0] .'最近上传图片';
                 } elseif ($count < 3) {
                     return $count[0]. '、' . $count[1] . '最近上传图片';
                 } else {
@@ -148,11 +153,12 @@ class HousesService
         // 房源
         $house = House::where('guid', $house->guid)->with(['buildingBlock', 'entryPerson.companyFramework', 'guardianPerson.companyFramework', 'picPerson.companyFramework', 'keyPerson.companyFramework'])->first();
         // 查看核心信息
-        $data['see_info'] = $this->getDynamicInfo($house->guid, 4);
+        $data['see_info'] = $this->getDynamicInfo($house, 4);
         // 跟进信息
-        $data['track_info'] = $this->getDynamicInfo($house->guid, 1);
+        $data['track_info'] = $this->getDynamicInfo($house, 1);
+
         // 上传图片信息
-        $data['img_info'] = $this->getDynamicInfo($house->guid, 3);
+        $data['img_info'] = $this->getDynamicInfo($house, 3);
         $data['top'] = $house->top == 1 ? true : false; // 置顶
         $data['img'] = $house->indoor_img_cn; // 图片
         $data['indoor_img'] = $house->indoor_img; // 室内图未处理

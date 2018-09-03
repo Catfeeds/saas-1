@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-
 use App\Handler\Common;
 use App\Models\Customer;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +14,7 @@ class CustomersRepository extends Model
         return Customer::where('company_guid', Common::user()->company_guid)->paginate($request->per_page??10);
     }
 
-    //添加客源
+    // 添加客源
     public function addCustomer($request)
     {
         return Customer::create([
@@ -42,7 +41,7 @@ class CustomersRepository extends Model
         ]);
     }
 
-    //更新客源
+    // 更新客源
     public function updateCustomer($customer, $request)
     {
         $customer->level = $request->level;
@@ -63,7 +62,7 @@ class CustomersRepository extends Model
         return true;
     }
 
-    //客源转为无效
+    // 客源转为无效
     public function invalid($guid, $request)
     {
         return Customer::where('guid', $guid)->update([
@@ -72,35 +71,18 @@ class CustomersRepository extends Model
         ]);
     }
 
-    //更改客源类型(公私盘)
+    // 更改客源类型(公私盘)
     public function updateGuest($guid, $request)
     {
         return Customer::where('guid', $guid)->update(['guest' => $request->guest]);
     }
 
-    //转移客源
+    // 转移客源
     public function transfer($guid, $request)
     {
         return Customer::where('guid', $guid)->update(['guardian_person' => $request->guardian_person]);
     }
 
-    //获取客源下拉数据kan
-    public function getCustomer($request)
-    {
-        //如果全部是数字,则为电话号码
-        if(preg_match("/^\d*$/",$request->param)) {
-            $res = Customer::where('company_guid', Common::user()->company_guid)->where('tel', $request->param)->get();
-        } else {
-            $res = Customer::where('company_guid', Common::user()->company_guid)->where('name', 'like', '%'.$request->param. '%')->get();
-        }
-        return $res->map(function($v) {
-           return  [
-               'value' => $v->guid,
-               'label' => $v->name,
-               'tel' => $v->tel
-           ];
-        });
-    }
 
     // 获取正常状态的客源下拉数据
     public function normalCustomer()

@@ -79,7 +79,7 @@ class CustomersController extends APIBaseController
         return $this->sendResponse($res, '设置成功');
     }
 
-    // 更改客源类型(公私盘)
+    // 更改客源类型(公私客)
     public function updateGuest
     (
         CustomersRequest $request,

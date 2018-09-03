@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use function PHPSTORM_META\map;
+
 class Customer extends BaseModel
 {
     protected $casts = [
@@ -14,7 +16,7 @@ class Customer extends BaseModel
     ];
 
     protected $appends = [
-        'level_cn', 'type_cn', 'renovation_cn'
+        'level_cn', 'type_cn', 'renovation_cn', 'public_guest_cn', 'remarks_cn', 'price_interval_cn', 'acreage_interval_cn', 'intention_cn'
     ];
 
     //等级中文
@@ -30,7 +32,8 @@ class Customer extends BaseModel
             case 3:
                 return 'C';
                 break;
-                default;
+            default:
+                return '';
                 break;
         }
     }
@@ -54,7 +57,8 @@ class Customer extends BaseModel
             case 5:
                 return '其他';
                 break;
-                default;
+            default :
+                return '-';
                 break;
         }
     }
@@ -81,6 +85,66 @@ class Customer extends BaseModel
             default;
                 break;
         }
+    }
+    
+    // 公私客中文
+    public function getPublicGuestCnAttribute()
+    {
+        switch ($this->guest) {
+            case 1:
+                return '公客';
+                break;
+            case 2:
+                return '私客';
+                break;
+            default;
+                break;
+        }
+    }
+
+    // 备注
+    public function getRemarksCnAttribute()
+    {
+        if (empty($this->remarks)) return '无备注';
+        return $this->remarks;
+    }
+
+    // 价格区间
+    public function getPriceIntervalCnAttribute()
+    {
+        if (empty($this->min_price) && (!empty($this->max_price))) {
+            return $this->max_price . '元/月以下';
+        } elseif ((!empty($this->min_price)) && empty($this->max_price)) {
+            return $this->min_price . '元/月以上';
+        } elseif (empty($this->min_price) && empty($this->max_price)) {
+            return '暂无报价';
+        }else {
+            return $this->min_price .'-'. $this->max_price . '元/月';
+        }
+    }
+
+    // 面积区间
+    public function getAcreageIntervalCnAttribute()
+    {
+        if (empty($this->min_acreage) && (!empty($this->max_acreage))) {
+            return $this->max_acreage . '㎡以下';
+        } elseif ((!empty($this->min_acreage)) && empty($this->max_acreage)) {
+            return $this->min_acreage . '㎡以上';
+        } elseif (empty($this->min_acreage) && empty($this->max_acreage)) {
+            return '不限面积';
+        }else {
+            return $this->min_acreage . '-' . $this->max_acreage . '㎡';
+        }
+    }
+
+    // 区域
+    public function getIntentionCnAttribute()
+    {
+       return collect($this->intention)->map(function($v) {
+               return [
+                   'intention' => $v
+               ];
+       });
     }
 
     // 录入人

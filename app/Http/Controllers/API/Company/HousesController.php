@@ -23,6 +23,9 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
+//        House::whereIn('cost_detail->name', [])->get();
+
+
         $res = $repository->houseList($request, $service);
         return $this->sendResponse($res,'房源列表获取成功');
     }

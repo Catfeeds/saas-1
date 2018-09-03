@@ -96,12 +96,11 @@ class CustomersController extends APIBaseController
     // 转移客源
     public function transfer
     (
-        $guid,
         CustomersRequest $request,
         CustomersService $service
     )
     {
-        $res = $service->transfer($guid, $request);
+        $res = $service->transfer($request);
         if (!$res) return $this->sendError('设置失败');
         return $this->sendResponse($res, '设置成功');
     }
@@ -131,5 +130,5 @@ class CustomersController extends APIBaseController
         $res = $service->normalCustomer();
         return $this->sendResponse($res,'正常状态客源下拉数据获取成功');
     }
-
+    
 }

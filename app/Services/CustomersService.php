@@ -106,10 +106,18 @@ class CustomersService
         }
     }
 
-    // 转移客源
-    public function transfer($guid, $request)
+    // 转移客源,变更人员
+    public function transfer($request)
     {
-        return Customer::where('guid', $guid)->update(['guardian_person' => $request->guardian_person]);
+        $customer = Customer::where(['guid', $request->guid]);
+
+        if ($request->broker) {
+            return $customer->update(['guardian_person' => $request->broker]);
+        } elseif ($request->entry_person) {
+            return $customer->update(['entry_person' => $request->entry_person]);
+        } elseif ($request->guardian_person) {
+            return $customer->updata(['guardian_person' => $request->guardian_person]);
+        }
     }
 
     //添加操作记录

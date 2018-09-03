@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Handler\Common;
 use App\Models\Customer;
+use App\Models\CustomerOperationRecord;
 
 class CustomersService
 {
@@ -63,28 +64,64 @@ class CustomersService
 
     public function getCustomerInfo($customer)
     {
-
+        dd(123);
     }
 
-    // 客源转为无效
+    // 客源转为无效/有效
     public function invalid($guid, $request)
     {
-        return Customer::where('guid', $guid)->update([
-            'status' => $request->status,
-            'reason' => $request->reason
-        ]);
+        \DB::beginTransaction();
+        try {
+            $suc =  Customer::where('guid', $guid)->update([
+                'status' => $request->status,
+                'reason' => $request->reason
+            ]);
+            if (!$suc) throw new \Exception('客源转为有效/无效失败');
+            $res = $this->addRecord($guid,4,Common::user()->guid,$request->remarks);
+            if (!$res) throw new \Exception('客源操作记录添加失败');
+            \DB::commit();
+            return true;
+        } catch(\Exception $exception) {
+            \DB::rollback();
+            \Log::error('客源设置失败'.$exception->getMessage());
+            return false;
+        }
     }
 
     // 更改客源类型(公私盘)
     public function updateGuest($guid, $request)
     {
-        return Customer::where('guid', $guid)->update(['guest' => $request->guest]);
+        \DB::beginTransaction();
+        try {
+           $suc =  Customer::where('guid', $guid)->update(['guest' => $request->guest]);
+           if (!$suc) throw new \Exception('房源类型更改失败');
+           $res = $this->addRecord($guid,4,Common::user()->guid,$request->remarks);
+           if (!$res) throw new \Exception('客源操作记录添加失败');
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            \Log::error('房源类型更改失败'.$exception->getMessage());
+            return false;
+        }
     }
 
     // 转移客源
     public function transfer($guid, $request)
     {
         return Customer::where('guid', $guid)->update(['guardian_person' => $request->guardian_person]);
+    }
+
+    //添加操作记录
+    public function addRecord($customer_guid, $type, $user_guid,$remarks)
+    {
+        return CustomerOperationRecord::create([
+            'guid' => Common::getUuid(),
+            'customer_guid' => $customer_guid,
+            'type' => $type,
+            'user_guid' => $user_guid,
+            'remarks' => $remarks
+        ]);
     }
 
 

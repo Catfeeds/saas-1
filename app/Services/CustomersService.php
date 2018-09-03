@@ -14,7 +14,7 @@ class CustomersService
     public function getList($request)
     {
         return Customer::where([
-            'company_guid' => Common::user()->company_guid,
+            'company_guid' => 'ed8090e4a6b811e8bf9a416618026100',
             'status' => 1
         ])->paginate($request->per_page??10);
     }

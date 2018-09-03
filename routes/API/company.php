@@ -160,10 +160,10 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 客源转为无效
     Route::post('invalid', 'CustomersController@invalid');
 
-    // 更改客源类型(公私盘)
+    // 更改客源类型(公私客)
     Route::post('update_guest', 'CustomersController@updateGuest');
 
-    // 转移客源
+    // 转移客源,变更人员
     Route::post('transfer', 'CustomersController@transfer');
 
     /*

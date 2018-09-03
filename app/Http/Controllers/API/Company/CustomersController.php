@@ -9,7 +9,7 @@ use App\Repositories\CustomersRepository;
 
 class CustomersController extends APIBaseController
 {
-    // 客源类表
+    // 客源列表
     public function index
     (
         CustomersRequest $request,

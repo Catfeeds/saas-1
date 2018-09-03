@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Handler\Common;
+use App\Models\Block;
+use App\Models\Building;
 use App\Models\Customer;
 use App\Models\CustomerOperationRecord;
 
@@ -67,8 +69,25 @@ class CustomersService
 
     public function getCustomerInfo($guid)
     {
-        $res = Customer::with('entryPerson:guid,name,tel', 'guardianPerson:guid,name,tel', 'track', 'remind')->where('guid', $guid)->first();
-        return $res;
+        $res = Customer::with('entryPerson:guid,name,tel', 'guardianPerson:guid,name,tel', 'track', 'track.user', 'remind')->where('guid', $guid)->first();
+        $data = [];
+        $data['guid'] = $res->guid;
+        $data['level'] = $res->level_cn;
+        $data['guest'] = $res->guest_cn;
+        $data['title'] = $res->prince_cn.',' .$res->acreage_cn;
+        $data['customer_info'] = $res->customer_info;
+        $data['area'] = $res->intention;
+        // 意向楼盘
+        $data['building'] = Building::whereIn('guid', $res->building)->pluck('name')->toArray();
+        // 查询意向商圈
+        $data['block'] = Block::whereIn('guid', $res->block)->pluck('name')->toArray();
+        $data['house_type'] = $res->house_type;
+        $data['acreage'] = $res->acreage_cn;
+        $data['price'] = $res->price_cn;
+        $data['floor'] = $res->floor_cn;
+        $data['type'] = $res->type_cn;
+        $data['renovation'] = $res->renovation_cn;
+        $data
     }
 
     // 客源转为无效/有效

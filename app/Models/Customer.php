@@ -14,8 +14,32 @@ class Customer extends BaseModel
     ];
 
     protected $appends = [
-        'level_cn', 'type_cn', 'renovation_cn'
+        'level_cn', 'type_cn', 'renovation_cn', 'acreage_cn', 'price_cn', 'floor_cn', 'guest_cn'
     ];
+
+    // 录入人
+    public function entryPerson()
+    {
+        return $this->belongsTo(User::class, 'entry_person', 'guid');
+    }
+
+    // 维护人
+    public function guardianPerson()
+    {
+        return $this->belongsTo(User::class, 'guardian_person', 'guid');
+    }
+
+    // 跟进
+    public function track()
+    {
+        return $this->hasMany(Track::class,'rel_guid', 'guid')->where('model_type', 'App\Models\Customer');
+    }
+
+    // 带看
+    public function remind()
+    {
+        return $this->hasMany(Visit::class,'cover_rel_guid', 'guid')->where('model_type', 'App\Models\Customer');
+    }
 
     //等级中文
     public function getLevelCnAttribute()
@@ -59,6 +83,20 @@ class Customer extends BaseModel
         }
     }
 
+    //公私盘
+    public function getGuestCnAttribute()
+    {
+        switch ($this->guest) {
+            case 1:
+                return '公';
+                break;
+            case 2:
+                return '私';
+                default;
+                break;
+        }
+    }
+
     // 装修中文
     public function getRenovationCnAttribute()
     {
@@ -82,29 +120,49 @@ class Customer extends BaseModel
                 break;
         }
     }
-
-    // 录入人
-    public function entryPerson()
-    {
-        return $this->belongsTo(User::class, 'entry_person', 'guid');
-    }
     
-    // 维护人 
-    public function guardianPerson()
+    // 面积中文
+    public function getAcreageCnAttribute()
     {
-        return $this->belongsTo(User::class, 'guardian_person', 'guid');
+        if ($this->min_acreage && $this->max_acreage) {
+            return $this->min_acreage . '-' . $this->max_acreage .' ㎡';
+        } elseif ($this->min_acreage && !$this->max_acreage) {
+            return $this->min_acreage. ' ㎡以上';
+        } elseif (!$this->min_acreage && $this->max_acreage) {
+            return $this->max_acreage. ' ㎡以下';
+        } else {
+            return '';
+        }
     }
 
-    // 跟进
-    public function track()
+    // 价格中文
+    public function getPriceCnAttribute()
     {
-        return $this->hasMany(Track::class,'rel_guid', 'guid')->where('model_type', 'App\Models\Customer');
+        if ($this->min_price && $this->max_price) {
+            return $this->min_price . '-' . $this->max_price .' 元/月';
+        } elseif ($this->min_price && !$this->max_price) {
+            return $this->min_price. ' 元/月以上';
+        } elseif (!$this->min_price && $this->max_price) {
+            return $this->max_price. ' 元/月以下';
+        } else {
+            return '';
+        }
     }
 
-    // 带看
-    public function remind()
+    // 楼层中文
+    public function getFloorCnAttribute()
     {
-        return $this->hasMany(Visit::class,'cover_rel_guid', 'guid')->where('model_type', 'App\Models\Customer');
+        if ($this->min_floor && $this->max_floor) {
+            return $this->min_floor . '-' . $this->max_floor .'层';
+        } elseif ($this->min_floor && !$this->max_floor) {
+            return $this->min_floor. '层以上';
+        } elseif (!$this->min_floor && $this->max_floor) {
+            return $this->max_floor. '层以下';
+        } else {
+            return '';
+        }
     }
+
+
 
 }

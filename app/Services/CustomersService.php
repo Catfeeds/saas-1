@@ -120,7 +120,7 @@ class CustomersService
         }
     }
 
-    //添加操作记录
+    // 添加操作记录
     public function addRecord($customer_guid, $type, $user_guid,$remarks)
     {
         return CustomerOperationRecord::create([
@@ -131,7 +131,6 @@ class CustomersService
             'remarks' => $remarks
         ]);
     }
-
 
     // 获取正常状态的客源下拉数据
     public function normalCustomer()

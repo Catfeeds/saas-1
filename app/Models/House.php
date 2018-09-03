@@ -52,7 +52,7 @@ class House extends BaseModel
     // 跟进
     public function track()
     {
-        return $this->hasMany(Track::class, 'rel_guid', 'guid')->where('model_type', 'App\Models\House');
+        return $this->hasMany(Track::class, 'rel_guid', 'guid')->where('model_type', 'App\Models\House')->orderBy('created_at','desc');
     }
     
     // 动态

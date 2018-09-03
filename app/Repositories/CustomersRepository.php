@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CustomersRepository extends Model
 {
-    //客源列表
+    // 客源列表
     public function getList($request)
     {
         return Customer::where('company_guid', Common::user()->company_guid)->paginate($request->per_page??10);

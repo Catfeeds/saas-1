@@ -65,7 +65,7 @@ class CustomersService
         $customer->renovation = $request->renovation;
         $customer->min_floor = $request->min_floor;
         $customer->max_floor = $request->max_floor;
-        $customer->track_time = $request->targets;
+        $customer->track_time = $request->track_time;
         if (!$customer->save()) return false;
         return true;
     }
@@ -80,8 +80,11 @@ class CustomersService
     {
         \DB::beginTransaction();
         try {
-
-            $suc =  Customer::where('guid', $request->guid)->update(['status' => $request->status]);
+            $data = ['status' => $request->status];
+            if ($request->status != 1 && $request->status != 2) {
+                $data['invalid_reason'] = $request->invalid_reason;
+            }
+            $suc =  Customer::where('guid', $request->guid)->update($data);
             if (!$suc) throw new \Exception('客源转为有效/无效失败');
 
             $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,$request->remarks);

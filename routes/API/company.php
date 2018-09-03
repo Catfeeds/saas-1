@@ -157,6 +157,15 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 获取正常状态客源下拉数据
     Route::get('normal_customer','CustomersController@normalCustomer');
 
+    // 客源转为无效
+    Route::post('invalid', 'CustomersController@invalid');
+
+    // 更改客源类型(公私盘)
+    Route::post('update_guest', 'CustomersController@updateGuest');
+
+    // 转移客源
+    Route::post('transfer', 'CustomersController@transfer');
+
     /*
     |--------------------------------------------------------------------------
     | 基础数据

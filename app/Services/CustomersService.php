@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Services;
 
 use App\Handler\Common;
 use App\Models\Customer;
-use Illuminate\Database\Eloquent\Model;
 
-class CustomersRepository extends Model
+class CustomersService
 {
-    // 客源列表
+    //客源列表
     public function getList($request)
     {
         return Customer::where('company_guid', Common::user()->company_guid)->paginate($request->per_page??10);
@@ -22,20 +21,18 @@ class CustomersRepository extends Model
             'company_guid' => Common::user()->company_guid,
             'level' => $request->level,
             'guest' => $request->guest,
-            'customer_info' => Common::arrayToObject($request->customer_info),
+            'customer_info' => $request->customer_info,
             'remarks' => $request->remarks,
-            'intention' => Common::arrayToObject($request->intention),
-            'block' => Common::arrayToObject($request->block),
-            'building' => Common::arrayToObject($request->building),
-            'house_type' => Common::arrayToObject($request->house_type),
-            'min_price' => $request->min_price,
-            'max_price' => $request->max_price,
-            'min_acreage' => $request->min_acreage,
-            'max_acreage' => $request->max_acreage,
+            'intention' => $request->intention,
+            'block' => $request->block,
+            'building' => $request->building,
+            'house_type' => $request->house_type,
+            'price' => $request->price,
+            'acreage' => $request->acreage,
             'type' => $request->type,
             'renovation' => $request->renovation,
-            'min_floor' => $request->min_floor,
-            'max_floor' => $request->max_floor,
+            'floor' => $request->floor,
+            'target' => $request->target,
             'status' => 1,
             'entry_person' => Common::user()->guid,
             'guardian_person' => Common::user()->guid,
@@ -48,25 +45,48 @@ class CustomersRepository extends Model
     {
         $customer->level = $request->level;
         $customer->guest = $request->guest;
-        $customer->customer_info = Common::arrayToObject($request->customer_info);
+        $customer->customer_info = $request->customer_info;
         $customer->remarks = $request->remarks;
-        $customer->intention = Common::arrayToObject($request->intention);
-        $customer->block = Common::arrayToObject($request->block);
-        $customer->building = Common::arrayToObject($request->building);
-        $customer->house_type = Common::arrayToObject($request->house_type);
-        $customer->min_price = $request->min_price;
-        $customer->max_price = $request->max_price;
-        $customer->min_acreage = $request->min_acreage;
-        $customer->max_acreage = $request->max_acreage;
+        $customer->intention = $request->intention;
+        $customer->block = $request->block;
+        $customer->building = $request->building;
+        $customer->house_type = $request->house_type;
+        $customer->price = $request->price;
+        $customer->acreage = $request->acreage;
         $customer->type = $request->type;
         $customer->renovation = $request->renovation;
-        $customer->min_floor = $request->min_floor;
-        $customer->max_floor = $request->max_floor;
-        $customer->status = $request->status;
-        $customer->track_time = $request->track_time;
+        $customer->floor = $request->floor;
+        $customer->target = $request->targets;
         if (!$customer->save()) return false;
         return true;
     }
+
+    public function getCustomerInfo($customer)
+    {
+
+    }
+
+    // 客源转为无效
+    public function invalid($guid, $request)
+    {
+        return Customer::where('guid', $guid)->update([
+            'status' => $request->status,
+            'reason' => $request->reason
+        ]);
+    }
+
+    // 更改客源类型(公私盘)
+    public function updateGuest($guid, $request)
+    {
+        return Customer::where('guid', $guid)->update(['guest' => $request->guest]);
+    }
+
+    // 转移客源
+    public function transfer($guid, $request)
+    {
+        return Customer::where('guid', $guid)->update(['guardian_person' => $request->guardian_person]);
+    }
+
 
     // 获取正常状态的客源下拉数据
     public function normalCustomer()

@@ -153,6 +153,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     |--------------------------------------------------------------------------
     */
     Route::resource('customers', 'CustomersController');
+    // 变更人员
+    Route::post('change_personnel','CustomersController@changePersonnel');
 
     // 获取正常状态客源下拉数据
     Route::get('normal_customer','CustomersController@normalCustomer');

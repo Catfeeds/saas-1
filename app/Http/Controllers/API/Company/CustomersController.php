@@ -121,5 +121,16 @@ class CustomersController extends APIBaseController
         $res = $repository->normalCustomer();
         return $this->sendResponse($res,'正常状态客源下拉数据获取成功');
     }
+    
+    // 变更人员
+    public function changePersonnel
+    (
+        CustomersRequest $request,
+        CustomersRepository $repository
+    )
+    {
+        $res = $repository->changePersonnel($request);
+        return $this->sendResponse($res,'变更人员成功');
+    }
 
 }

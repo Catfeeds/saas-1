@@ -16,10 +16,11 @@ class Customer extends BaseModel
     ];
 
     protected $appends = [
+        'floor_cn',
+        'guest_cn',
         'level_cn',
         'type_cn',
         'renovation_cn',
-        'public_guest_cn',
         'remarks_cn',
         'price_interval_cn',
         'acreage_interval_cn',
@@ -131,23 +132,7 @@ class Customer extends BaseModel
                 break;
         }
     }
-<<<<<<< HEAD
-=======
-    
-    // 公私客中文
-    public function getPublicGuestCnAttribute()
-    {
-        switch ($this->guest) {
-            case 1:
-                return '公客';
-                break;
-            case 2:
-                return '私客';
-                break;
-            default;
-                break;
-        }
-    }
+
 
     // 备注
     public function getRemarksCnAttribute()
@@ -192,41 +177,6 @@ class Customer extends BaseModel
                    'intention' => $v
                ];
        });
-    }
-
-    // 录入人
-    public function entryPerson()
-    {
-        return $this->belongsTo(User::class, 'guid', 'entry_person');
-    }
->>>>>>> origin/zy
-    
-    // 面积中文
-    public function getAcreageCnAttribute()
-    {
-        if ($this->min_acreage && $this->max_acreage) {
-            return $this->min_acreage . '-' . $this->max_acreage .' ㎡';
-        } elseif ($this->min_acreage && !$this->max_acreage) {
-            return $this->min_acreage. ' ㎡以上';
-        } elseif (!$this->min_acreage && $this->max_acreage) {
-            return $this->max_acreage. ' ㎡以下';
-        } else {
-            return '';
-        }
-    }
-
-    // 价格中文
-    public function getPriceCnAttribute()
-    {
-        if ($this->min_price && $this->max_price) {
-            return $this->min_price . '-' . $this->max_price .' 元/月';
-        } elseif ($this->min_price && !$this->max_price) {
-            return $this->min_price. ' 元/月以上';
-        } elseif (!$this->min_price && $this->max_price) {
-            return $this->max_price. ' 元/月以下';
-        } else {
-            return '';
-        }
     }
 
     // 楼层中文

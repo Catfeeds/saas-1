@@ -7,6 +7,8 @@ use App\Models\Block;
 use App\Models\Building;
 use App\Models\Customer;
 use App\Models\CustomerOperationRecord;
+use App\Models\Track;
+use App\Models\Visit;
 
 class CustomersService
 {
@@ -87,7 +89,48 @@ class CustomersService
         $data['floor'] = $res->floor_cn;
         $data['type'] = $res->type_cn;
         $data['renovation'] = $res->renovation_cn;
-        $data
+        $data['entry_person'] = $res->entryPerson;  // 录入人信息
+        $data['guardian_person'] = $res->guardianPerson; // 维护人
+
+        // 获取动态(跟进,带看) 最新4条数据
+        $item = CustomerOperationRecord::where('customer_guid', $guid)
+                                        ->whereIn('type', [1, 2])
+                                        ->latest()
+                                        ->take(4)
+                                        ->get();
+        $dynamic = [];
+        foreach ($item as $v) {
+            if ($v->type == 1) {
+                // 1跟进
+                $dynamic[] = Track::with('user:guid,name')->where([
+                    'model_type' => 'App\Models\Customer',
+                    'rel_guid' => $guid,
+                    'created_at' => $v->created_at->format('Y-m-d H:i:s')
+                ])->first();
+            } else {
+                // 2 带看
+                $dynamic[] = Visit::with('user:guid,name', 'house')->where([
+                    'cover_rel_guid' => $guid,
+                    'model_type' => 'App\Models\Customer',
+                    'created_at' => $v->created_at->format('Y-m-d H:i:s')
+                ])->first();
+            }
+        }
+        if (!empty($dynamic)) {
+            foreach ($dynamic as $v) {
+                if (!empty($v)) {
+                    $data['dynamic']['user_name'] = $v->user->name;
+                    $data['dynamic']['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
+                    $data['dynamic']['img_cn'] = $v->indoor_img_cn ? $v->indoor_img_cn: '';
+                }
+            }
+        }
+
+
+
+
+
+        return $data;
     }
 
     // 客源转为无效/有效

@@ -92,7 +92,7 @@ class CustomersService
         $data['floor'] = $res->floor_cn;
         $data['type'] = $res->type_cn;
         $data['renovation'] = $res->renovation_cn;
-        $data
+        return $data;
     }
 
     // 客源转为无效/有效
@@ -140,7 +140,7 @@ class CustomersService
     // 转移客源,变更人员
     public function transfer($request)
     {
-        $customer = Customer::where(['guid', $request->guid]);
+        $customer = Customer::where(['guid' => $request->guid]);
 
         if ($request->broker) {
             return $customer->update(['guardian_person' => $request->broker]);

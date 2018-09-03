@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class CustomerOperationRecord extends Model
+class CustomerOperationRecord extends BaseModel
 {
     //
 }

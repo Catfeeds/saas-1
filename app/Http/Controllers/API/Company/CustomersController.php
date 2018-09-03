@@ -70,12 +70,11 @@ class CustomersController extends APIBaseController
     // 客源转为无效
     public function invalid
     (
-        $guid,
         CustomersRequest $request,
         CustomersService $service
     )
     {
-        $res = $service->invalid($guid, $request);
+        $res = $service->invalid($request);
         if (!$res) return $this->sendError('设置失败');
         return $this->sendResponse($res, '设置成功');
     }
@@ -83,12 +82,11 @@ class CustomersController extends APIBaseController
     // 更改客源类型(公私盘)
     public function updateGuest
     (
-        $guid,
         CustomersRequest $request,
         CustomersService $service
     )
     {
-        $res = $service->updateGuest($guid, $request);
+        $res = $service->updateGuest($request);
         if (!$res) return $this->sendError('设置失败');
         return $this->sendResponse($res, '设置成功');
     }

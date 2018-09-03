@@ -25,18 +25,20 @@ class CustomersService
             'company_guid' => Common::user()->company_guid,
             'level' => $request->level,
             'guest' => $request->guest,
-            'customer_info' => $request->customer_info,
+            'customer_info' => Common::arrayToObject($request->customer_info),
             'remarks' => $request->remarks,
-            'intention' => $request->intention,
-            'block' => $request->block,
-            'building' => $request->building,
-            'house_type' => $request->house_type,
-            'price' => $request->price,
-            'acreage' => $request->acreage,
+            'intention' => Common::arrayToObject($request->intention),
+            'block' => Common::arrayToObject($request->block),
+            'building' => Common::arrayToObject($request->building),
+            'house_type' => Common::arrayToObject($request->house_type),
+            'min_price' => $request->min_price,
+            'max_price' => $request->max_price,
+            'min_acreage' => $request->min_acreage,
+            'max_acreage' => $request->max_acreage,
             'type' => $request->type,
             'renovation' => $request->renovation,
-            'floor' => $request->floor,
-            'target' => $request->target,
+            'min_floor' => $request->min_floor,
+            'max_floor' => $request->max_floor,
             'status' => 1,
             'entry_person' => Common::user()->guid,
             'guardian_person' => Common::user()->guid,
@@ -49,18 +51,21 @@ class CustomersService
     {
         $customer->level = $request->level;
         $customer->guest = $request->guest;
-        $customer->customer_info = $request->customer_info;
+        $customer->customer_info = Common::arrayToObject($request->customer_info);
         $customer->remarks = $request->remarks;
-        $customer->intention = $request->intention;
-        $customer->block = $request->block;
-        $customer->building = $request->building;
-        $customer->house_type = $request->house_type;
-        $customer->price = $request->price;
-        $customer->acreage = $request->acreage;
+        $customer->intention = Common::arrayToObject($request->intention);
+        $customer->block = Common::arrayToObject($request->block);
+        $customer->building = Common::arrayToObject($request->building);
+        $customer->house_type = Common::arrayToObject($request->house_type);
+        $customer->min_price = $request->min_price;
+        $customer->max_price = $request->max_price;
+        $customer->min_acreage = $request->min_acreage;
+        $customer->max_acreage = $request->max_acreage;
         $customer->type = $request->type;
         $customer->renovation = $request->renovation;
-        $customer->floor = $request->floor;
-        $customer->target = $request->targets;
+        $customer->min_floor = $request->min_floor;
+        $customer->max_floor = $request->max_floor;
+        $customer->track_time = $request->targets;
         if (!$customer->save()) return false;
         return true;
     }
@@ -75,6 +80,7 @@ class CustomersService
     {
         \DB::beginTransaction();
         try {
+
             $suc =  Customer::where('guid', $request->guid)->update(['status' => $request->status]);
             if (!$suc) throw new \Exception('客源转为有效/无效失败');
 

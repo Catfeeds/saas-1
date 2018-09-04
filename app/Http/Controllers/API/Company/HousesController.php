@@ -23,11 +23,6 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-
-        $data = ['电费'];
-
-
-
 //        $res = \DB::select("SELECT * FROM `houses` WHERE JSON_CONTAINS(JSON_EXTRACT(cost_detail,'$[*].name'), '[电费]')");
 //        dd($res);
 
@@ -37,9 +32,9 @@ class HousesController extends APIBaseController
 //        $res = \DB::table('houses')->where('cost_detail', ['江汉区', '武昌区'])->get();
 //        dd($res);
 
-        $id = '1';
+        $id = '电费';
 
-        $res = \DB::table('houses')->whereRaw("JSON_CONTAINS(cost_detail,'[\"$id\"]')")->get();
+        $res = House::whereRaw("JSON_CONTAINS(cost_detail,'[\"$id\"]')")->get();
         dd($res);
 
         $res = $repository->houseList($request, $service);

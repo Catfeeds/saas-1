@@ -29,12 +29,12 @@ class CustomersService
             'company_guid' => Common::user()->company_guid,
             'level' => $request->level,
             'guest' => $request->guest,
-            'customer_info' => Common::arrayToObject($request->customer_info),
+            'customer_info' => $request->customer_info,
             'remarks' => $request->remarks,
-            'intention' => Common::arrayToObject($request->intention),
-            'block' => Common::arrayToObject($request->block),
-            'building' => Common::arrayToObject($request->building),
-            'house_type' => Common::arrayToObject($request->house_type),
+            'intention' => $request->intention,
+            'block' => $request->block,
+            'building' => $request->building,
+            'house_type' => $request->house_type,
             'min_price' => $request->min_price,
             'max_price' => $request->max_price,
             'min_acreage' => $request->min_acreage,
@@ -55,12 +55,12 @@ class CustomersService
     {
         $customer->level = $request->level;
         $customer->guest = $request->guest;
-        $customer->customer_info = Common::arrayToObject($request->customer_info);
+        $customer->customer_info = $request->customer_info;
         $customer->remarks = $request->remarks;
-        $customer->intention = Common::arrayToObject($request->intention);
-        $customer->block = Common::arrayToObject($request->block);
-        $customer->building = Common::arrayToObject($request->building);
-        $customer->house_type = Common::arrayToObject($request->house_type);
+        $customer->intention = $request->intention;
+        $customer->block = $request->block;
+        $customer->building = $request->building;
+        $customer->house_type = $request->house_type;
         $customer->min_price = $request->min_price;
         $customer->max_price = $request->max_price;
         $customer->min_acreage = $request->min_acreage;

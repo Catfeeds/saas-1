@@ -155,11 +155,21 @@ class CustomersService
         if (!empty($record)) {
             foreach ($record as $k =>  $v) {
                 if (!empty($v)) {
-                    $data['dynamic'][$k]['user_name'] = $v->user->name;
+                    $data['dynamic'][$k]['guid'] = $v->guid; // guid
+                    $data['dynamic'][$k]['house_guid'] = optional($v->house)->guid; // 房源guid
+                    $data['dynamic'][$k]['user_name'] = $v->user->name; // 跟进人/带看人
                     $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
                     $data['dynamic'][$k]['img_cn'] = optional($v->house)->indoor_img_cn;
                     $data['dynamic'][$k]['title'] = optional($v->house)->floor;
                     $data['dynamic'][$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
+                    // 是否允许编辑
+                    $data['dynamic'][$k]['operation'] = false;
+                    if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 10 * 60 * 30) {
+                        $guid = $v->user_guid ? $v->user_guid : $v->visit_user;
+                        if ( $guid == Common::user()->guid) {
+                            $data['dynamic'][$k]['operation'] = true;
+                        }
+                    }
                 }
             }
         }

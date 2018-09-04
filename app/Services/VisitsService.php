@@ -70,5 +70,13 @@ class VisitsService
         }
     }
 
+    // 修改
+    public function updateVisit($request, $visit)
+    {
+        $visit->remarks = $request->remarks;
+        if (!$visit->save()) return false;
+        return true;
+    }
+
 
 }

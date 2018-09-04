@@ -29,6 +29,9 @@ class TracksService
             if ($request->model_type == 'App\Models\House') {
                 $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->rel_guid, 1, $request->tracks_info);
                 if (empty($houseOperationRecords)) throw new \Exception('房源跟进操作记录添加失败');
+            } elseif ($request->model_type == 'App\Models\Customer') {
+                $customerOperationRecords = Common::customerOperationRecords(Common::user()->guid, $request->rel_guid,2, $request->tracks_info);
+                if (empty($customerOperationRecords)) throw new \Exception('客源带看操作记录失败');
             }
 
             \DB::commit();

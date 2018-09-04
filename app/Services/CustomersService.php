@@ -85,14 +85,10 @@ class CustomersService
         $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn. '的写字楼。'. $res->remarks;
         $data['status'] = $res->status;
         $data['customer_info'] = $res->customer_info;
-        $data['area'] = Common::splicing($res->intention); // 意向区域
-        // 意向楼盘
-        $item  = Building::whereIn('guid', $res->building)->pluck('name')->toArray();
-        $data['building'] = Common::splicing($item);
-        // 意向商圈
-        $item = Block::whereIn('guid', $res->block)->pluck('name')->toArray();
-        $data['block'] = Common::splicing($item);
-        $data['house_type'] = Common::splicing($res->house_type); // 户型
+        $data['area'] = $res->intention_cn; // 意向区域
+        $data['block'] = $res->block_cn; // 意向商圈
+        $data['building'] = $res->building_cn; // 意向楼盘
+        $data['house_type'] = $res->house_type_cn; // 户型
         $data['acreage'] = $res->acreage_interval_cn; // 面积
         $data['price'] = $res->price_interval_cn; // 价格
         $data['floor'] = $res->floor_cn; // 楼层

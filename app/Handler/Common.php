@@ -137,16 +137,4 @@ class Common
         $title['price'] = $house->price . $house->price_unit_cn;
         return $title;
     }
-
-    // 拼接 户型/区域/楼盘/商圈
-    public static function splicing($data)
-    {
-        $str = '';
-        if (!empty($data)) {
-            foreach ($data as $v) {
-                $str .= ','. $v;
-            }
-        }
-        return trim($str, ',');
-    }
 }

@@ -62,8 +62,14 @@ class VisitsService
                 $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->cover_rel_guid, 2, $remarks, $request->visit_img);
                 if (empty($houseOperationRecords)) throw new \Exception('房源/客源带看操作记录添加失败');
             }
+
+            if ($request->model_type == 'App\Models\Customer') {
+                $customerOperationRecords = Common::customerOperationRecords(Common::user()->guid, $request->cover_rel_guid, 2, $request->remarks);
+                if (empty($customerOperationRecords)) throw new \Exception('客源带看操作记录添加失败');
+            }
+
             \DB::commit();
-            return true;
+            return $visit;
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;

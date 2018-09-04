@@ -135,6 +135,7 @@ class Common
         $title['building_name'] = $house->buildingBlock->building->name;
         $title['acreage'] = $house->acreage_cn;
         $title['price'] = $house->price . $house->price_unit_cn;
+        $title['img'] = $house->indoor_img_cn;
         return $title;
     }
 }

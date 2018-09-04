@@ -169,6 +169,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 获取客源信息
     Route::get('get_customers_info','CustomersController@getCustomersInfo');
 
+    // 获取楼盘,楼座关联基础数据
+    Route::get('building_blocks_select','CustomersController@buildingBlocksSelect');
+
     /*
     |--------------------------------------------------------------------------
     | 基础数据

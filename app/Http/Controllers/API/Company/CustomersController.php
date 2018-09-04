@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\API\Company;
 
+use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\CustomersRequest;
+use App\Models\Company;
 use App\Models\Customer;
 use App\Services\CustomersService;
 
@@ -139,5 +141,15 @@ class CustomersController extends APIBaseController
         $res = $service->getCustomersInfo($request);
         if (!$res) return $this->sendError('获取客源信息失败');
         return $this->sendResponse($res,'获取客源信息成功');
+    }
+
+    // 获取楼座下拉数据
+    public function buildingBlocksSelect()
+    {
+        // 获取登录人公司所在的城市
+        $cityName = Company::find(Common::user()->company_guid)->city_name;
+        $res = curl(config('hosts.building').'/api/get_building_block?city_name='.$cityName,'GET');
+        if (empty($res->data)) return $this->sendError($res->message);
+        return $this->sendResponse($res->data, '获取所有下拉数据成功');
     }
 }

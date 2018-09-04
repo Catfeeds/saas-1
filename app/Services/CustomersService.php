@@ -198,7 +198,6 @@ class CustomersService
     public function transfer($request)
     {
         $customer = Customer::where(['guid' => $request->guid]);
-
         if ($request->broker) {
             return $customer->update(['guardian_person' => $request->broker]);
         } elseif ($request->entry_person) {

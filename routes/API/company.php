@@ -166,6 +166,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 转移客源,变更人员
     Route::post('transfer', 'CustomersController@transfer');
 
+    // 获取客源信息
+    Route::get('get_customers_info','CustomersController@getCustomersInfo');
+
     /*
     |--------------------------------------------------------------------------
     | 基础数据

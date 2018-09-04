@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests\Company;
 
+use App\Handler\Common;
+use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CustomersRequest extends FormRequest
 {
@@ -78,11 +82,41 @@ class CustomersRequest extends FormRequest
                  ];
             case 'updateGuest':
                 return [
-                    'customer_guid' => 'required|exists:customer,guid'
+                    'guid' => 'required|exists:customer,guid'
                 ];
                 default;
                 return[
                 ];
+            case 'transfer':
+                return [
+                    'broker' => [
+                        'nullable',
+                        Rule::in(
+                            User::where(['company_guid' => Common::user()->company_guid])->pluck('guid')->toArray()
+                        )
+                    ],
+                    'entry_person' => [
+                        'nullable',
+                        Rule::in(
+                            User::where(['company_guid' => Common::user()->company_guid])->pluck('guid')->toArray()
+                        )
+                    ],
+                    'guardian_person' => [
+                        'nullable',
+                        Rule::in(
+                            User::where(['company_guid' => Common::user()->company_guid])->pluck('guid')->toArray()
+                        )
+                    ]
+                ];
+            case 'getCustomersInfo':
+                return [
+                    'guid' =>[
+                    'required',
+                    Rule::in(
+                        Customer::all()->pluck('guid')->toArray()
+                    )
+                ],
+            ];
         }
     }
 }

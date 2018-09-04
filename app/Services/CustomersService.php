@@ -177,8 +177,12 @@ class CustomersService
             }
             $suc =  Customer::where('guid', $request->guid)->update($data);
             if (!$suc) throw new \Exception('客源转为有效/无效失败');
-
-            $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,$request->remarks);
+            if ($request->status ==1) {
+                $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,'转为有效');
+            } else {
+                $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,"'将客源转为无效：原因是'
+                    .$request->status .$request->invalid_reason");
+            }
 
             if (!$res) throw new \Exception('客源操作记录添加失败');
             \DB::commit();
@@ -190,7 +194,7 @@ class CustomersService
         }
     }
 
-    // 更改客源类型(公私盘)
+    // 更改客源类型(公私客)
     public function updateGuest($request)
     {
         \DB::beginTransaction();
@@ -236,5 +240,24 @@ class CustomersService
                 'label' => '客户:'.$v->customer_info[0]['name'].'  电话:'.$v->customer_info[0]['tel']
             ];
         });
+    }
+    
+    // 获取客源信息
+    public function getCustomersInfo($request)
+    {
+        \DB::beginTransaction();
+        try {
+            $customer_info = Customer::where(['guid' => $request->guid])->pluck('customer_info')->first();
+            if (empty($customer_info)) throw new \Exception('获取客源信息失败');
+
+            $customerOperationRecords = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,'查看了客源联系方式');
+            if (empty($customerOperationRecords)) throw new \Exception('查看客源信息添加操作记录失败');
+
+            \DB::commit();
+            return $customer_info;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            return false;
+        }
     }
 }

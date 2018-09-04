@@ -207,7 +207,7 @@ class CustomersService
         } elseif ($request->entry_person) {
             return $customer->update(['entry_person' => $request->entry_person]);
         } elseif ($request->guardian_person) {
-            return $customer->updata(['guardian_person' => $request->guardian_person]);
+            return $customer->update(['guardian_person' => $request->guardian_person]);
         }
     }
 

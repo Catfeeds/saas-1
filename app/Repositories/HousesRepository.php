@@ -131,7 +131,10 @@ class HousesRepository extends Model
    // 通过楼座，楼层获取房源信息
     public function adoptAssociationGetHouse($request)
     {
-        $house = House::where('building_block_guid',$request->building_block_guid);
+        $house = House::where([
+            'company_guid' => Common::user()->company_guid,
+            'building_block_guid' => $request->building_block_guid
+        ]);
 
         if ($request->floor) {
             $house = $house->where('floor', $request->floor);

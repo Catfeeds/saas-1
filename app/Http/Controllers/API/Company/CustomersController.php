@@ -128,5 +128,16 @@ class CustomersController extends APIBaseController
         $res = $service->normalCustomer();
         return $this->sendResponse($res,'正常状态客源下拉数据获取成功');
     }
-    
+
+    // 获取客源信息
+    public function getCustomersInfo
+    (
+        CustomersRequest $request,
+        CustomersService $service
+    )
+    {
+        $res = $service->getCustomersInfo($request);
+        if (!$res) return $this->sendError('获取客源信息失败');
+        return $this->sendResponse($res,'获取客源信息成功');
+    }
 }

@@ -85,39 +85,14 @@ class CustomersService
         $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn. '的写字楼。'. $res->remarks;
         $data['status'] = $res->status;
         $data['customer_info'] = $res->customer_info;
-        // 意向区域
-        $area = '';
-        if ($res->intention) {
-            foreach ($res->intention as $v) {
-                $area .= ','.$v['name'];
-            }
-        }
-        $data['area'] = trim($area,',');
+        $data['area'] = $res->area_cn; // 意向区域
         // 意向楼盘
-        $building = '';
         $item  = Building::whereIn('guid', $res->building)->pluck('name')->toArray();
-        if (!empty($item)) {
-            foreach ($item as $v) {
-                $building .= ','.$v;
-            }
-        }
-        $data['building'] = trim($building,',');
-        // 查询意向商圈
+        $data['building'] = $this->splicing($item);
+        // 意向商圈
         $item = Block::whereIn('guid', $res->block)->pluck('name')->toArray();
-        $block = '';
-        if (!empty($item)) {
-            foreach ($item as $v) {
-                $block .= ','.$v;
-            }
-        }
-        $data['block'] = trim($block,',');
-        $house_type = '';
-        if ($res->house_type) {
-            foreach ($res->house_type as $v) {
-                $house_type .= ','.$v['name'];
-            }
-        }
-        $data['house_type'] = trim($house_type,',');
+        $data['block'] = $this->splicing($item);
+        $data['house_type'] = $res->house_type_cn; // 户型
         $data['acreage'] = $res->acreage_interval_cn; // 面积
         $data['price'] = $res->price_interval_cn; // 价格
         $data['floor'] = $res->floor_cn; // 楼层
@@ -269,5 +244,17 @@ class CustomersService
             \DB::rollback();
             return false;
         }
+    }
+
+    // 拼接数据
+    public function splicing($data)
+    {
+        $str = '';
+        if (!empty($data)) {
+            foreach ($data as $v) {
+                $str .= ','. $v;
+            }
+        }
+        return trim($str, ',');
     }
 }

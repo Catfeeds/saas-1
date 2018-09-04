@@ -21,7 +21,9 @@ class Customer extends BaseModel
         'remarks_cn',
         'price_interval_cn',
         'acreage_interval_cn',
-        'intention_cn'
+        'intention_cn',
+        'house_type_cn',
+        'area_cn'
     ];
 
     // 录入人
@@ -188,4 +190,29 @@ class Customer extends BaseModel
             return '不限楼层';
         }
     }
+
+    // 户型
+    public function getHouseTypeCnAttribute()
+    {
+        $house_type = '';
+        if ($this->house_type) {
+            foreach ($this->house_type as $v) {
+                $house_type .= ','.$v['name'];
+            }
+        }
+        return trim($house_type, ',');
+    }
+
+    // 意向区域
+    public function getAreaCnAttribute()
+    {
+        $area = '';
+        if ($this->intention) {
+            foreach ($this->intention as $v) {
+                $area .= ','.$v['name'];
+            }
+        }
+        return trim($area, ',');
+    }
+
 }

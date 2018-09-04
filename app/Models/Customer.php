@@ -197,7 +197,7 @@ class Customer extends BaseModel
         $house_type = '';
         if ($this->house_type) {
             foreach ($this->house_type as $v) {
-                $house_type .= ','.$v['name'];
+                $house_type .= ','.$v;
             }
         }
         return trim($house_type, ',');

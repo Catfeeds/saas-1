@@ -130,7 +130,6 @@ class CustomersService
             foreach ($record as $k =>  $v) {
                 if (!empty($v)) {
                     $data['dynamic'][$k]['guid'] = $v->guid; // guid
-                    $data['dynamic'][$k]['house_guid'] = optional($v->house)->guid; // 房源guid
                     $data['dynamic'][$k]['user_name'] = $v->user->name; // 跟进人/带看人
                     $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
                     $data['dynamic'][$k]['title'] = $v->house ? Common::HouseTitle($v->house->guid) : null;
@@ -258,6 +257,8 @@ class CustomersService
                     'created_at' => $v->created_at->format('Y-m-d H:i:s')
                 ])->value('rel_guid');
                 $v['house'] = Common::HouseTitle($house_guid);
+            } else {
+                $v['house'] = '';
             }
         }
         return $res;

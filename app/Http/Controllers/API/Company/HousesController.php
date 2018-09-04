@@ -23,6 +23,11 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
+
+        $res = \DB::select("select * from houses where cost_detail->'$.tel' = '13231113766'  or JSON_CONTAINS(cost_detail->'$[*].tel', '\"13231113766\"', '$')");
+
+        dd($res);
+
         $id = "[\"13231113766\"]";
 
 //        $res = House::whereRaw("JSON_CONTAINS(cost_detail,'".$id."')")->get();
@@ -31,6 +36,8 @@ class HousesController extends APIBaseController
 
         $id = "13231113766";
 
+        $res = House::where("cost_detail->$.tel", $id)->orWhere("JSON_CONTAINS('cost_detail->$[*].tel', $id, '$')")->get();
+        dd($res);
 
         $res = House::where("cost_detail->$.tel",$id)->get();
 

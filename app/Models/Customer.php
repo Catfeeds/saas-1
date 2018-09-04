@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-
-use function PHPSTORM_META\map;
-
 class Customer extends BaseModel
 {
     protected $casts = [

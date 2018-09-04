@@ -37,7 +37,9 @@ class HousesController extends APIBaseController
 //        $res = \DB::table('houses')->where('cost_detail', ['江汉区', '武昌区'])->get();
 //        dd($res);
 
-        $res = \DB::table('houses')->whereRaw("JSON_CONTAINS(cost_detail,'Mysql')")->get();
+        $id = '1';
+
+        $res = \DB::table('houses')->whereRaw("JSON_CONTAINS(cost_detail,'[\"$id\"]')")->get();
         dd($res);
 
         $res = $repository->houseList($request, $service);

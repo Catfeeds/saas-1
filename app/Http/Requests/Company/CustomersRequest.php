@@ -79,7 +79,7 @@ class CustomersRequest extends FormRequest
                  ];
             case 'updateGuest':
                 return [
-                    'customer_guid' => 'required|exists:customer,guid'
+                    'guid' => 'required|exists:customers,guid'
                 ];
                 default;
                 return[

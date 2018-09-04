@@ -185,7 +185,7 @@ class CustomersService
         }
     }
 
-    // 更改客源类型(公私盘)
+    // 更改客源类型(公私客)
     public function updateGuest($request)
     {
         \DB::beginTransaction();

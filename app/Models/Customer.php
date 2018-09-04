@@ -130,7 +130,6 @@ class Customer extends BaseModel
         }
     }
 
-
     // 备注
     public function getRemarksCnAttribute()
     {
@@ -186,10 +185,7 @@ class Customer extends BaseModel
         } elseif (!$this->min_floor && $this->max_floor) {
             return $this->max_floor. '层以下';
         } else {
-            return '';
+            return '不限楼层';
         }
     }
-
-
-
 }

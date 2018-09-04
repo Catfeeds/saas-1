@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Company;
 
+use App\Handler\Common;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CustomersRequest extends FormRequest
 {
@@ -72,7 +75,7 @@ class CustomersRequest extends FormRequest
                     'max_floor' => 'nullable',
                     'track_time' => 'nullable'
                 ];
-           case 'invalid':
+            case 'invalid':
                  return [
                    'customer_guid' => 'required|exists:customer,guid',
                    'status' => 'required|integer|between:1,7'
@@ -81,7 +84,25 @@ class CustomersRequest extends FormRequest
                 return [
                     'guid' => 'required|exists:customers,guid'
                 ];
-                default;
+            case 'transfer':
+                return [
+                    'broker' => [
+                        Rule::in(
+                            User::where(['company_guid' => Common::user()->company_guid])->pluck('guid')->toArray()
+                        )
+                    ],
+                    'entry_person' => [
+                        Rule::in(
+                            User::where(['company_guid' => Common::user()->company_guid])->pluck('guid')->toArray()
+                        )
+                    ],
+                    'guardian_person' => [
+                        Rule::in(
+                            User::where(['company_guid' => Common::user()->company_guid])->pluck('guid')->toArray()
+                        )
+                    ]
+                ];
+            default;
                 return[
                 ];
         }

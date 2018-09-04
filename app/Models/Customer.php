@@ -133,7 +133,6 @@ class Customer extends BaseModel
         }
     }
 
-
     // 备注
     public function getRemarksCnAttribute()
     {
@@ -192,7 +191,4 @@ class Customer extends BaseModel
             return '';
         }
     }
-
-
-
 }

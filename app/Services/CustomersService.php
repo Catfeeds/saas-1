@@ -3,8 +3,12 @@
 namespace App\Services;
 
 use App\Handler\Common;
+use App\Models\Block;
+use App\Models\Building;
 use App\Models\Customer;
 use App\Models\CustomerOperationRecord;
+use App\Models\Track;
+use App\Models\Visit;
 
 class CustomersService
 {
@@ -70,9 +74,64 @@ class CustomersService
         return true;
     }
 
-    public function getCustomerInfo($customer)
+    public function getCustomerInfo($guid)
     {
-        dd(123);
+        $res = Customer::with('entryPerson:guid,name,tel', 'guardianPerson:guid,name,tel', 'track', 'track.user', 'remind')->where('guid', $guid)->first();
+        $data = [];
+        $data['guid'] = $res->guid;
+        $data['level'] = $res->level_cn;
+        $data['guest'] = $res->guest_cn;
+        $data['title'] = $res->prince_cn.',' .$res->acreage_cn;
+        $data['customer_info'] = $res->customer_info;
+        $data['area'] = $res->intention;
+        // 意向楼盘
+        $data['building'] = Building::whereIn('guid', $res->building)->pluck('name')->toArray();
+        // 查询意向商圈
+        $data['block'] = Block::whereIn('guid', $res->block)->pluck('name')->toArray();
+        $data['house_type'] = $res->house_type;
+        $data['acreage'] = $res->acreage_cn;
+        $data['price'] = $res->price_cn;
+        $data['floor'] = $res->floor_cn;
+        $data['type'] = $res->type_cn;
+        $data['renovation'] = $res->renovation_cn;
+        $data['entry_person'] = $res->entryPerson;  // 录入人信息
+        $data['guardian_person'] = $res->guardianPerson; // 维护人
+
+        // 获取动态(跟进,带看) 最新4条数据
+        $item = CustomerOperationRecord::where('customer_guid', $guid)
+                                        ->whereIn('type', [1, 2])
+                                        ->latest()
+                                        ->take(4)
+                                        ->get();
+        $dynamic = [];
+        foreach ($item as $v) {
+            if ($v->type == 1) {
+                // 1跟进
+                $dynamic[] = Track::with('user:guid,name')->where([
+                    'model_type' => 'App\Models\Customer',
+                    'rel_guid' => $guid,
+                    'created_at' => $v->created_at->format('Y-m-d H:i:s')
+                ])->first();
+            } else {
+                // 2 带看
+                $dynamic[] = Visit::with('user:guid,name', 'house')->where([
+                    'cover_rel_guid' => $guid,
+                    'model_type' => 'App\Models\Customer',
+                    'created_at' => $v->created_at->format('Y-m-d H:i:s')
+                ])->first();
+            }
+        }
+        if (!empty($dynamic)) {
+            foreach ($dynamic as $v) {
+                if (!empty($v)) {
+                    $data['dynamic']['user_name'] = $v->user->name;
+                    $data['dynamic']['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
+                    $data['dynamic']['img_cn'] = $v->indoor_img_cn ? $v->indoor_img_cn: '';
+                }
+            }
+        }
+
+        return $data;
     }
 
     // 客源转为无效/有效
@@ -120,7 +179,7 @@ class CustomersService
     // 转移客源,变更人员
     public function transfer($request)
     {
-        $customer = Customer::where(['guid', $request->guid]);
+        $customer = Customer::where(['guid' => $request->guid]);
 
         if ($request->broker) {
             return $customer->update(['guardian_person' => $request->broker]);

@@ -16,8 +16,40 @@ class Customer extends BaseModel
     ];
 
     protected $appends = [
-        'level_cn', 'type_cn', 'renovation_cn', 'public_guest_cn', 'remarks_cn', 'price_interval_cn', 'acreage_interval_cn', 'intention_cn'
+        'floor_cn',
+        'guest_cn',
+        'level_cn',
+        'type_cn',
+        'renovation_cn',
+        'remarks_cn',
+        'price_interval_cn',
+        'acreage_interval_cn',
+        'intention_cn'
     ];
+
+    // 录入人
+    public function entryPerson()
+    {
+        return $this->belongsTo(User::class, 'entry_person', 'guid');
+    }
+
+    // 维护人
+    public function guardianPerson()
+    {
+        return $this->belongsTo(User::class, 'guardian_person', 'guid');
+    }
+
+    // 跟进
+    public function track()
+    {
+        return $this->hasMany(Track::class,'rel_guid', 'guid')->where('model_type', 'App\Models\Customer');
+    }
+
+    // 带看
+    public function remind()
+    {
+        return $this->hasMany(Visit::class,'cover_rel_guid', 'guid')->where('model_type', 'App\Models\Customer');
+    }
 
     //等级中文
     public function getLevelCnAttribute()
@@ -63,6 +95,20 @@ class Customer extends BaseModel
         }
     }
 
+    //公私盘
+    public function getGuestCnAttribute()
+    {
+        switch ($this->guest) {
+            case 1:
+                return '公';
+                break;
+            case 2:
+                return '私';
+                default;
+                break;
+        }
+    }
+
     // 装修中文
     public function getRenovationCnAttribute()
     {
@@ -86,7 +132,7 @@ class Customer extends BaseModel
                 break;
         }
     }
-    
+
     // 备注
     public function getRemarksCnAttribute()
     {
@@ -132,28 +178,17 @@ class Customer extends BaseModel
        });
     }
 
-    // 录入人
-    public function entryPerson()
+    // 楼层中文
+    public function getFloorCnAttribute()
     {
-        return $this->belongsTo(User::class, 'guid', 'entry_person');
+        if ($this->min_floor && $this->max_floor) {
+            return $this->min_floor . '-' . $this->max_floor .'层';
+        } elseif ($this->min_floor && !$this->max_floor) {
+            return $this->min_floor. '层以上';
+        } elseif (!$this->min_floor && $this->max_floor) {
+            return $this->max_floor. '层以下';
+        } else {
+            return '';
+        }
     }
-    
-    // 维护人 
-    public function guardianPerson()
-    {
-        return $this->belongsTo(User::class, 'guid', 'guardian_person');
-    }
-
-    // 跟进
-    public function track()
-    {
-        return $this->hasMany(Track::class,'rel_guid', 'guid')->where('model_type', 'App\Models\Customer');
-    }
-
-    // 带看
-    public function remind()
-    {
-        return $this->hasMany(Visit::class,'cover_rel_guid', 'guid')->where('model_type', 'App\Models\Customer');
-    }
-
 }

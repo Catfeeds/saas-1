@@ -23,8 +23,22 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-//        House::whereIn('cost_detail->name', [])->get();
 
+        $data = ['电费'];
+
+
+
+//        $res = \DB::select("SELECT * FROM `houses` WHERE JSON_CONTAINS(JSON_EXTRACT(cost_detail,'$[*].name'), '[电费]')");
+//        dd($res);
+
+
+//        SELECT * FROM `json_test` WHERE json_contains(JSON_EXTRACT(json_data,'$.city'), '[1]');
+
+//        $res = \DB::table('houses')->where('cost_detail', ['江汉区', '武昌区'])->get();
+//        dd($res);
+
+        $res = \DB::table('houses')->whereRaw("JSON_CONTAINS(cost_detail,'Mysql')")->get();
+        dd($res);
 
         $res = $repository->houseList($request, $service);
         return $this->sendResponse($res,'房源列表获取成功');

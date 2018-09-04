@@ -100,13 +100,15 @@ class House extends BaseModel
             return '元/平/月';
         } elseif ($this->price_unit == 3) {
             return '元/平/天';
+        } else {
+            return '暂无报价';
         }
     }
 
     // 面积   acreage_cn
     public function getAcreageCnAttribute()
     {
-        if (empty($this->acreage)) return '';
+        if (empty($this->acreage)) return '暂无面积';
         return $this->acreage.'㎡';
     }
 

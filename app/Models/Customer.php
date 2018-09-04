@@ -21,6 +21,7 @@ class Customer extends BaseModel
         'remarks_cn',
         'price_interval_cn',
         'acreage_interval_cn',
+        'intention_cn',
         'house_type_cn',
         'intention_cn',
         'block_cn',

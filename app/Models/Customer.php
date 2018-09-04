@@ -51,7 +51,7 @@ class Customer extends BaseModel
         return $this->hasMany(Visit::class,'cover_rel_guid', 'guid')->where('model_type', 'App\Models\Customer');
     }
 
-    //等级中文
+    // 等级中文
     public function getLevelCnAttribute()
     {
         switch ($this->level) {
@@ -70,7 +70,7 @@ class Customer extends BaseModel
         }
     }
 
-    //房源类型中文
+    // 房源类型中文
     public function getTypeCnAttribute()
     {
         switch ($this->type) {
@@ -95,7 +95,7 @@ class Customer extends BaseModel
         }
     }
 
-    //公私盘
+    // 公私盘
     public function getGuestCnAttribute()
     {
         switch ($this->guest) {
@@ -182,7 +182,7 @@ class Customer extends BaseModel
         }
     }
 
-    // 户型
+    // 户型 house_type_cn
     public function getHouseTypeCnAttribute()
     {
         return empty($this->house_type)?'不限户型':implode(',', $this->house_type);

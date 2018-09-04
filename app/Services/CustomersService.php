@@ -100,6 +100,7 @@ class CustomersService
         $data['renovation'] = $res->renovation_cn;
         $data['entry_person'] = $res->entryPerson;  // 录入人信息
         $data['guardian_person'] = $res->guardianPerson; // 维护人
+        $data['created_at'] = $res->created_at->format('Y-m-d H:i:s');
 
         // 获取动态(跟进,带看) 最新4条数据
         $item = CustomerOperationRecord::where('customer_guid', $guid)
@@ -135,7 +136,7 @@ class CustomersService
                     $data['dynamic'][$k]['user_name'] = $v->user->name; // 跟进人/带看人
                     $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
                     $data['dynamic'][$k]['img_cn'] = optional($v->house)->indoor_img_cn;
-                    $data['dynamic'][$k]['title'] = optional($v->house)->floor;
+                    $data['dynamic'][$k]['title'] = $v->house ? Common::HouseTitle($v->house->guid) : null;
                     $data['dynamic'][$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
                     // 是否允许编辑
                     $data['dynamic'][$k]['operation'] = false;

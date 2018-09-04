@@ -136,7 +136,7 @@ class CustomersService
                     $data['dynamic'][$k]['user_name'] = $v->user->name; // 跟进人/带看人
                     $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
                     $data['dynamic'][$k]['img_cn'] = optional($v->house)->indoor_img_cn;
-                    $data['dynamic'][$k]['title'] = $v->house ? Common::Hous1eTitle($v->house->guid) : null;
+                    $data['dynamic'][$k]['title'] = $v->house ? Common::HouseTitle($v->house->guid) : null;
                     $data['dynamic'][$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
                     // 是否允许编辑
                     $data['dynamic'][$k]['operation'] = false;

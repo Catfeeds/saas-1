@@ -81,16 +81,43 @@ class CustomersService
         $data['guid'] = $res->guid;
         $data['level'] = $res->level_cn;
         $data['guest'] = $res->guest_cn;
-        $data['title'] = $res->prince_cn.',' .$res->acreage_cn;
+        $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn;
         $data['customer_info'] = $res->customer_info;
-        $data['area'] = $res->intention;
+        // 意向区域
+        $area = '';
+        if ($res->intention) {
+            foreach ($res->intention as $v) {
+                $area .= ','.$v['name'];
+            }
+        }
+        $data['area'] = trim($area,',');
         // 意向楼盘
-        $data['building'] = Building::whereIn('guid', $res->building)->pluck('name')->toArray();
+        $building = '';
+        $item  = Building::whereIn('guid', $res->building)->pluck('name')->toArray();
+        if (!empty($item)) {
+            foreach ($item as $v) {
+                $building .= ','.$v;
+            }
+        }
+        $data['building'] = trim($building,',');
         // 查询意向商圈
-        $data['block'] = Block::whereIn('guid', $res->block)->pluck('name')->toArray();
-        $data['house_type'] = $res->house_type;
-        $data['acreage'] = $res->acreage_cn;
-        $data['price'] = $res->price_cn;
+        $item = Block::whereIn('guid', $res->block)->pluck('name')->toArray();
+        $block = '';
+        if (!empty($item)) {
+            foreach ($item as $v) {
+                $block .= ','.$v;
+            }
+        }
+        $data['block'] = trim($block,',');
+        $house_type = '';
+        if ($res->house_type) {
+            foreach ($res->house_type as $v) {
+                $house_type .= ','.$v['name'];
+            }
+        }
+        $data['house_type'] = trim($house_type,',');
+        $data['acreage'] = $res->acreage_interval_cn;
+        $data['price'] = $res->price_interval_cn;
         $data['floor'] = $res->floor_cn;
         $data['type'] = $res->type_cn;
         $data['renovation'] = $res->renovation_cn;
@@ -122,15 +149,15 @@ class CustomersService
             }
         }
         if (!empty($dynamic)) {
-            foreach ($dynamic as $v) {
+            foreach ($dynamic as $k =>  $v) {
                 if (!empty($v)) {
-                    $data['dynamic']['user_name'] = $v->user->name;
-                    $data['dynamic']['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
-                    $data['dynamic']['img_cn'] = $v->indoor_img_cn ? $v->indoor_img_cn: '';
+                    $data['dynamic'][$k]['user_name'] = $v->user->name;
+                    $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
+                    $data['dynamic'][$k]['img_cn'] = optional($v->house)->indoor_img_cn;
+                    $data['dynamic'][$k]['title'] = optional($v->house)->floor;
                 }
             }
         }
-
         return $data;
     }
 

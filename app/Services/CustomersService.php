@@ -85,39 +85,14 @@ class CustomersService
         $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn. '的写字楼。'. $res->remarks;
         $data['status'] = $res->status;
         $data['customer_info'] = $res->customer_info;
-        // 意向区域
-        $area = '';
-        if ($res->intention) {
-            foreach ($res->intention as $v) {
-                $area .= ','.$v['name'];
-            }
-        }
-        $data['area'] = trim($area,',');
+        $data['area'] = $res->area_cn; // 意向区域
         // 意向楼盘
-        $building = '';
         $item  = Building::whereIn('guid', $res->building)->pluck('name')->toArray();
-        if (!empty($item)) {
-            foreach ($item as $v) {
-                $building .= ','.$v;
-            }
-        }
-        $data['building'] = trim($building,',');
-        // 查询意向商圈
+        $data['building'] = $this->splicing($item);
+        // 意向商圈
         $item = Block::whereIn('guid', $res->block)->pluck('name')->toArray();
-        $block = '';
-        if (!empty($item)) {
-            foreach ($item as $v) {
-                $block .= ','.$v;
-            }
-        }
-        $data['block'] = trim($block,',');
-        $house_type = '';
-        if ($res->house_type) {
-            foreach ($res->house_type as $v) {
-                $house_type .= ','.$v['name'];
-            }
-        }
-        $data['house_type'] = trim($house_type,',');
+        $data['block'] = $this->splicing($item);
+        $data['house_type'] = $res->house_type_cn; // 户型
         $data['acreage'] = $res->acreage_interval_cn; // 面积
         $data['price'] = $res->price_interval_cn; // 价格
         $data['floor'] = $res->floor_cn; // 楼层
@@ -125,6 +100,7 @@ class CustomersService
         $data['renovation'] = $res->renovation_cn;
         $data['entry_person'] = $res->entryPerson;  // 录入人信息
         $data['guardian_person'] = $res->guardianPerson; // 维护人
+        $data['created_at'] = $res->created_at->format('Y-m-d H:i:s');
 
         // 获取动态(跟进,带看) 最新4条数据
         $item = CustomerOperationRecord::where('customer_guid', $guid)
@@ -155,11 +131,21 @@ class CustomersService
         if (!empty($record)) {
             foreach ($record as $k =>  $v) {
                 if (!empty($v)) {
-                    $data['dynamic'][$k]['user_name'] = $v->user->name;
+                    $data['dynamic'][$k]['guid'] = $v->guid; // guid
+                    $data['dynamic'][$k]['house_guid'] = optional($v->house)->guid; // 房源guid
+                    $data['dynamic'][$k]['user_name'] = $v->user->name; // 跟进人/带看人
                     $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
                     $data['dynamic'][$k]['img_cn'] = optional($v->house)->indoor_img_cn;
-                    $data['dynamic'][$k]['title'] = optional($v->house)->floor;
+                    $data['dynamic'][$k]['title'] = $v->house ? Common::HouseTitle($v->house->guid) : null;
                     $data['dynamic'][$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
+                    // 是否允许编辑
+                    $data['dynamic'][$k]['operation'] = false;
+                    if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 10 * 60 * 30) {
+                        $guid = $v->user_guid ? $v->user_guid : $v->visit_user;
+                        if ( $guid == Common::user()->guid) {
+                            $data['dynamic'][$k]['operation'] = true;
+                        }
+                    }
                 }
             }
         }
@@ -180,8 +166,7 @@ class CustomersService
             if ($request->status ==1) {
                 $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,'转为有效');
             } else {
-                $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,"'将客源转为无效：原因是'
-                    .$request->status .$request->invalid_reason");
+                $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,"'将客源转为无效：原因是:'.$request->status .$request->invalid_reason");
             }
 
             if (!$res) throw new \Exception('客源操作记录添加失败');
@@ -250,7 +235,7 @@ class CustomersService
             $customer_info = Customer::where(['guid' => $request->guid])->pluck('customer_info')->first();
             if (empty($customer_info)) throw new \Exception('获取客源信息失败');
 
-            $customerOperationRecords = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,'查看了客源联系方式');
+            $customerOperationRecords = Common::customerOperationRecords(Common::user()->guid,$request->guid,3,'查看了客源联系方式');
             if (empty($customerOperationRecords)) throw new \Exception('查看客源信息添加操作记录失败');
 
             \DB::commit();
@@ -259,5 +244,17 @@ class CustomersService
             \DB::rollback();
             return false;
         }
+    }
+
+    // 拼接数据
+    public function splicing($data)
+    {
+        $str = '';
+        if (!empty($data)) {
+            foreach ($data as $v) {
+                $str .= ','. $v;
+            }
+        }
+        return trim($str, ',');
     }
 }

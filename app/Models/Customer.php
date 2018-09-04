@@ -22,7 +22,6 @@ class Customer extends BaseModel
         'price_interval_cn',
         'acreage_interval_cn',
         'intention_cn',
-        'block_cn'
     ];
 
     // 录入人
@@ -188,15 +187,5 @@ class Customer extends BaseModel
         } else {
             return '不限楼层';
         }
-    }
-    
-    // 商圈
-    public function getBlockCnAttribute()
-    {
-        $data = [];
-        foreach ($this->block as $k=>$v) {
-            $data[$k] = $v;
-        }
-        return $data;
     }
 }

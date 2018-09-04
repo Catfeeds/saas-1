@@ -85,39 +85,14 @@ class CustomersService
         $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn. '的写字楼。'. $res->remarks;
         $data['status'] = $res->status;
         $data['customer_info'] = $res->customer_info;
-        // 意向区域
-        $area = '';
-        if ($res->intention) {
-            foreach ($res->intention as $v) {
-                $area .= ','.$v['name'];
-            }
-        }
-        $data['area'] = trim($area,',');
+        $data['area'] = Common::splicing($res->intention); // 意向区域
         // 意向楼盘
-        $building = '';
         $item  = Building::whereIn('guid', $res->building)->pluck('name')->toArray();
-        if (!empty($item)) {
-            foreach ($item as $v) {
-                $building .= ','.$v;
-            }
-        }
-        $data['building'] = trim($building,',');
-        // 查询意向商圈
+        $data['building'] = Common::splicing($item);
+        // 意向商圈
         $item = Block::whereIn('guid', $res->block)->pluck('name')->toArray();
-        $block = '';
-        if (!empty($item)) {
-            foreach ($item as $v) {
-                $block .= ','.$v;
-            }
-        }
-        $data['block'] = trim($block,',');
-        $house_type = '';
-        if ($res->house_type) {
-            foreach ($res->house_type as $v) {
-                $house_type .= ','.$v['name'];
-            }
-        }
-        $data['house_type'] = trim($house_type,',');
+        $data['block'] = Common::splicing($item);
+        $data['house_type'] = Common::splicing($res->house_type); // 户型
         $data['acreage'] = $res->acreage_interval_cn; // 面积
         $data['price'] = $res->price_interval_cn; // 价格
         $data['floor'] = $res->floor_cn; // 楼层
@@ -125,6 +100,7 @@ class CustomersService
         $data['renovation'] = $res->renovation_cn;
         $data['entry_person'] = $res->entryPerson;  // 录入人信息
         $data['guardian_person'] = $res->guardianPerson; // 维护人
+        $data['created_at'] = $res->created_at->format('Y-m-d H:i:s');
 
         // 获取动态(跟进,带看) 最新4条数据
         $item = CustomerOperationRecord::where('customer_guid', $guid)
@@ -160,7 +136,7 @@ class CustomersService
                     $data['dynamic'][$k]['user_name'] = $v->user->name; // 跟进人/带看人
                     $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
                     $data['dynamic'][$k]['img_cn'] = optional($v->house)->indoor_img_cn;
-                    $data['dynamic'][$k]['title'] = optional($v->house)->floor;
+                    $data['dynamic'][$k]['title'] = $v->house ? Common::HouseTitle($v->house->guid) : null;
                     $data['dynamic'][$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
                     // 是否允许编辑
                     $data['dynamic'][$k]['operation'] = false;

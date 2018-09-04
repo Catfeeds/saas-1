@@ -6,6 +6,7 @@
 namespace App\Handler;
 
 use App\Models\CustomerOperationRecord;
+use App\Models\House;
 use App\Models\HouseOperationRecord;
 use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
@@ -124,5 +125,28 @@ class Common
         ]);
         if (empty($customerOperationRecords)) return false;
         return true;
+    }
+
+    // 拼接房源标题
+    public static function HouseTitle($guid)
+    {
+        $house = House::with('buildingBlock', 'buildingBlock.building')->where('guid', $guid)->first();
+        $title = [];
+        $title['building_name'] = $house->buildingBlock->building->name;
+        $title['acreage'] = $house->acreage_cn;
+        $title['price'] = $house->price . $house->price_unit_cn;
+        return $title;
+    }
+
+    // 拼接 户型/区域/楼盘/商圈
+    public static function splicing($data)
+    {
+        $str = '';
+        if (!empty($data)) {
+            foreach ($data as $v) {
+                $str .= ','. $v;
+            }
+        }
+        return trim($str, ',');
     }
 }

@@ -74,14 +74,16 @@ class CustomersService
         return true;
     }
 
+    // 客源详情
     public function getCustomerInfo($guid)
     {
-        $res = Customer::with('entryPerson:guid,name,tel', 'guardianPerson:guid,name,tel', 'track', 'track.user', 'remind')->where('guid', $guid)->first();
+        $res = Customer::with('entryPerson:guid,name,tel', 'guardianPerson:guid,name,tel', 'track', 'track.user', 'visit')->where('guid', $guid)->first();
         $data = [];
         $data['guid'] = $res->guid;
         $data['level'] = $res->level_cn;
         $data['guest'] = $res->guest_cn;
-        $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn;
+        $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn. '的写字楼。'. $res->remarks;
+        $data['status'] = $res->status;
         $data['customer_info'] = $res->customer_info;
         // 意向区域
         $area = '';
@@ -116,10 +118,10 @@ class CustomersService
             }
         }
         $data['house_type'] = trim($house_type,',');
-        $data['acreage'] = $res->acreage_interval_cn;
-        $data['price'] = $res->price_interval_cn;
-        $data['floor'] = $res->floor_cn;
-        $data['type'] = $res->type_cn;
+        $data['acreage'] = $res->acreage_interval_cn; // 面积
+        $data['price'] = $res->price_interval_cn; // 价格
+        $data['floor'] = $res->floor_cn; // 楼层
+        $data['type'] = $res->type_cn; // 房屋类型
         $data['renovation'] = $res->renovation_cn;
         $data['entry_person'] = $res->entryPerson;  // 录入人信息
         $data['guardian_person'] = $res->guardianPerson; // 维护人
@@ -129,32 +131,35 @@ class CustomersService
                                         ->whereIn('type', [1, 2])
                                         ->latest()
                                         ->take(4)
-                                        ->get();
+                                        ->pluck('type','created_at')
+                                        ->toArray();
         $dynamic = [];
-        foreach ($item as $v) {
-            if ($v->type == 1) {
+        foreach ($item as $k => $v) {
+            if ($v == 1) {
                 // 1跟进
                 $dynamic[] = Track::with('user:guid,name')->where([
                     'model_type' => 'App\Models\Customer',
                     'rel_guid' => $guid,
-                    'created_at' => $v->created_at->format('Y-m-d H:i:s')
+                    'created_at' => $k
                 ])->first();
             } else {
                 // 2 带看
                 $dynamic[] = Visit::with('user:guid,name', 'house')->where([
                     'cover_rel_guid' => $guid,
                     'model_type' => 'App\Models\Customer',
-                    'created_at' => $v->created_at->format('Y-m-d H:i:s')
+                    'created_at' => $k
                 ])->first();
             }
         }
-        if (!empty($dynamic)) {
-            foreach ($dynamic as $k =>  $v) {
+        $record = array_values(array_filter($dynamic));
+        if (!empty($record)) {
+            foreach ($record as $k =>  $v) {
                 if (!empty($v)) {
                     $data['dynamic'][$k]['user_name'] = $v->user->name;
                     $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
                     $data['dynamic'][$k]['img_cn'] = optional($v->house)->indoor_img_cn;
                     $data['dynamic'][$k]['title'] = optional($v->house)->floor;
+                    $data['dynamic'][$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
                 }
             }
         }

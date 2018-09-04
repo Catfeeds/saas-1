@@ -166,7 +166,8 @@ class CustomersService
             if ($request->status ==1) {
                 $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,'转为有效');
             } else {
-                $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,"'将客源转为无效：原因是:'.$request->status .$request->invalid_reason");
+                $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,'将客源转为无效：原因是:'
+                    . $request->status . $request->invalid_reason);
             }
 
             if (!$res) throw new \Exception('客源操作记录添加失败');

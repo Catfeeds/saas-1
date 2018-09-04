@@ -32,7 +32,7 @@ class HousesController extends APIBaseController
         $id = "13231113766";
 
 
-        $res = House::where("cost_detail->tel",'13231113766')->get();
+        $res = House::where("cost_detail->$.tel",$id)->get();
 
         dd($res);
 

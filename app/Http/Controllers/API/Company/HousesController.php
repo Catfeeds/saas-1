@@ -23,15 +23,6 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-//        $id = "[\"13231113766\"]";
-//        $res = House::whereRaw("JSON_CONTAINS(cost_detail,'".$id."')")->get();
-
-
-//        $id = "13231113777";
-//        $res = House::whereRaw("JSON_CONTAINS(cost_detail->'$[*].tel', '\"$id\"', '$')")->get();
-//        dd($res);
-
-
         $res = $repository->houseList($request, $service);
         return $this->sendResponse($res,'房源列表获取成功');
     }

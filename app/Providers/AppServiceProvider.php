@@ -13,11 +13,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if ($this->app->environment() == 'local') {
-            \DB::listen(function ($query) {
-                \Log::info( $query->sql);
-            });
-        }
+//        if ($this->app->environment() == 'local') {
+//            \DB::listen(function ($query) {
+//                \Log::info( $query->sql);
+//            });
+//        }
     }
 
     /**

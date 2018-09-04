@@ -82,17 +82,14 @@ class CustomersService
         $data['guid'] = $res->guid;
         $data['level'] = $res->level_cn;
         $data['guest'] = $res->guest_cn;
-        $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn. '的写字楼。'. $res->remarks;
+        $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn. '的写字楼。';
+        $data['remarks'] = $res->remarks;
         $data['status'] = $res->status;
         $data['customer_info'] = $res->customer_info;
-        $data['area'] = Common::splicing($res->intention); // 意向区域
-        // 意向楼盘
-        $item  = Building::whereIn('guid', $res->building)->pluck('name')->toArray();
-        $data['building'] = Common::splicing($item);
-        // 意向商圈
-        $item = Block::whereIn('guid', $res->block)->pluck('name')->toArray();
-        $data['block'] = Common::splicing($item);
-        $data['house_type'] = Common::splicing($res->house_type); // 户型
+        $data['area'] = $res->intention_cn; // 意向区域
+        $data['block'] = $res->block_cn; // 意向商圈
+        $data['building'] = $res->building_cn; // 意向楼盘
+        $data['house_type'] = $res->house_type_cn; // 户型
         $data['acreage'] = $res->acreage_interval_cn; // 面积
         $data['price'] = $res->price_interval_cn; // 价格
         $data['floor'] = $res->floor_cn; // 楼层
@@ -128,6 +125,7 @@ class CustomersService
             }
         }
         $record = array_values(array_filter($dynamic));
+        $data['dynamic'] = [];
         if (!empty($record)) {
             foreach ($record as $k =>  $v) {
                 if (!empty($v)) {
@@ -135,7 +133,6 @@ class CustomersService
                     $data['dynamic'][$k]['house_guid'] = optional($v->house)->guid; // 房源guid
                     $data['dynamic'][$k]['user_name'] = $v->user->name; // 跟进人/带看人
                     $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
-                    $data['dynamic'][$k]['img_cn'] = optional($v->house)->indoor_img_cn;
                     $data['dynamic'][$k]['title'] = $v->house ? Common::HouseTitle($v->house->guid) : null;
                     $data['dynamic'][$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
                     // 是否允许编辑
@@ -202,7 +199,6 @@ class CustomersService
     public function transfer($request)
     {
         $customer = Customer::where(['guid' => $request->guid]);
-
         if ($request->broker) {
             return $customer->update(['guardian_person' => $request->broker]);
         } elseif ($request->entry_person) {
@@ -245,5 +241,25 @@ class CustomersService
             \DB::rollback();
             return false;
         }
+    }
+
+    //获取客源动态
+    public function getDynamic($request)
+    {
+        $res = CustomerOperationRecord::with('user:guid,name,tel')->where('customer_guid', $request->customer_guid);
+        if (!empty($request->type)) $res = $res->where('type', $request->type);
+        $res = $res->latest()->get();
+        foreach ($res as $v) {
+            // 如果是带看  查询房子的相关信息
+            if ($v->type == 2) {
+                $house_guid = Visit::where([
+                    'cover_rel_guid' => $v->customer_guid,
+                    'model_type' => 'App\Models\Customer',
+                    'created_at' => $v->created_at->format('Y-m-d H:i:s')
+                ])->value('rel_guid');
+                $v['house'] = Common::HouseTitle($house_guid);
+            }
+        }
+        return $res;
     }
 }

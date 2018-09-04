@@ -135,18 +135,7 @@ class Common
         $title['building_name'] = $house->buildingBlock->building->name;
         $title['acreage'] = $house->acreage_cn;
         $title['price'] = $house->price . $house->price_unit_cn;
+        $title['img'] = $house->indoor_img_cn;
         return $title;
-    }
-
-    // 拼接 户型/区域/楼盘/商圈
-    public static function splicing($data)
-    {
-        $str = '';
-        if (!empty($data)) {
-            foreach ($data as $v) {
-                $str .= ','. $v;
-            }
-        }
-        return trim($str, ',');
     }
 }

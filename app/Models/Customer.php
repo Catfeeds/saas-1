@@ -209,7 +209,7 @@ class Customer extends BaseModel
         $area = '';
         if ($this->intention) {
             foreach ($this->intention as $v) {
-                $area .= ','.$v['name'];
+                $area .= ','.$v;
             }
         }
         return trim($area, ',');

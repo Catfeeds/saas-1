@@ -91,14 +91,14 @@ class CustomersService
         $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn. '的写字楼。'. $res->remarks;
         $data['status'] = $res->status;
         $data['customer_info'] = $res->customer_info;
-        $data['area'] = $res->area_cn; // 意向区域
+        $data['area'] = Common::splicing($res->intention); // 意向区域
         // 意向楼盘
         $item  = Building::whereIn('guid', $res->building)->pluck('name')->toArray();
-        $data['building'] = $this->splicing($item);
+        $data['building'] = Common::splicing($item);
         // 意向商圈
         $item = Block::whereIn('guid', $res->block)->pluck('name')->toArray();
-        $data['block'] = $this->splicing($item);
-        $data['house_type'] = $res->house_type_cn; // 户型
+        $data['block'] = Common::splicing($item);
+        $data['house_type'] = Common::splicing($res->house_type); // 户型
         $data['acreage'] = $res->acreage_interval_cn; // 面积
         $data['price'] = $res->price_interval_cn; // 价格
         $data['floor'] = $res->floor_cn; // 楼层
@@ -142,7 +142,7 @@ class CustomersService
                     $data['dynamic'][$k]['user_name'] = $v->user->name; // 跟进人/带看人
                     $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
                     $data['dynamic'][$k]['img_cn'] = optional($v->house)->indoor_img_cn;
-                    $data['dynamic'][$k]['title'] = $v->house ? Common::HouseTitle($v->house->guid) : null;
+                    $data['dynamic'][$k]['title'] = $v->house ? Common::Hous1eTitle($v->house->guid) : null;
                     $data['dynamic'][$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
                     // 是否允许编辑
                     $data['dynamic'][$k]['operation'] = false;
@@ -250,17 +250,5 @@ class CustomersService
             \DB::rollback();
             return false;
         }
-    }
-
-    // 拼接数据
-    public function splicing($data)
-    {
-        $str = '';
-        if (!empty($data)) {
-            foreach ($data as $v) {
-                $str .= ','. $v;
-            }
-        }
-        return trim($str, ',');
     }
 }

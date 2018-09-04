@@ -15,10 +15,16 @@ class CustomersService
     //客源列表
     public function getList($request)
     {
-        return Customer::where([
+        $customer = Customer::where([
             'company_guid' => 'ed8090e4a6b811e8bf9a416618026100',
             'status' => 1
         ])->paginate($request->per_page??10);
+
+        foreach ($customer as $v) {
+
+        }
+
+
     }
 
     // 添加客源

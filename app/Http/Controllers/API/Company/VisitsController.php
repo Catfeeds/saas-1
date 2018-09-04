@@ -34,12 +34,19 @@ class VisitsController extends APIBaseController
         return $this->sendResponse($res, '带看登记成功');
     }
 
-    //删除客源带看
-    public function destroy(Visit $visit)
+    //编辑带看
+    public function update
+    (
+        VisitsService $service,
+        VisitsRequest $request,
+        Visit $visit
+    )
     {
-        $res = $visit->delete();
-        return $this->sendResponse($res, '带看删除成功');
+        $res = $service->updateVisit($request, $visit);
+        if (!$res) return $this->sendError('带看修改失败');
+        return $this->sendResponse($res, '带看修改成功');
     }
+
 
 
 

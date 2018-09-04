@@ -278,7 +278,7 @@ class HousesService
             $track[$k]['created_at'] = $v->created_at->format('Y-m-d H:i');
             // 是否允许编辑标识  十分钟内  添加人必须是登录人
             $track[$k]['operation'] = false;
-            if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 10 * 60) {
+            if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 10 * 60 * 30) {
                 if ($v->user_guid == Common::user()->guid) {
                     $track[$k]['operation'] = true;
                 }

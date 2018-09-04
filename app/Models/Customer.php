@@ -21,7 +21,10 @@ class Customer extends BaseModel
         'remarks_cn',
         'price_interval_cn',
         'acreage_interval_cn',
-        'intention_cn'
+        'house_type_cn',
+        'intention_cn',
+        'block_cn',
+        'building_cn'
     ];
 
     // 录入人
@@ -165,16 +168,6 @@ class Customer extends BaseModel
         }
     }
 
-    // 区域
-    public function getIntentionCnAttribute()
-    {
-       return collect($this->intention)->map(function($v) {
-               return [
-                   'intention' => $v
-               ];
-       });
-    }
-
     // 楼层中文
     public function getFloorCnAttribute()
     {
@@ -189,28 +182,41 @@ class Customer extends BaseModel
         }
     }
 
-//    // 户型
-//    public function getHouseTypeCnAttribute()
-//    {
-//        $house_type = '';
-//        if ($this->house_type) {
-//            foreach ($this->house_type as $v) {
-//                $house_type .= ','.$v;
-//            }
-//        }
-//        return trim($house_type, ',');
-//    }
-//
-//    // 意向区域
-//    public function getAreaCnAttribute()
-//    {
-//        $area = '';
-//        if ($this->intention) {
-//            foreach ($this->intention as $v) {
-//                $area .= ','.$v;
-//            }
-//        }
-//        return trim($area, ',');
-//    }
+    // 户型
+    public function getHouseTypeCnAttribute()
+    {
+        return empty($this->house_type)?'不限户型':implode(',', $this->house_type);
+    }
 
+    // 区域 intention_cn
+    public function getIntentionCnAttribute()
+    {
+        return empty($this->intention)?'':implode(',',$this->intention);
+    }
+
+    // 商圈 block_cn
+    public function getBlockCnAttribute()
+    {
+        $blockName = array();
+        if ($this->block) {
+            foreach ($this->block as $v) {
+                $blockName[] = $v['name'];
+            }
+        }
+
+        return empty($blockName)?'':implode(',',$blockName);
+    }
+
+    // 楼盘 building_cn
+    public function getBuildingCnAttribute()
+    {
+        $buildingName = array();
+        if ($this->building) {
+            foreach ($this->building as $v) {
+                $buildingName[] = $v['name'];
+            }
+        }
+
+        return empty($buildingName)?'':implode(',',$buildingName);
+    }
 }

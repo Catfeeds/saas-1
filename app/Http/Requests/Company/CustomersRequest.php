@@ -75,7 +75,6 @@ class CustomersRequest extends FormRequest
            case 'invalid':
                  return [
                    'customer_guid' => 'required|exists:customer,guid',
-                   'status' => 'required|integer|between:1,7'
                  ];
             case 'updateGuest':
                 return [

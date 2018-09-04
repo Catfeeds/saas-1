@@ -74,25 +74,54 @@ class CustomersService
         return true;
     }
 
+    // 客源详情
     public function getCustomerInfo($guid)
     {
-        $res = Customer::with('entryPerson:guid,name,tel', 'guardianPerson:guid,name,tel', 'track', 'track.user', 'remind')->where('guid', $guid)->first();
+        $res = Customer::with('entryPerson:guid,name,tel', 'guardianPerson:guid,name,tel', 'track', 'track.user', 'visit')->where('guid', $guid)->first();
         $data = [];
         $data['guid'] = $res->guid;
         $data['level'] = $res->level_cn;
         $data['guest'] = $res->guest_cn;
-        $data['title'] = $res->prince_cn.',' .$res->acreage_cn;
+        $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn. '的写字楼。'. $res->remarks;
+        $data['status'] = $res->status;
         $data['customer_info'] = $res->customer_info;
-        $data['area'] = $res->intention;
+        // 意向区域
+        $area = '';
+        if ($res->intention) {
+            foreach ($res->intention as $v) {
+                $area .= ','.$v['name'];
+            }
+        }
+        $data['area'] = trim($area,',');
         // 意向楼盘
-        $data['building'] = Building::whereIn('guid', $res->building)->pluck('name')->toArray();
+        $building = '';
+        $item  = Building::whereIn('guid', $res->building)->pluck('name')->toArray();
+        if (!empty($item)) {
+            foreach ($item as $v) {
+                $building .= ','.$v;
+            }
+        }
+        $data['building'] = trim($building,',');
         // 查询意向商圈
-        $data['block'] = Block::whereIn('guid', $res->block)->pluck('name')->toArray();
-        $data['house_type'] = $res->house_type;
-        $data['acreage'] = $res->acreage_cn;
-        $data['price'] = $res->price_cn;
-        $data['floor'] = $res->floor_cn;
-        $data['type'] = $res->type_cn;
+        $item = Block::whereIn('guid', $res->block)->pluck('name')->toArray();
+        $block = '';
+        if (!empty($item)) {
+            foreach ($item as $v) {
+                $block .= ','.$v;
+            }
+        }
+        $data['block'] = trim($block,',');
+        $house_type = '';
+        if ($res->house_type) {
+            foreach ($res->house_type as $v) {
+                $house_type .= ','.$v['name'];
+            }
+        }
+        $data['house_type'] = trim($house_type,',');
+        $data['acreage'] = $res->acreage_interval_cn; // 面积
+        $data['price'] = $res->price_interval_cn; // 价格
+        $data['floor'] = $res->floor_cn; // 楼层
+        $data['type'] = $res->type_cn; // 房屋类型
         $data['renovation'] = $res->renovation_cn;
         $data['entry_person'] = $res->entryPerson;  // 录入人信息
         $data['guardian_person'] = $res->guardianPerson; // 维护人
@@ -102,35 +131,38 @@ class CustomersService
                                         ->whereIn('type', [1, 2])
                                         ->latest()
                                         ->take(4)
-                                        ->get();
+                                        ->pluck('type','created_at')
+                                        ->toArray();
         $dynamic = [];
-        foreach ($item as $v) {
-            if ($v->type == 1) {
+        foreach ($item as $k => $v) {
+            if ($v == 1) {
                 // 1跟进
                 $dynamic[] = Track::with('user:guid,name')->where([
                     'model_type' => 'App\Models\Customer',
                     'rel_guid' => $guid,
-                    'created_at' => $v->created_at->format('Y-m-d H:i:s')
+                    'created_at' => $k
                 ])->first();
             } else {
                 // 2 带看
                 $dynamic[] = Visit::with('user:guid,name', 'house')->where([
                     'cover_rel_guid' => $guid,
                     'model_type' => 'App\Models\Customer',
-                    'created_at' => $v->created_at->format('Y-m-d H:i:s')
+                    'created_at' => $k
                 ])->first();
             }
         }
-        if (!empty($dynamic)) {
-            foreach ($dynamic as $v) {
+        $record = array_values(array_filter($dynamic));
+        if (!empty($record)) {
+            foreach ($record as $k =>  $v) {
                 if (!empty($v)) {
-                    $data['dynamic']['user_name'] = $v->user->name;
-                    $data['dynamic']['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
-                    $data['dynamic']['img_cn'] = $v->indoor_img_cn ? $v->indoor_img_cn: '';
+                    $data['dynamic'][$k]['user_name'] = $v->user->name;
+                    $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
+                    $data['dynamic'][$k]['img_cn'] = optional($v->house)->indoor_img_cn;
+                    $data['dynamic'][$k]['title'] = optional($v->house)->floor;
+                    $data['dynamic'][$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
                 }
             }
         }
-
         return $data;
     }
 

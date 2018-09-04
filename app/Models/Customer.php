@@ -46,7 +46,7 @@ class Customer extends BaseModel
     }
 
     // 带看
-    public function remind()
+    public function visit()
     {
         return $this->hasMany(Visit::class,'cover_rel_guid', 'guid')->where('model_type', 'App\Models\Customer');
     }

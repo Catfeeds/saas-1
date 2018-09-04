@@ -87,21 +87,6 @@ class Customer extends BaseModel
         }
     }
     
-    // 公私客中文
-    public function getPublicGuestCnAttribute()
-    {
-        switch ($this->guest) {
-            case 1:
-                return '公客';
-                break;
-            case 2:
-                return '私客';
-                break;
-            default;
-                break;
-        }
-    }
-
     // 备注
     public function getRemarksCnAttribute()
     {

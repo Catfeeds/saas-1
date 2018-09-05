@@ -18,86 +18,86 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源',
-            'name_en' => 'Listing'
+            'name_en' => 'listing'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-类型',
-            'name_en' => 'Listing-type'
+            'name_en' => 'listing_type'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-私盘房源上限',
-            'name_en' => 'Private listing limit'
+            'name_en' => 'private_listing_limit'
         ]);
 
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-公盘转私盘',
-            'name_en' => 'Public disk'
+            'name_en' => 'public_disk'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-私盘转公盘',
-            'name_en' => 'Private disk transfer'
+            'name_en' => 'private_disk_transfer'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-业主信息-新增房源的业主信息',
-            'name_en' => 'Owner information for new listings'
+            'name_en' => 'owner_information_for_new_listings'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-业主信息-修改/删除房源的业主信息',
-            'name_en' => 'Edit/delete owner information for a listing'
+            'name_en' => 'edit_delete_owner_information_for_a_listing'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-电脑端查看公盘房源业主信息',
-            'name_en' => 'View the public information of the owner of the public on the computer'
+            'name_en' => 'view_the_public_information_of_the_owner_of_the_public_on_the_computer'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '私盘房源业主信息',
-            'name_en' => 'Private Listing Owner Information'
+            'name_en' => 'private_listing_owner_information'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '私盘房源门牌号',
-            'name_en' => 'Private house number'
+            'name_en' => 'private_house_number'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-公盘门牌号',
-            'name_en' => 'Public house number'
+            'name_en' => 'public_house_number'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-门牌号',
-            'name_en' => 'House number'
+            'name_en' => 'house_number'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-小区名称',
-            'name_en' => 'Community name'
+            'name_en' => 'community_name'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-房源等级',
-            'name_en' => 'Listing level'
+            'name_en' => 'listing_level'
         ]);
 
         Permission::create([
@@ -109,244 +109,244 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-其他信息',
-            'name_en' => 'other information'
+            'name_en' => 'other_information'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-录入人',
-            'name_en' => 'Entering person'
+            'name_en' => 'entering_person'
         ]);
 
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-维护人',
-            'name_en' => 'Maintainer'
+            'name_en' => 'maintainer'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-图片人',
-            'name_en' => 'Picture person'
+            'name_en' => 'picture_person'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-钥匙人',
-            'name_en' => 'Key person'
+            'name_en' => 'key_person'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-修改状态',
-            'name_en' => 'Modify status'
+            'name_en' => 'modify_status'
         ]);
 
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-转为无效审核',
-            'name_en' => 'Switch to invalid review'
+            'name_en' => 'switch_to_invalid_review'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-置顶房源',
-            'name_en' => 'Pinned listing'
+            'name_en' => 'pinned_listing'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-上传图片',
-            'name_en' => 'upload image'
+            'name_en' => 'upload_image'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-编辑图片',
-            'name_en' => 'Edit picture'
+            'name_en' => 'edit_picture'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-删除图片',
-            'name_en' => 'Delete image'
+            'name_en' => 'delete_image'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-上传证件',
-            'name_en' => 'Upload document'
+            'name_en' => 'upload_document'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-查看证件',
-            'name_en' => 'View documents'
+            'name_en' => 'view_documents'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-删除证件',
-            'name_en' => 'Delete document'
+            'name_en' => 'delete_document'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-提交钥匙',
-            'name_en' => 'Submit key'
+            'name_en' => 'submit_key'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-编辑退换钥匙',
-            'name_en' => 'Edit return key'
+            'name_en' => 'edit_return_key'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-提交退还钥匙审核',
-            'name_en' => 'Submit a refund key review'
+            'name_en' => 'submit_a_refund_key_review'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-编辑/删除委托书',
-            'name_en' => 'Edit delete power of attorney'
+            'name_en' => 'edit_delete_power_of_attorney'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-查看联系方式写跟进',
-            'name_en' => 'View contact information write follow up'
+            'name_en' => 'view_contact_information_write_follow_up'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-删除跟进',
-            'name_en' => 'Delete follow up'
+            'name_en' => 'delete_follow_up'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-删除房源',
-            'name_en' => 'Delete listing'
+            'name_en' => 'delete_listing'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-列表展示',
-            'name_en' => 'List display'
+            'name_en' => 'list_display'
         ]);
 
         // 客源
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源',
-            'name_en' => 'Customer source'
+            'name_en' => 'customer_source'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-求购客源',
-            'name_en' => 'Buying source'
+            'name_en' => 'buying_source'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-求租客源',
-            'name_en' => 'Renter source'
+            'name_en' => 'renter_source'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-客别',
-            'name_en' => 'Guest'
+            'name_en' => 'guest'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-电脑端公客',
-            'name_en' => 'Computer public'
+            'name_en' => 'computer_public'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-电脑端抢客',
-            'name_en' => 'Computer rush'
+            'name_en' => 'computer_rush'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-私客查看范围',
-            'name_en' => 'Private guest view range'
+            'name_en' => 'private_guest_view_range'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-联系方式',
-            'name_en' => 'Contact information'
+            'name_en' => 'contact_information'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-客源等级',
-            'name_en' => 'Source level'
+            'name_en' => 'source_level'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-其他信息',
-            'name_en' => 'other information'
+            'name_en' => 'other_information'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-录入人',
-            'name_en' => 'Entering person'
+            'name_en' => 'entering_person'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-维护人',
-            'name_en' => 'Maintainer'
+            'name_en' => 'maintainer'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-转为无效',
-            'name' => 'Turned invalid'
+            'name' => 'turned_invalid'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-查看联系方式写跟进',
-            'name_en' => 'View contact information write follow up'
+            'name_en' => 'view_contact_information_write_follow_up'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-删除跟进',
-            'name_en' => 'Delete follow up'
+            'name_en' => 'delete_follow_up'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-查看带看',
-            'name' => 'View with a look'
+            'name' => 'view_with_a_look'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-删除带看',
-            'name_en' => 'Delete to see'
+            'name_en' => 'delete_to_see'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-删除客源',
-            'name_en' => 'Delete source'
+            'name_en' => 'delete_source'
         ]);
 
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Company;
 
+use App\Handler\Access;
 use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Controllers\Traits\QiNiu;
@@ -23,6 +24,11 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
+        $user = Access::getUser(2);
+        dd($user);
+
+
+
         $res = $repository->houseList($request, $service);
         return $this->sendResponse($res,'房源列表获取成功');
     }

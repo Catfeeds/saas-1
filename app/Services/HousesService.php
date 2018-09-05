@@ -377,7 +377,6 @@ class HousesService
                 $data['guardian_person'] = '';
                 $data['public_private'] = 2;
                 $public_private = '公盘';
-
             }
 
             $houseStatus = House::where('guid',$request->guid)->update($data);

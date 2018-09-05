@@ -18,11 +18,14 @@ class Access{
     //获取登录人某个权限具体操作
     public static function permission($name)
     {
-        $permissionGuid = Permission::where('name', $name)->value('guid');
-        if (!empty($permissionGuid)) return RoleHasPermission::where('permission_guid', $permissionGuid)->first();
+        // 获取登录人角色guid
+        $user = Common::user();
+        $role_guid = $user->role->guid;
+        $permission_guid = Permission::where('name', $name)->value('guid');
+        if (!empty($permission_guid)) return RoleHasPermission::where(['permission_guid' => $permission_guid, 'role_guid' => $role_guid])->first();
     }
 
-    // 获取登录人的权限具体操作
+    // 获取登录人的所有权限
     public static function access($user = null)
     {
         // 获取当前登录人

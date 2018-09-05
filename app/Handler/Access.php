@@ -32,8 +32,10 @@ class Access{
         foreach ($res->role->roleHasPermission as $k => $v) {
             $permission[$k]['permission_guid'] = $v->permission_guid;
             $permission[$k]['permission_name'] = $v->hasPermission->name;
-            $permission[$k]['action_scope'] = $v->action_scope_cn;
-            $permission[$k]['follow_up'] = $v->follow_up_cn;
+            $permission[$k]['action_scope'] = $v->action_scope;
+            $permission[$k]['action_scope_cn'] = $v->action_scope_cn;
+            $permission[$k]['follow_up'] = $v->follow_up;
+            $permission[$k]['follow_up_cn'] = $v->follow_up_cn;
             $permission[$k]['operation_number'] = $v->operation_number;
         }
         return $permission;

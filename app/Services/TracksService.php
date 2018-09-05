@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Handler\Common;
+use App\Models\CustomerOperationRecord;
 use App\Models\HouseOperationRecord;
 use App\Models\Track;
 
@@ -47,14 +48,28 @@ class TracksService
     {
         \DB::beginTransaction();
         try {
+            $oldTracksInfo = $track->tracks_info;
+
             $track->tracks_info = $request->tracks_info;
             if (!$track->save()) throw new \Exception('修改跟进失败');
-            // 修改操作记录
-            $houseOperationRecord = HouseOperationRecord::where([
-                'house_guid' => $track->rel_guid,
+
+            // 修改条件
+            $where = [
+                'user_guid' => Common::user()->guid,
+                'remarks' => $oldTracksInfo,
                 'created_at' => $track->created_at
-            ])->update(['remarks' => $request->tracks_info]);
-            if (empty($houseOperationRecord)) throw new \Exception('房源跟进记录修改失败');
+            ];
+
+            if ($request->model_type == 'App\Models\CustomerOperationRecord') {
+                $where['customer_guid'] = $track->rel_guid;
+            } else {
+                $where['house_guid'] = $track->rel_guid;
+            }
+
+            // 修改操作记录
+            $operationRecord = $request->model_type::where($where)->update(['remarks' => $request->tracks_info]);
+            if (empty($operationRecord)) throw new \Exception('房源/客源跟进记录修改失败');
+
             \DB::commit();
             return $track;
         } catch (\Exception $exception) {

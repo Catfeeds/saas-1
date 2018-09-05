@@ -51,12 +51,9 @@ class TracksService
             // 修改操作记录
             $houseOperationRecord = HouseOperationRecord::where([
                 'house_guid' => $track->rel_guid,
-                'user_guid' => Common::user()->guid,
-                'remarks' => $track->tracks_info,
                 'created_at' => $track->created_at
             ])->update(['remarks' => $request->tracks_info]);
             if (empty($houseOperationRecord)) throw new \Exception('房源跟进记录修改失败');
-
             \DB::commit();
             return $track;
         } catch (\Exception $exception) {

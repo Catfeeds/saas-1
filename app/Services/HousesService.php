@@ -109,16 +109,48 @@ class HousesService
         $count = count($user);
         switch ($type) {
             case 1:
-                return $count == 0 ? '最近暂无跟进信息' : current($user).'等'.$count.'人最近跟进';
+                if (!$count) {
+                    return '最近暂无跟进信息';
+                } elseif ($count == 1) {
+                    return current($user).'最近跟进';
+                } elseif ($count == 2) {
+                    return current($user).'、'. end($user).'最近跟进';
+                } else {
+                    return $user[0].'、'.$user[1].'、'.$user[2].'等'.$count.'人最近跟进';
+                }
                 break;
             case 2:
-                return $count == 0 ? '最近暂无带看信息' : current($user).'等'.$count.'人最近带看';
+                if (!$count) {
+                    return '最近暂无带看信息';
+                } elseif ($count == 1) {
+                    return current($user).'最近带看';
+                } elseif ($count == 2) {
+                    return current($user).'、'. end($user).'最近带看';
+                } else {
+                    return $user[0].'、'.$user[1].'、'.$user[2].'等'.$count.'人最近带看';
+                }
                 break;
             case 3:
-                return $count == 0 ? '最近无图片上传' : current($user).'等'. $count.'人最近上传图片';
+                if (!$count) {
+                    return '最近暂无图片上传';
+                } elseif ($count == 1) {
+                    return current($user).'最近上传图片';
+                } elseif ($count == 2) {
+                    return current($user).'、'. end($user).'最近上传图片';
+                } else {
+                    return $user[0].'、'.$user[1].'、'.$user[2].'等'.$count.'人最近上传图片';
+                }
                 break;
             case 4:
-                return $count == 0 ? '最近暂无查看信息' : current($user).'等'. $count.'人最近查看核心信息';
+                if (!$count) {
+                    return '最近暂无查看信息';
+                } elseif ($count == 1) {
+                    return current($user).'最近查看核心信息';
+                } elseif ($count == 2) {
+                    return current($user).'、'. end($user).'最近查看核心信息';
+                } else {
+                    return $user[0].'、'.$user[1].'、'.$user[2].'等'.$count.'人最近查看核心信息';
+                }
                 break;
                 default;
                 break;
@@ -237,14 +269,19 @@ class HousesService
             $keyPersonName = $house->keyPerson->name;
             // 钥匙人图像
             if ($house->keyPerson->pic) $keyPersonPic = config('setting.qiniu_url') . $house->keyPerson->pic;
+            // 钥匙人所属门店
+            if ($house->keyPerson->rel_guid) $keyPersonStorefront = $house->entryPerson->companyFramework->name;
         }
         $data['relevant']['key_person']['name'] = $keyPersonName??'-';
-        $data['relevant']['key_person']['storefront'] = $house->have_key == 1 ? $house->seeHouseWay->storefront->name : '';
+        $data['relevant']['key_person']['storefront'] = $keyPersonStorefront??'';
         $data['relevant']['key_person']['pic'] = $keyPersonPic??config('setting.user_default_img');
         $data['relevant']['key_person']['guid'] = $house->key_person??'';
 
-        // 看房方式
-        $data['seeHouseWay'] = $house->seeHouseWay;
+        // 看房方式 $data['seeHouseWay']['storefront_name']
+        $storefront_name = $house->have_key == 1 ? $house->seeHouseWay->storefront->name : '';
+        $data['seeHouseWay'] = $house->seeHouseWay->setRelation('storefront',[]);
+        $data['seeHouseWay']['storefront_name'] = $storefront_name;
+
         // 七牛url
         $data['qiNiuUrl'] = config('setting.qiniu_url');
 

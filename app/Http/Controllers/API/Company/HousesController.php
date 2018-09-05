@@ -24,8 +24,7 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-        $user = Access::getUser(2);
-        dd($user);
+        $user = Access::getUser(3);
 
 
 

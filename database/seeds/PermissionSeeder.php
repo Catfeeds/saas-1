@@ -206,13 +206,13 @@ class PermissionSeeder extends Seeder
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '房源-提交.退还钥匙审核',
+            'name' => '房源-提交退还钥匙审核',
             'name_en' => 'Submit a refund key review'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '房源-编辑删除委托书',
+            'name' => '房源-编辑/删除委托书',
             'name_en' => 'Edit delete power of attorney'
         ]);
 
@@ -244,91 +244,109 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源',
+            'name_en' => 'Customer source'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-求购客源'
+            'name' => '客源-求购客源',
+            'name_en' => 'Buying source'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-求租客源'
+            'name' => '客源-求租客源',
+            'name_en' => 'Renter source'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-客别'
+            'name' => '客源-客别',
+            'name_en' => 'Guest'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-电脑端公客'
+            'name' => '客源-电脑端公客',
+            'name_en' => 'Computer public'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-电脑端抢客'
+            'name' => '客源-电脑端抢客',
+            'name_en' => 'Computer rush'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-私客查看范围'
+            'name' => '客源-私客查看范围',
+            'name_en' => 'Private guest view range'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-联系方式'
+            'name' => '客源-联系方式',
+            'name_en' => 'Contact information'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-客源等级'
+            'name' => '客源-客源等级',
+            'name_en' => 'Source level'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-其他信息'
+            'name' => '客源-其他信息',
+            'name_en' => 'other information'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-录入人'
+            'name' => '客源-录入人',
+            'name_en' => 'Entering person'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-维护人'
+            'name' => '客源-维护人',
+            'name_en' => 'Maintainer'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-转为无效'
+            'name' => '客源-转为无效',
+            'name' => 'Turned invalid'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-查看联系方式写跟进'
+            'name' => '客源-查看联系方式写跟进',
+            'name_en' => 'View contact information write follow up'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-删除跟进'
+            'name' => '客源-删除跟进',
+            'name_en' => 'Delete follow up'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-查看带看'
+            'name' => '客源-查看带看',
+            'name' => 'View with a look'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-删除带看'
+            'name' => '客源-删除带看',
+            'name_en' => 'Delete to see'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '客源-删除客源'
+            'name' => '客源-删除客源',
+            'name_en' => 'Delete source'
         ]);
 
     }

@@ -278,7 +278,7 @@ class HousesService
         $data['relevant']['key_person']['guid'] = $house->key_person??'';
 
         // 看房方式 $data['seeHouseWay']['storefront_name']
-        $storefront_name = $house->have_key == 1 ? $house->seeHouseWay->storefront->name : '';
+        $storefront_name = $house->have_key == 1 ? $house->seeHouseWay->storefront->name : '请预约';
         $data['seeHouseWay'] = optional($house->seeHouseWay)->setRelation('storefront',[]);
         $data['seeHouseWay']['storefront_name'] = $storefront_name;
 

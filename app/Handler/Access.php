@@ -22,6 +22,23 @@ class Access{
         if (!empty($permissionGuid)) return RoleHasPermission::where('permission_guid', $permissionGuid)->first();
     }
 
+    // 获取登录人的权限具体操作
+    public static function access($user = null)
+    {
+        // 获取当前登录人
+        if (empty($user)) $user = Common::user();
+        $res = $user::with('role','role.roleHasPermission', 'role.roleHasPermission.hasPermission')->first();
+        $permission = [];
+        foreach ($res->role->roleHasPermission as $k => $v) {
+            $permission[$k]['permission_guid'] = $v->permission_guid;
+            $permission[$k]['permission_name'] = $v->hasPermission->name;
+            $permission[$k]['action_scope'] = $v->action_scope_cn;
+            $permission[$k]['follow_up'] = $v->follow_up_cn;
+            $permission[$k]['operation_number'] = $v->operation_number;
+        }
+        return $permission;
+    }
+
     // 获取公司/区域/门店/组所有用户
     public static function getUser(
         $actionScope
@@ -74,4 +91,6 @@ class Access{
             return Common::user()->guid;
         }
     }
+
+
 }

@@ -65,13 +65,13 @@ class PermissionSeeder extends Seeder
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '私盘房源业主信息',
+            'name' => '房源-私盘房源业主信息',
             'name_en' => 'private_owner_information'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
-            'name' => '私盘房源门牌号',
+            'name' => '房源-私盘房源门牌号',
             'name_en' => 'private_house_number'
         ]);
 
@@ -331,7 +331,7 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-查看带看',
-            'name' => 'view_with_look'
+            'name_en' => 'view_with_look'
         ]);
 
         Permission::create([

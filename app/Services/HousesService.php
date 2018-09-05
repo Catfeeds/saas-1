@@ -332,20 +332,25 @@ class HousesService
             // 修改房源状态
             $status = '';
             if ($request->status == 3) {
-                $status = '暂缓,';
+                $status = '暂缓';
             } elseif ($request->status == 4) {
-                $status = '内成交,';
+                $status = '内成交';
             } elseif ($request->status == 5) {
-                $status = '外成交,';
+                $status = '外成交';
             } elseif ($request->status == 6) {
-                $status = '信息有误,';
+                $status = '信息有误';
             } elseif ($request->status == 7) {
-                $status = '其他,';
+                $status = '其他';
             }
-            $remarks = "将房源转为无效,原因是$status" . $request->remarks;
-            $houseStatus = House::where('guid',$request->guid)->update(['status' => $request->status,'remarks' => $remarks]);
+
+            if ($request->remark) {
+                $remarks = '将房源转为无效,原因是:'.$status. ',备注原因是:'. $request->remark;
+            } else {
+                $remarks = '将房源转为无效,原因是:'.$status;
+            }
+            $houseStatus = House::where('guid', $request->guid)->update(['status' => $request->status]);
             if (empty($houseStatus)) throw new \Exception('修改房源状态失败');
-            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,6,$remarks);
+            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,6, $remarks);
             if (empty($houseOperationRecords)) throw new \Exception('房源其他操作记录添加失败');
 
             \DB::commit();
@@ -362,25 +367,23 @@ class HousesService
         \DB::beginTransaction();
         try {
             // 修改房源状态
-            $public_private = '';
-            if ($request->public_private == 1) {
-                $public_private = '私盘';
-            } elseif ($request->public_private == 2) {
-                $public_private = '公盘';
-            }
             $data = ['status' => 1];
+            $public_private = '';
             if ($request->type == 1) {
                 $data['guardian_person'] = Common::user()->guid;
                 $data['public_private'] = 1;
+                $public_private = '私盘';
             } elseif ($request->type == 2) {
                 $data['guardian_person'] = '';
                 $data['public_private'] = 2;
+                $public_private = '公盘';
+
             }
+
             $houseStatus = House::where('guid',$request->guid)->update($data);
             if (empty($houseStatus)) throw new \Exception('修改房源状态失败');
-            $remarks = "'将房源转为'.$public_private";
-            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,6,
-                $remarks);
+            $remarks = '将房源转为有效房源,并设置为:'.$public_private;
+            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,6, $remarks);
             if (empty($houseOperationRecords)) throw new \Exception('房源其他操作记录添加失败');
             \DB::commit();
             return true;
@@ -434,7 +437,7 @@ class HousesService
         }
     }
 
-    //获取房源动态
+    // 获取房源动态
     public function getDynamic($request)
     {
         $res = HouseOperationRecord::with('user:guid,name,tel')->where('house_guid', $request->house_guid);

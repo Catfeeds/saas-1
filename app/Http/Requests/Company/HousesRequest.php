@@ -223,7 +223,7 @@ class HousesRequest extends FormRequest
                       )
                       ],
                   'status' => 'required|integer|between:3,7',
-                  'remarks' => 'required'
+                  'remarks' => 'nullable|max:128'
                 ];
             case 'turnEffective':
                 return [

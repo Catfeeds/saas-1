@@ -429,7 +429,8 @@ class HousesService
             $house = House::where(['guid' => $request->guid])->update([
                 'house_type_img' => json_encode($request->house_type_img),
                 'indoor_img' => json_encode($request->indoor_img),
-                'outdoor_img' => json_encode($request->outdoor_img)
+                'outdoor_img' => json_encode($request->outdoor_img),
+                'pic_person' => Common::user()->guid
             ]);
             if (empty($house)) throw new \Exception('房源编辑图片失败');
 

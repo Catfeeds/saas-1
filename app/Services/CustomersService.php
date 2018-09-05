@@ -153,17 +153,30 @@ class CustomersService
     {
         \DB::beginTransaction();
         try {
+            $status = '';
+            if ($request->status == 3) {
+                $status = '暂缓,';
+            } elseif ($request->status == 4) {
+                $status = '内成交,';
+            } elseif ($request->status == 5) {
+                $status = '外成交,';
+            } elseif ($request->status == 6) {
+                $status = '电话错误,';
+            } elseif ($request->status == 7) {
+                $status = '其他,';
+            }
+
+            $remarks = "将客源转为无效,原因是$status" . $request->invalid_reason;
             $data = ['status' => $request->status];
             if ($request->status != 1 && $request->status != 2) {
-                $data['invalid_reason'] = $request->invalid_reason;
+                $data['invalid_reason'] = $remarks;
             }
             $suc =  Customer::where('guid', $request->guid)->update($data);
             if (!$suc) throw new \Exception('客源转为有效/无效失败');
             if ($request->status ==1) {
                 $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,'转为有效');
             } else {
-                $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,'将客源转为无效：原因是:'
-                    . $request->status . $request->invalid_reason);
+                $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,$remarks);
             }
 
             if (!$res) throw new \Exception('客源操作记录添加失败');

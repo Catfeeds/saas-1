@@ -55,19 +55,19 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-业主信息-修改/删除房源的业主信息',
-            'name_en' => 'edit_delete_owner_information_for_a_listing'
+            'name_en' => 'qwe'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-电脑端查看公盘房源业主信息',
-            'name_en' => 'view_the_public_information_of_the_owner_of_the_public_on_the_computer'
+            'name_en' => 'qweqwe'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '私盘房源业主信息',
-            'name_en' => 'private_listing_owner_information'
+            'name_en' => 'qe'
         ]);
 
         Permission::create([

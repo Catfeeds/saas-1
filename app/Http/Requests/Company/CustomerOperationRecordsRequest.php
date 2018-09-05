@@ -24,7 +24,7 @@ class CustomerOperationRecordsRequest extends FormRequest
         switch ($this->route()->getActionMethod()) {
             case 'index':
                 return [
-                    'customer_guid.exists' => '客源必须存在'
+
                 ];
             default;
                 return [
@@ -43,7 +43,7 @@ class CustomerOperationRecordsRequest extends FormRequest
         switch ($this->route()->getActionMethod()) {
             case 'index':
                 return [
-                    'customer_guid' => 'required|max:32|exists:customer_operation_records,customer_guid',
+                    'customer_guid' => 'required|max:32',
                     'type' => 'nullable|integer|between:1,6'
                 ];
                 default;

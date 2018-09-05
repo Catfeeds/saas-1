@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Handler\Common;
-use App\Models\Block;
-use App\Models\Building;
 use App\Models\Customer;
 use App\Models\CustomerOperationRecord;
 use App\Models\Track;
@@ -12,13 +10,13 @@ use App\Models\Visit;
 
 class CustomersService
 {
-    //客源列表
+    // 客源列表
     public function getList($request)
     {
         return Customer::where([
             'company_guid' => 'ed8090e4a6b811e8bf9a416618026100',
             'status' => 1
-        ])->with('guardianPerson:guid,name', 'entryPerson:guid,name')->paginate($request->per_page??10);
+        ])->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at','desc')->paginate($request->per_page??10);
     }
 
     // 添加客源
@@ -46,7 +44,6 @@ class CustomersService
             'status' => 1,
             'entry_person' => Common::user()->guid,
             'guardian_person' => Common::user()->guid,
-            'track_time' => date('Y-m-d H:i:s',time())  // 第一次跟进时间
         ]);
     }
 
@@ -69,7 +66,6 @@ class CustomersService
         $customer->renovation = $request->renovation;
         $customer->min_floor = $request->min_floor;
         $customer->max_floor = $request->max_floor;
-        $customer->track_time = $request->track_time;
         if (!$customer->save()) return false;
         return true;
     }
@@ -261,6 +257,7 @@ class CustomersService
         $res = CustomerOperationRecord::with('user:guid,name,tel')->where('customer_guid', $request->customer_guid);
         if (!empty($request->type)) $res = $res->where('type', $request->type);
         $res = $res->latest()->get();
+        if (empty($res)) return [];
         foreach ($res as $v) {
             // 如果是带看  查询房子的相关信息
             if ($v->type == 2) {
@@ -269,6 +266,7 @@ class CustomersService
                     'model_type' => 'App\Models\Customer',
                     'created_at' => $v->created_at->format('Y-m-d H:i:s')
                 ])->value('rel_guid');
+                if (empty($house_guid)) $v['house'] = '';
                 $v['house'] = Common::HouseTitle($house_guid);
             } else {
                 $v['house'] = '';

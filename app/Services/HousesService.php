@@ -302,6 +302,7 @@ class HousesService
         }
         $data['track'] = $track;
         $data['status'] = $house->status;
+        $data['status_cn'] = $house->status_cn;
 
         return $data;
     }

@@ -34,7 +34,8 @@ class House extends BaseModel
         'relevant_proves_img_cn',
         'indoor_img_url',
         'house_type_img_url',
-        'outdoor_img_url'
+        'outdoor_img_url',
+        'status_cn'
     ];
 
     // 房源关联钥匙
@@ -404,5 +405,25 @@ class House extends BaseModel
                 'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
             ];
         })->values();
+    }
+
+    // 房源状态 status_cn
+    public function getStatusCnAttribute()
+    {
+        if ($this->status == 1) {
+            return '有效';
+        } elseif ($this->status == 2) {
+            return '无效';
+        } elseif ($this->status == 3) {
+            return '无效-暂缓';
+        } elseif ($this->status == 4) {
+            return '无效-内成交';
+        } elseif ($this->status == 5) {
+            return '无效-外成交';
+        } elseif ($this->status == 6) {
+            return '无效-信息有误';
+        } elseif ($this->status == 7) {
+            return '无效-其他';
+        }
     }
 }

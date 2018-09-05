@@ -222,7 +222,8 @@ class HousesRequest extends FormRequest
                           House::all()->pluck('guid')->toArray()
                       )
                       ],
-                  'status' => 'required|integer|between:3,7'
+                  'status' => 'required|integer|between:3,7',
+                  'remarks' => 'nullable|max:128'
                 ];
             case 'turnEffective':
                 return [

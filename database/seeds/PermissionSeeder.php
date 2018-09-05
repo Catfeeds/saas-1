@@ -144,7 +144,7 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-转为无效审核',
-            'name_en' => 'turned_invalid'
+            'name_en' => 'turned_invalid_review'
         ]);
 
         Permission::create([
@@ -313,7 +313,7 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-转为无效',
-            'name' => 'turned_invalid'
+            'name_en' => 'turned_invalid'
         ]);
 
         Permission::create([

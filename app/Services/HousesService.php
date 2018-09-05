@@ -168,6 +168,7 @@ class HousesService
         $data['relevant_proves_img'] = $house->relevant_proves_img_cn??array(); // 相关证件
         $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
         $data['owner_info'] = $house->owner_info; // 业主信息
+        $data['created_at'] = $house->created_at->format('Y-m-d H:i:s'); // 创建时间
         // 门牌号
         if (empty($house->buildingBlock->unit)) {
             $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number.' '.$house->house_number;
@@ -226,7 +227,7 @@ class HousesService
             // 维护人姓名
             $guardianPersonName = $house->guardianPerson->name;
             // 维护人所属门店
-            if ($house->guardianPerson->rel_guid) $guardianPersonStorefront = $house->entryPerson->companyFramework->name;
+            if ($house->guardianPerson->rel_guid) $guardianPersonStorefront = $house->guardianPerson->companyFramework->name;
             // 维护人图像
             if ($house->guardianPerson->pic) $guardianPersonPic = config('setting.qiniu_url') . $house->guardianPerson->pic;
         }
@@ -240,7 +241,7 @@ class HousesService
             // 图像人姓名
             $picPersonName = $house->picPerson->name;
             // 图片人所属门店
-            if ($house->picPerson->rel_guid) $picPersonStorefront = $house->entryPerson->companyFramework->name;
+            if ($house->picPerson->rel_guid) $picPersonStorefront = $house->picPerson->companyFramework->name;
             // 图片人图像
             if ($house->picPerson->pic) $picPersonStorePic = config('setting.qiniu_url') . $house->picPerson->pic;
         }
@@ -254,7 +255,8 @@ class HousesService
             // 钥匙人姓名
             $keyPersonName = $house->keyPerson->name;
             // 钥匙人所属门店
-            if ($house->keyPerson->rel_guid) $keyPersonStorefront = $house->entryPerson->companyFramework->name;
+            if ($house->keyPerson->rel_guid) $keyPersonStorefront = $house->keyPerson->companyFramework->name;
+
             // 钥匙人图像
             if ($house->keyPerson->pic) $keyPersonPic = config('setting.qiniu_url') . $house->keyPerson->pic;
         }
@@ -277,7 +279,7 @@ class HousesService
             $track[$k]['created_at'] = $v->created_at->format('Y-m-d H:i');
             // 是否允许编辑标识  十分钟内  添加人必须是登录人
             $track[$k]['operation'] = false;
-            if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 10 * 60 * 30) {
+            if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 60 * 30) {
                 if ($v->user_guid == Common::user()->guid) {
                     $track[$k]['operation'] = true;
                 }

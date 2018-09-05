@@ -163,8 +163,18 @@ class HousesRepository extends Model
     // 修改证件图片
     public function relevantProves($request)
     {
-        $res = House::where('guid',$request->guid)->update(['relevant_proves_img' => json_encode($request->relevant_proves_img)]);
-        if (empty($res)) return false;
-        return true;
+        \DB::beginTransaction();
+        try {
+            $res = House::where('guid',$request->guid)->update(['relevant_proves_img' => json_encode($request->relevant_proves_img)]);
+            if (empty($res)) throw  new \Exception('图片上传失败');
+            $suc = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'上传证件图片');
+            if (!$suc) throw new \Exception('房源操作记录添加失败');
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            \Log::error('证件上传失败'.$exception->getMessage());
+            return false;
+        }
     }
 }

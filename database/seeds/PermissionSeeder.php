@@ -49,25 +49,25 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-业主信息-新增房源的业主信息',
-            'name_en' => 'owner_information_for_new_listings'
+            'name_en' => 'add_owner_information'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-业主信息-修改/删除房源的业主信息',
-            'name_en' => 'edit_delete_owner_information_for_a_listing'
+            'name_en' => 'edit_owner_information'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-电脑端查看公盘房源业主信息',
-            'name_en' => 'view_the_public_information_of_the_owner_of_the_public_on_the_computer'
+            'name_en' => 'computer_view'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '私盘房源业主信息',
-            'name_en' => 'private_listing_owner_information'
+            'name_en' => 'private_owner_information'
         ]);
 
         Permission::create([
@@ -147,7 +147,7 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-转为无效审核',
-            'name_en' => 'switch_to_invalid_review'
+            'name_en' => 'turned_invalid'
         ]);
 
         Permission::create([
@@ -207,19 +207,19 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-提交退还钥匙审核',
-            'name_en' => 'submit_a_refund_key_review'
+            'name_en' => 'submit_key_review'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-编辑/删除委托书',
-            'name_en' => 'edit_delete_power_of_attorney'
+            'name_en' => 'Power_of_attorney'
         ]);
 
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-查看联系方式写跟进',
-            'name_en' => 'view_contact_information_write_follow_up'
+            'name_en' => 'write_follow_up'
         ]);
 
         Permission::create([
@@ -280,7 +280,7 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-私客查看范围',
-            'name_en' => 'private_guest_view_range'
+            'name_en' => 'private_guest_view'
         ]);
 
         Permission::create([
@@ -322,7 +322,7 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-查看联系方式写跟进',
-            'name_en' => 'view_contact_information_write_follow_up'
+            'name_en' => 'write_follow_up'
         ]);
 
         Permission::create([

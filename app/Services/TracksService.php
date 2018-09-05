@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Handler\Common;
-use App\Models\CustomerOperationRecord;
-use App\Models\HouseOperationRecord;
 use App\Models\Track;
 
 class TracksService

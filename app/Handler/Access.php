@@ -2,7 +2,6 @@
 
 namespace App\Handler;
 
-use App\Models\Company;
 use App\Models\CompanyFramework;
 use App\Models\Permission;
 use App\Models\RoleHasPermission;

@@ -103,43 +103,23 @@ class HousesService
     public function getDynamicInfo($house, $type)
     {
         $res = $house->load(['record' => function($query) use ($type) {
-            $query->where('type', $type);
+            $query->where('type', $type)->latest();
         }]);
-        $user = $res->record->pluck('name')->toArray();
+        $user = $res->record->pluck('name','tel')->toArray();
         $count = count($user);
         switch ($type) {
-            case 4:
-                if ($count == 0) {
-                    return '最近暂无查看信息';
-                } elseif ($count == 1) {
-                    return $user[0] .'最近查看核心信息';
-                } elseif ($count < 3 && $count > 1 ) {
-                    return $user[0]. '、' . $user[1] . '最近查看核心信息';
-                } else {
-                    return $user[0]. '、' . $user[1] . $user[2]. '等'.$count.'人最近查看核心信息';
-                }
-                break;
             case 1:
-                if ($count == 0) {
-                    return '最近暂无跟进信息';
-                } elseif ($count == 1) {
-                    return $user[0] .'最近跟进';
-                } elseif ($count < 3) {
-                    return $user[0]. '、' . $user[1] . '最近跟进';
-                } else {
-                    return $user[0]. '、' . $user[1] . '、' .$user[2]. '等'.$count.'人最近跟进';
-                }
+                return $count == 0 ? '最近暂无跟进信息' : current($user).'等'.$count.'人最近跟进';
+                break;
+            case 2:
+                return $count == 0 ? '最近暂无带看信息' : current($user).'等'.$count.'人最近带看';
                 break;
             case 3:
-                if ($count == 0) {
-                    return '最近无图片上传';
-                } elseif ($count == 1) {
-                    return $user[0] .'最近上传图片';
-                } elseif ($count < 3) {
-                    return $count[0]. '、' . $count[1] . '最近上传图片';
-                } else {
-                    return $user[0]. '、' . $user[1] . '、'.$user[2]. '等'.$count.'人最近上传图片';
-                }
+                return $count == 0 ? '最近无图片上传' : current($user).'等'. $count.'人最近上传图片';
+                break;
+            case 4:
+                return $count == 0 ? '最近暂无查看信息' : current($user).'等'. $count.'人最近查看核心信息';
+                break;
                 default;
                 break;
         }
@@ -150,13 +130,15 @@ class HousesService
     {
         $data = array();
         // 房源
-        $house = House::where('guid', $house->guid)->with(['buildingBlock', 'entryPerson.companyFramework', 'guardianPerson.companyFramework', 'picPerson.companyFramework', 'keyPerson.companyFramework'])->first();
+        $house = House::where('guid', $house->guid)->with(['buildingBlock', 'entryPerson.companyFramework', 'guardianPerson.companyFramework', 'picPerson.companyFramework', 'keyPerson.companyFramework', 'seeHouseWay', 'seeHouseWay.storefront'])->first();
         // 查看核心信息
         $data['see_info'] = $this->getDynamicInfo($house, 4);
         // 跟进信息
         $data['track_info'] = $this->getDynamicInfo($house, 1);
         // 上传图片信息
         $data['img_info'] = $this->getDynamicInfo($house, 3);
+        // 带看信息
+        $data['visit_info'] = $this->getDynamicInfo($house, 2);
         $data['top'] = $house->top == 1 ? true : false; // 置顶
         $data['img'] = $house->indoor_img_cn; // 图片
         $data['indoor_img'] = $house->indoor_img; // 室内图未处理
@@ -216,11 +198,10 @@ class HousesService
             // 录入人图像
             if ($house->entryPerson->pic) $entryPersonPic = config('setting.qiniu_url') . $house->entryPerson->pic;
         }
-        $entryPersonGuid = $house->entry_person??''; // 录入人guid
         $data['relevant']['entry_person']['name'] = $entryPersonName??'-';
         $data['relevant']['entry_person']['storefront'] = $entryPersonStorefront??'';
         $data['relevant']['entry_person']['pic'] = $entryPersonPic??config('setting.user_default_img');
-        $data['relevant']['entry_person']['guid'] = $entryPersonGuid;
+        $data['relevant']['entry_person']['guid'] = $house->entry_person??''; // 录入人guid
 
         // 维护人
         if ($house->guardianPerson) {
@@ -254,16 +235,13 @@ class HousesService
         if ($house->keyPerson) {
             // 钥匙人姓名
             $keyPersonName = $house->keyPerson->name;
-            // 钥匙人所属门店
-            if ($house->keyPerson->rel_guid) $keyPersonStorefront = $house->keyPerson->companyFramework->name;
-
             // 钥匙人图像
             if ($house->keyPerson->pic) $keyPersonPic = config('setting.qiniu_url') . $house->keyPerson->pic;
         }
         $data['relevant']['key_person']['name'] = $keyPersonName??'-';
-        $data['relevant']['key_person']['storefront'] = $keyPersonStorefront??'';
+        $data['relevant']['key_person']['storefront'] = $house->have_key == 1 ? $house->seeHouseWay->storefront->name : '';
         $data['relevant']['key_person']['pic'] = $keyPersonPic??config('setting.user_default_img');
-        $data['relevant']['key_person']['guid'] = $house->key_personGuid??'';
+        $data['relevant']['key_person']['guid'] = $house->key_person??'';
 
         // 看房方式
         $data['seeHouseWay'] = $house->seeHouseWay;

@@ -279,7 +279,7 @@ class HousesService
 
         // 看房方式 $data['seeHouseWay']['storefront_name']
         $storefront_name = $house->have_key == 1 ? $house->seeHouseWay->storefront->name : '';
-        $data['seeHouseWay'] = $house->seeHouseWay->setRelation('storefront',[]);
+        $data['seeHouseWay'] = optional($house->seeHouseWay)->setRelation('storefront',[]);
         $data['seeHouseWay']['storefront_name'] = $storefront_name;
 
         // 七牛url

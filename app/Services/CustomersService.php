@@ -85,7 +85,7 @@ class CustomersService
         $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn. '的写字楼。';
         $data['remarks'] = $res->remarks;
         $data['status'] = $res->status;
-        $data['customer_info'] = $res->customer_info;
+        $data['customer_name'] = $res->customer_info[0]['name'];
         $data['area'] = $res->intention_cn; // 意向区域
         $data['block'] = $res->block_cn; // 意向商圈
         $data['building'] = $res->building_cn; // 意向楼盘

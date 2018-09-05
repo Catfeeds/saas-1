@@ -292,9 +292,9 @@ class House extends BaseModel
         if ($this->shortest_lease == 1) {
             return '1年';
         } elseif ($this->shortest_lease == 2) {
-            return '2';
+            return '2年';
         } elseif ($this->shortest_lease == 3) {
-            return '3';
+            return '3年';
         } elseif ($this->shortest_lease == 4) {
             return '5年';
         } elseif ($this->shortest_lease == 5) {

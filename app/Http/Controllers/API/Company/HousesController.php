@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Company;
 
+use App\Handler\Access;
 use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Controllers\Traits\QiNiu;
@@ -24,8 +25,8 @@ class HousesController extends APIBaseController
     )
     {
         // 先判断是否有房源类表权限
-       $permission = Access::permission('list_displays');
-       if (empty($permission)) return $this->sendError('无房源列表权限');
+        $permission = Access::permission('list_display');
+        if (empty($permission)) return $this->sendError('无房源列表权限');
         $res = $repository->houseList($request, $service);
         return $this->sendResponse($res,'房源列表获取成功');
     }

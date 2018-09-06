@@ -457,7 +457,7 @@ class HousesService
             $house = House::where('guid',$request->guid)->first();
             $data = [];
             if (empty($house->buildingBlock->unit)) {
-                $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number.' '.$house->house_number;
+                $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
             } else {
                 $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit.' '.$house->house_number;
             }

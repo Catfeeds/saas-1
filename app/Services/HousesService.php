@@ -484,12 +484,12 @@ class HousesService
 
     // 修改房源图片
     public function updateImg(
-        $request
+        $request,$guardian_person
     )
     {
         \DB::beginTransaction();
         try {
-            $house = House::where(['guid' => $request->guid])->update([
+            $house = House::where(['guid' => $request->guid])->whereIn('guardian_person',$guardian_person)->update([
                 'house_type_img' => json_encode($request->house_type_img),
                 'indoor_img' => json_encode($request->indoor_img),
                 'outdoor_img' => json_encode($request->outdoor_img),

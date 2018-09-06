@@ -141,7 +141,12 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-        $res = $service->updateImg($request);
+        // 判断是否有编辑图片权限
+        $permission = Access::permission('edit_picture');
+        if (empty($permission)) return $this->sendError('无编辑图片权限');
+        // 判断作用域
+        $guardian_person = Access::getUser($permission->action_scope);
+        $res = $service->updateImg($request,$guardian_person);
         if (!$res) return $this->sendError('修改房源图片失败');
         return $this->sendResponse($res,'修改房源图片成功');
     }
@@ -153,7 +158,12 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
-        $res = $repository->setTop($request);
+        // 先判断是否有房源置顶权限
+        $permission = Access::permission('pinned_listing');
+        if (empty($permission)) return $this->sendError('无房源置顶权限');
+        // 判断作用域
+        $guardian_person = Access::getUser($permission->action_scope);
+        $res = $repository->setTop($request,$guardian_person);
         return $this->sendResponse($res,'房源置顶成功');
     }
 

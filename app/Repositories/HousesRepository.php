@@ -117,9 +117,9 @@ class HousesRepository extends Model
     }
 
     // 房源置顶
-    public function setTop($request)
+    public function setTop($request,$guardian_person)
     {
-        return House::where(['guid' => $request->guid])->update(['top' => 1]);
+        return House::where(['guid' => $request->guid])->whereIn('guardian_person',$guardian_person)->update(['top' => 1]);
     }
     
     // 取消置顶

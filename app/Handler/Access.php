@@ -48,9 +48,11 @@ class Access{
         $actionScope
     )
     {
+        $guid = Common::user()->guid;
+
         if ($actionScope == 1) {
             // 全公司
-            return User::where([
+            $res =  User::where([
                 'company_guid' => Common::user()->company_guid,
                 'status' => 1
             ])->pluck('guid')->toArray();
@@ -68,7 +70,7 @@ class Access{
 
             $guids = array_merge($storefrontGuid, $groupGuid);
 
-            return User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
+            $res =  User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 3) {
             // 门店
             $storefrontGuid = CompanyFramework::where([
@@ -81,7 +83,7 @@ class Access{
 
             $guids = array_merge($storefrontGuid, $groupGuid);
 
-            return User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
+            $res = User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 4) {
             // 组
             $groupGuid = CompanyFramework::where([
@@ -89,11 +91,14 @@ class Access{
                 'level' => 3
             ])->pluck('guid')->toArray();
 
-            return User::whereIn('rel_guid', $groupGuid)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
+            $res = User::whereIn('rel_guid', $groupGuid)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 5) {
             // 个人
-            return Common::user()->guid;
+            $res = $guid;
         }
+         $res[] = $guid;
+        
+         return array_unique($res);
     }
 
 

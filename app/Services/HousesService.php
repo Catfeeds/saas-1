@@ -94,7 +94,7 @@ class HousesService
         $houses['floor'] = $res->floor. '层'; //楼层
         $houses['total_floor'] = $res->total_floor?'共' . $res->total_floor . '层': '-' ; //总楼层
         $houses['top'] = $res->top == 1 ? true : false; // 置顶
-        $houses['track_user'] = !$res->track->isEmpty() ? $res->track->sortByDesc('created_at')->first()->user->name : $res->entryPerson->name;
+        $houses['track_user'] = !$res->track->isEmpty() ? $res->track->sortByDesc('created_at')->first()->user->name : optional($res->entryPerson)->name;
         $houses['track_time'] = $res->track_time; //跟进时间
         return $houses;
     }

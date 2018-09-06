@@ -20,7 +20,7 @@ class Access{
         // 获取登录人角色guid
         $user = Common::user();
         $role_guid = $user->role->guid;
-        $permission_guid = Permission::where('name', $name)->value('guid');
+        $permission_guid = Permission::where('name_en', $name)->value('guid');
         if (!empty($permission_guid)) return RoleHasPermission::where(['permission_guid' => $permission_guid, 'role_guid' => $role_guid])->first();
     }
 

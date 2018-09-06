@@ -454,7 +454,9 @@ class HousesService
     {
         \DB::beginTransaction();
         try {
-            $house = House::where('guid',$request->guid)->whereIn('guardian_person',$guardian_person)->first();
+            $house = House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->first();
+            if (empty($house)) return ['status' => false, 'message' => '无权限查看此房源门牌号信息'];
+
             $data = [];
             if (empty($house->buildingBlock->unit)) {
                 $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
@@ -466,10 +468,10 @@ class HousesService
             $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,4,'查看了房源的业门牌号信息');
             if (empty($houseOperationRecords)) throw new \Exception('查看门牌号添加操作记录失败');
             \DB::commit();
-            return $data;
+            return ['status' => true, 'message' => $data];
         } catch (\Exception $exception) {
             \DB::rollback();
-            return false;
+            return ['status' => false, 'message' => '系统异常,获取房源门牌号失败'];
         }
     }
 

@@ -144,7 +144,13 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-置顶房源',
-            'name_en' => 'pinned_listing'
+            'name_en' => 'set_top'
+        ]);
+
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '房源-取消置顶房源',
+            'name_en' => 'cancel_top'
         ]);
 
         Permission::create([

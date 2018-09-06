@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Handler\Access;
 use App\Handler\Common;
 use App\Models\BuildingBlock;
 use App\Models\House;
@@ -29,7 +30,11 @@ class HousesService
         $buildingBlock = BuildingBlock::where('guid', $request->building_block_guid)->with('building')->first();
 
         // 楼座名称
-        $buildingBlockName = $buildingBlock->name.$buildingBlock->name_unit.'-'.$buildingBlock->unit.$buildingBlock->unit_unit;
+        if ($buildingBlock->unit) {
+            $buildingBlockName = $buildingBlock->name.$buildingBlock->name_unit.'-'.$buildingBlock->unit.$buildingBlock->unit_unit;
+        } else {
+            $buildingBlockName = $buildingBlock->name.$buildingBlock->name_unit;
+        }
 
         return [
             'name' => $buildingBlock->building->name.$buildingBlockName,
@@ -160,7 +165,65 @@ class HousesService
     // 房源详情数据处理
     public function getHouseInfo($house)
     {
+        $permission['see_owner_info'] = true; // 是否允许查看业主信息
+        $permission['upload_image'] = true; // 是否允许上传图片
+        $permission['edit_picture'] = true; // 是否允许编辑图片
+        $permission['edit_return_key'] = true; // 是否允许编辑/退换钥匙
+        $permission['view_documents'] = true; // 是否允许查看相关证件
+        $permission['modify_status'] = true; // 是否允许修改状态(转为无效)
+        $permission['update_house'] = true; // 是否允许编辑房源
+
+        if ($house->public_private == 1) {
+            // 获取私盘业主信息
+            $ownerInfo = Access::adoptPermissionGetUser('private_owner_information');
+            // 判断是否有权限
+            if (empty($ownerInfo['status'])) return ['status' => false, 'message' => $ownerInfo['message']];
+            if (!in_array($house->guardian_person, $ownerInfo['message'])) {
+                $permission['see_owner_info'] = false; // 是否允许查看业主信息
+            }
+
+            // 上传图片
+            $uploadImage = Access::adoptPermissionGetUser('upload_image');
+            if (!in_array($house->guardian_person, $uploadImage['message'])) {
+                $permission['upload_image'] = false; // 是否上传图片
+            }
+
+            // 编辑图片
+            $editPicture = Access::adoptPermissionGetUser('edit_picture');
+            if (!in_array($house->guardian_person, $editPicture['message'])) {
+                $permission['edit_picture'] = false; // 是否允许编辑图片
+            }
+
+            // 看房方式
+            $editReturnKey = Access::adoptPermissionGetUser('edit_return_key');
+            if (!in_array($house->guardian_person, $editReturnKey['message'])) {
+                $permission['edit_return_key'] = false; // 是否允许编辑/退换钥匙
+            }
+
+            // 查看相关证件
+            $viewDocuments = Access::adoptPermissionGetUser('view_documents');
+            if (!in_array($house->guardian_person, $viewDocuments['message'])) {
+                $permission['view_documents'] = false; // 是否允许查看相关证件
+            }
+
+            // 修改状态(转为无效)
+            $modifyStatus = Access::adoptPermissionGetUser('modify_status');
+            if (!in_array($house->guardian_person, $modifyStatus['message'])) {
+                $permission['modify_status'] = false; // 是否允许修改状态(转为无效)
+            }
+
+            // 编辑房源
+            $updateHouse = Access::adoptPermissionGetUser('update_house');
+            if (!in_array($house->guardian_person, $updateHouse['message'])) {
+                $permission['update_house'] = false; // 是否允许编辑房源
+            }
+
+        }
+
         $data = array();
+
+        $data['permission'] = $permission;  // 权限
+
         // 房源
         $house = House::where('guid', $house->guid)->with(['buildingBlock', 'entryPerson.companyFramework', 'guardianPerson.companyFramework', 'picPerson.companyFramework', 'keyPerson.companyFramework', 'seeHouseWay', 'seeHouseWay.storefront'])->first();
         // 查看核心信息
@@ -181,7 +244,7 @@ class HousesService
         $data['outdoor_img_url'] = $house->outdoor_img_url; // 室外图
         $data['relevant_proves_img'] = $house->relevant_proves_img_cn??array(); // 相关证件
         $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
-        $data['owner_info'] = $house->owner_info; // 业主信息
+//        $data['owner_info'] = $house->owner_info; // 业主信息
         $data['created_at'] = $house->created_at->format('Y-m-d H:i:s'); // 创建时间
         // 门牌号
         if (empty($house->buildingBlock->unit)) {
@@ -450,14 +513,11 @@ class HousesService
     }
 
     // 获取门牌号
-    public function getHouseNumber($request,$guardian_person)
+    public function getHouseNumber($request)
     {
         \DB::beginTransaction();
         try {
-            $house = House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->first();
-
-            if (empty($house)) return ['status' => false, 'message' => '无权限查看此房源门牌号信息'];
-
+            $house = House::where('guid',$request->guid)->first();
             $data = [];
             if (empty($house->buildingBlock->unit)) {
                 $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
@@ -469,10 +529,10 @@ class HousesService
             $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,4,'查看了房源的业门牌号信息');
             if (empty($houseOperationRecords)) throw new \Exception('查看门牌号添加操作记录失败');
             \DB::commit();
-            return ['status' => true, 'message' => $data];
+            return $data;
         } catch (\Exception $exception) {
             \DB::rollback();
-            return ['status' => false, 'message' => '系统异常,获取房源门牌号失败'];
+            return false;
         }
     }
 
@@ -482,6 +542,19 @@ class HousesService
         $res = HouseOperationRecord::with('user:guid,name,tel')->where('house_guid', $request->house_guid);
         if (!empty($request->type)) $res = $res->where('type', $request->type);
         $res = $res->latest()->get();
+
+        // 判断是否允许编辑
+        foreach ($res as $k => $v) {
+            if ($v->type = 1) {
+                $v->operation = false;
+                if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 60 * 30) {
+                    if ($v->user_guid == Common::user()->guid) {
+                        $v->operation = true;
+                    }
+                }
+            }
+        }
+
         return $res;
     }
 

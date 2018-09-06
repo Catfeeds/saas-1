@@ -126,7 +126,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 转为有效
     Route::get('turn_effective','HousesController@turnEffective');
     // 修改证件图片
-    Route::get('relevant_proves','HousesController@relevantProves');
+    Route::post('relevant_proves','HousesController@relevantProves');
 
     // 看房方式
     Route::post('see_house_way','HousesController@seeHouseWay');

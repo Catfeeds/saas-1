@@ -220,13 +220,12 @@ class CustomersService
     public function normalCustomer()
     {
         // 查出私人及公客
-        $whereIn[] = Common::user()->guid;
-        $whereIn[] = '';
-
         $res = Customer::where([
             'company_guid' => Common::user()->company_guid,
-            'status' => 1
-        ])->whereIn('guardian_person',$whereIn)->get();
+            'guardian_person' => Common::user()->guid,
+            'status' => 1,
+        ])->orWhere('guest',1)
+            ->get();
 
         return $res->map(function ($v) {
             return [

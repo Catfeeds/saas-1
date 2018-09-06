@@ -294,12 +294,8 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-        // 通过权限获取区间用户
-        $guardian_person = Access::adoptPermissionGetUser('house_number');
-        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
-        if (!in_array(Common::user()->guid, $guardian_person['message'])) return $this->sendError('无权限查看此房源门牌号信息');
-        $res = $service->getHouseNumber($request,$guardian_person['message']);
-        if (empty($res['status'])) return $this->sendError($res['message']);
-        return $this->sendResponse($res['message'],'获取门牌号成功');
+        $res = $service->getHouseNumber($request);
+        if (!$res) return $this->sendError('获取门牌号失败');
+        return $this->sendResponse($res,'获取门牌号成功');
     }
 }

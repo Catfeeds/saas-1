@@ -94,7 +94,7 @@ class HousesService
         $houses['floor'] = $res->floor. '层'; //楼层
         $houses['total_floor'] = $res->total_floor?'共' . $res->total_floor . '层': '-' ; //总楼层
         $houses['top'] = $res->top == 1 ? true : false; // 置顶
-        $houses['track_user'] = !$res->track->isEmpty() ? $res->track->sortByDesc('created_at')->first()->user->name : $res->entryPerson->name;
+        $houses['track_user'] = !$res->track->isEmpty() ? $res->track->sortByDesc('created_at')->first()->user->name : optional($res->entryPerson)->name;
         $houses['track_time'] = $res->track_time; //跟进时间
         return $houses;
     }
@@ -444,17 +444,17 @@ class HousesService
             \DB::commit();
             return $ownerInfo;
         } catch (\Exception $exception) {
-            \DB::roolback();
+            \DB::rollback();
             return false;
         }
     }
 
     // 获取门牌号
-    public function getHouseNumber($request)
+    public function getHouseNumber($request,$guardian_person)
     {
         \DB::beginTransaction();
         try {
-            $house = House::where('guid',$request->guid)->first();
+            $house = House::where('guid',$request->guid)->whereIn('guardian_person',$guardian_person)->first();
             $data = [];
             if (empty($house->buildingBlock->unit)) {
                 $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
@@ -465,11 +465,10 @@ class HousesService
 
             $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,4,'查看了房源的业门牌号信息');
             if (empty($houseOperationRecords)) throw new \Exception('查看门牌号添加操作记录失败');
-
             \DB::commit();
             return $data;
         } catch (\Exception $exception) {
-            \DB::roolback();
+            \DB::rollback();
             return false;
         }
     }

@@ -23,6 +23,9 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
+        // 先判断是否有房源类表权限
+       $permission = Access::permission('list_displays');
+       if (empty($permission)) return $this->sendError('无房源列表权限');
         $res = $repository->houseList($request, $service);
         return $this->sendResponse($res,'房源列表获取成功');
     }

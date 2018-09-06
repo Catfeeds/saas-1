@@ -131,7 +131,7 @@ class UsersController extends APIBaseController
         $res['role_name'] = $user->role->name;  // 角色名称
         $res['storefront'] = empty($user->companyFramework)?$user->company->name:$user->companyFramework->name;
         //根据当前登录用户角色,获取所有权限
-        $res['permission'] = Access::access($user);
+        $res['permission'] = $user->role->permission->pluck('name_en')->toArray()??[];
         return $this->sendResponse($res, '用户信息获取成功');
     }
 

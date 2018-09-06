@@ -60,7 +60,7 @@ class HousesController extends APIBaseController
     )
     {
         $house->allGuid = $service->adoptBuildingBlockGetCity($house->building_block_guid);
-        return $this->sendResponse($house,'获取更新之前原始数据成功');
+        return $this->sendResponse($house,'获取1更新之前原始数据成功');
     }
 
     // 更新房源信息
@@ -103,13 +103,30 @@ class HousesController extends APIBaseController
     }
 
     // 变更人员
-    public function changePersonnel(
+    public function changePersonnel
+    (
         HousesRequest $request,
         HousesRepository $repository
     )
     {
-        $res = $repository->changePersonnel($request);
-        return $this->sendResponse($res,'变更人员成功');
+        // 判断是否有对应权限
+        if ($request->entry_person) {
+            $guardian_person = Access::adoptPermissionGetUser('entering_person');
+        } elseif ($request->guardian_person) {
+            $guardian_person = Access::adoptPermissionGetUser('maintainer');
+        } elseif ($request->pic_person) {
+            $guardian_person = Access::adoptPermissionGetUser('picture_person');
+        } elseif ($request->key_person) {
+            $guardian_person = Access::adoptPermissionGetUser('key_person');
+        }
+        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
+
+        // 判断权限范围
+        if (!in_array(Common::user()->guid, $guardian_person['message'])) return $this->sendError('暂无权限');
+
+        $res = $repository->changePersonnel($request, $guardian_person['message']);
+        if (!$res['status']) return $this->sendError($res['message']);
+        return $this->sendResponse(true, $res['message']);
     }
 
     // 通过楼座,楼层获取房源成功

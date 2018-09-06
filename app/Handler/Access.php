@@ -94,10 +94,9 @@ class Access{
             $res = User::whereIn('rel_guid', $groupGuid)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 5) {
             // 个人
-            $res = $guid;
+            $res = array($guid);
         }
          $res[] = $guid;
-        
          return array_unique($res);
     }
 

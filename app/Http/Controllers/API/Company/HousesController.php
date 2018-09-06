@@ -27,15 +27,9 @@ class HousesController extends APIBaseController
         // 先判断是否有房源列表权限
         $permission = Access::permission('list_display');
         if (empty($permission)) return $this->sendError('无房源列表权限');
-
         // 判断作用域
-        $guardian_person = Access::getUser(5);
-        if (empty($guardian_person)) {
-            $where = [];
-        } else {
-            $where = ['guardian_person' => $guardian_person];
-        }
-        $res = $repository->houseList($request, $service, $where);
+        $guardian_person = Access::getUser($permission->action_scope);
+        $res = $repository->houseList($request, $service, $guardian_person);
         return $this->sendResponse($res,'房源列表获取成功');
     }
     

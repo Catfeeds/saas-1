@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\API\Company;
 
-use App\Handler\Access;
 use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\UsersRequest;
-use App\Models\Company;
 use App\Models\User;
 use App\Services\LoginsService;
 use App\Services\UserService;

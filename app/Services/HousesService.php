@@ -270,7 +270,7 @@ class HousesService
             // 钥匙人图像
             if ($house->keyPerson->pic) $keyPersonPic = config('setting.qiniu_url') . $house->keyPerson->pic;
             // 钥匙人所属门店
-            if ($house->keyPerson->rel_guid) $keyPersonStorefront = $house->entryPerson->companyFramework->name;
+            if ($house->keyPerson->rel_guid) $keyPersonStorefront = $house->keyPerson->companyFramework->name;
         }
         $data['relevant']['key_person']['name'] = $keyPersonName??'-';
         $data['relevant']['key_person']['storefront'] = $keyPersonStorefront??'';

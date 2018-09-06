@@ -24,12 +24,10 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-        // 先判断是否有房源列表权限
-        $permission = Access::permission('list_display');
-        if (empty($permission)) return $this->sendError('无房源列表权限');
-        // 判断作用域
-        $guardian_person = Access::getUser($permission->action_scope);
-        $res = $repository->houseList($request, $service, $guardian_person);
+        // 通过权限获取区间用户
+        $guardian_person = Access::adoptPermissionGetUser('list_display');
+        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
+        $res = $repository->houseList($request, $service, $guardian_person['message']);
         return $this->sendResponse($res,'房源列表获取成功');
     }
     
@@ -296,13 +294,12 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-        // 先判断是否有获取门牌号权限
-        $permission = Access::permission('house_number');
-        if (empty($permission)) return $this->sendError('无查看门牌号权限');
-        // 判断作用域
-        $guardian_person = Access::getUser($permission->action_scope);
-        $res = $service->getHouseNumber($request,$guardian_person);
-        if (!$res) return $this->sendError('获取门牌号失败');
-        return $this->sendResponse($res,'获取门牌号成功');
+        // 通过权限获取区间用户
+        $guardian_person = Access::adoptPermissionGetUser('house_number');
+        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
+        if (!in_array(Common::user()->guid, $guardian_person['message'])) return $this->sendError('无权限查看此房源门牌号信息');
+        $res = $service->getHouseNumber($request,$guardian_person['message']);
+        if (empty($res['status'])) return $this->sendError($res['message']);
+        return $this->sendResponse($res['message'],'获取门牌号成功');
     }
 }

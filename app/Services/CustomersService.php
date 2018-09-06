@@ -16,7 +16,7 @@ class CustomersService
         return Customer::where([
             'company_guid' => 'ed8090e4a6b811e8bf9a416618026100',
             'status' => 1
-        ])->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at','desc')->paginate($request->per_page??10);
+        ])->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
     }
 
     // 添加客源
@@ -78,7 +78,7 @@ class CustomersService
         $data['guid'] = $res->guid;
         $data['level'] = $res->level_cn;
         $data['guest'] = $res->guest_cn;
-        $data['title'] = $res->price_interval_cn.',' . $res->acreage_interval_cn. '的写字楼。';
+        $data['title'] = $res->price_interval_cn . ',' . $res->acreage_interval_cn . '的写字楼。';
         $data['remarks'] = $res->remarks;
         $data['status'] = $res->status;
         $data['customer_name'] = $res->customer_info[0]['name'];
@@ -97,11 +97,11 @@ class CustomersService
 
         // 获取动态(跟进,带看) 最新4条数据
         $item = CustomerOperationRecord::where('customer_guid', $guid)
-                                        ->whereIn('type', [1, 2])
-                                        ->latest()
-                                        ->take(4)
-                                        ->pluck('type','created_at')
-                                        ->toArray();
+            ->whereIn('type', [1, 2])
+            ->latest()
+            ->take(4)
+            ->pluck('type', 'created_at')
+            ->toArray();
         $dynamic = [];
         foreach ($item as $k => $v) {
             if ($v == 1) {
@@ -123,18 +123,18 @@ class CustomersService
         $record = array_values(array_filter($dynamic));
         $data['dynamic'] = [];
         if (!empty($record)) {
-            foreach ($record as $k =>  $v) {
+            foreach ($record as $k => $v) {
                 if (!empty($v)) {
                     $data['dynamic'][$k]['guid'] = $v->guid; // guid
                     $data['dynamic'][$k]['user_name'] = $v->user->name; // 跟进人/带看人
-                    $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v-> tracks_info;
+                    $data['dynamic'][$k]['remarks'] = $v->remarks ? $v->remarks : $v->tracks_info;
                     $data['dynamic'][$k]['title'] = $v->house ? Common::HouseTitle($v->house->guid) : null;
                     $data['dynamic'][$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
                     // 是否允许编辑
                     $data['dynamic'][$k]['operation'] = false;
                     if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 10 * 60 * 30) {
                         $guid = $v->user_guid ? $v->user_guid : $v->visit_user;
-                        if ( $guid == Common::user()->guid) {
+                        if ($guid == Common::user()->guid) {
                             $data['dynamic'][$k]['operation'] = true;
                         }
                     }
@@ -167,20 +167,20 @@ class CustomersService
             if ($request->status != 1 && $request->status != 2) {
                 $data['invalid_reason'] = $remarks;
             }
-            $suc =  Customer::where('guid', $request->guid)->update($data);
+            $suc = Customer::where('guid', $request->guid)->update($data);
             if (!$suc) throw new \Exception('客源转为有效/无效失败');
-            if ($request->status ==1) {
-                $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,'转为有效');
+            if ($request->status == 1) {
+                $res = Common::customerOperationRecords(Common::user()->guid, $request->guid, 4, '转为有效');
             } else {
-                $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,$remarks);
+                $res = Common::customerOperationRecords(Common::user()->guid, $request->guid, 4, $remarks);
             }
 
             if (!$res) throw new \Exception('客源操作记录添加失败');
             \DB::commit();
             return true;
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             \DB::rollback();
-            \Log::error('客源设置失败'.$exception->getMessage());
+            \Log::error('客源设置失败' . $exception->getMessage());
             return false;
         }
     }
@@ -190,15 +190,15 @@ class CustomersService
     {
         \DB::beginTransaction();
         try {
-           $suc =  Customer::where('guid', $request->guid)->update(['guest' => $request->guest]);
-           if (!$suc) throw new \Exception('房源类型更改失败');
-           $res = Common::customerOperationRecords(Common::user()->guid,$request->guid,4,$request->remarks);
-           if (!$res) throw new \Exception('客源操作记录添加失败');
+            $suc = Customer::where('guid', $request->guid)->update(['guest' => $request->guest]);
+            if (!$suc) throw new \Exception('房源类型更改失败');
+            $res = Common::customerOperationRecords(Common::user()->guid, $request->guid, 4, $request->remarks);
+            if (!$res) throw new \Exception('客源操作记录添加失败');
             \DB::commit();
             return true;
         } catch (\Exception $exception) {
             \DB::rollback();
-            \Log::error('房源类型更改失败'.$exception->getMessage());
+            \Log::error('房源类型更改失败' . $exception->getMessage());
             return false;
         }
     }
@@ -216,22 +216,26 @@ class CustomersService
         }
     }
 
-
     // 获取正常状态的客源下拉数据
     public function normalCustomer()
     {
+        // 查出私人及公客
+        $whereIn[] = Common::user()->guid;
+        $whereIn[] = '';
+
         $res = Customer::where([
             'company_guid' => Common::user()->company_guid,
             'status' => 1
-        ])->get();
-        return $res->map(function ($v){
+        ])->whereIn('guardian_person',$whereIn)->get();
+
+        return $res->map(function ($v) {
             return [
                 'value' => $v->guid,
-                'label' => '客户:'.$v->customer_info[0]['name'].'  电话:'.$v->customer_info[0]['tel']
+                'label' => '客户:' . $v->customer_info[0]['name'] . '  电话:' . $v->customer_info[0]['tel']
             ];
         });
     }
-    
+
     // 获取客源信息
     public function getCustomersInfo($request)
     {
@@ -240,7 +244,7 @@ class CustomersService
             $customer_info = Customer::where(['guid' => $request->guid])->pluck('customer_info')->first();
             if (empty($customer_info)) throw new \Exception('获取客源信息失败');
 
-            $customerOperationRecords = Common::customerOperationRecords(Common::user()->guid,$request->guid,3,'查看了客源联系方式');
+            $customerOperationRecords = Common::customerOperationRecords(Common::user()->guid, $request->guid, 3, '查看了客源联系方式');
             if (empty($customerOperationRecords)) throw new \Exception('查看客源信息添加操作记录失败');
 
             \DB::commit();

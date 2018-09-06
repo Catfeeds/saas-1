@@ -455,6 +455,7 @@ class HousesService
         \DB::beginTransaction();
         try {
             $house = House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->first();
+
             if (empty($house)) return ['status' => false, 'message' => '无权限查看此房源门牌号信息'];
 
             $data = [];

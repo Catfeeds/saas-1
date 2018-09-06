@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class HousesRepository extends Model
 {
     //房源列表
-    public function houseList($request, $service, $where)
+    public function houseList($request, $service, $guardian_person)
     {
-        $data = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->where($where)->orderBy('top','asc')->orderBy('created_at','desc')->paginate($request->per_page??10);
+        $data = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy('created_at','desc')->paginate($request->per_page??10);
         $houses = [];
         foreach ($data as $key => $v) {
             $houses[$key] = $service->getData($v);

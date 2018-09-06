@@ -119,13 +119,15 @@ class HousesRepository extends Model
     // 房源置顶
     public function setTop($request,$guardian_person)
     {
-        return House::where(['guid' => $request->guid])->whereIn('guardian_person',$guardian_person)->update(['top' => 1]);
+        return House::with('guardianPerson')->where(['guid' => $request->guid])->whereIn('guardian_person',
+                $guardian_person)->update(['top'
+        => 1]);
     }
     
     // 取消置顶
-    public function cancelTop($request)
+    public function cancelTop($request,$guardian_person)
     {
-        return House::where('guid',$request->guid)->update(['top' => 2]);
+        return House::with('guardianPerson')->where('guid',$request->guid)->whereIn('guardian_person',$guardian_person)->update(['top' => 2]);
     }
     
    // 通过楼座，楼层获取房源信息

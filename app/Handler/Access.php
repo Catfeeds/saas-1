@@ -101,13 +101,11 @@ class Access{
     }
 
     // 通过权限获取区间用户
-    public static function adoptPermissionGetUser(
-        $permission
-    )
+    public static function adoptPermissionGetUser($permission)
     {
         // 先判断是否有房源列表权限
         $permission = self::permission($permission);
-        if (empty($permission)) return ['status' => false, 'message' => '无房源列表权限'];
+        if (empty($permission)) return ['status' => false, 'message' => '暂无权限'];
         // 判断作用域
         $guardian_person = self::getUser($permission->action_scope);
         return ['status' => true, 'message' => $guardian_person];

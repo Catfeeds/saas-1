@@ -444,7 +444,7 @@ class HousesService
             \DB::commit();
             return $ownerInfo;
         } catch (\Exception $exception) {
-            \DB::roolback();
+            \DB::rollback();
             return false;
         }
     }
@@ -465,11 +465,10 @@ class HousesService
 
             $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,4,'查看了房源的业门牌号信息');
             if (empty($houseOperationRecords)) throw new \Exception('查看门牌号添加操作记录失败');
-
             \DB::commit();
             return $data;
         } catch (\Exception $exception) {
-            \DB::roolback();
+            \DB::rollback();
             return false;
         }
     }

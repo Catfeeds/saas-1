@@ -450,14 +450,14 @@ class HousesService
     }
 
     // 获取门牌号
-    public function getHouseNumber($request)
+    public function getHouseNumber($request,$guardian_person)
     {
         \DB::beginTransaction();
         try {
-            $house = House::where('guid',$request->guid)->first();
+            $house = House::where('guid',$request->guid)->whereIn('guardian_person',$guardian_person)->first();
             $data = [];
             if (empty($house->buildingBlock->unit)) {
-                $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number.' '.$house->house_number;
+                $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;
             } else {
                 $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit.' '.$house->house_number;
             }

@@ -19,18 +19,22 @@ class QuartersService
     //岗位设置列表
     public function roleHasPermissionList()
     {
-        $res = Role::where('company_guid', $this->user->company_guid)->with('roleHasPermission','roleHasPermission.hasPermission')->orderBy('level')->orderBy('created_at', 'asc')->get();
+        $res = Role::where('company_guid', $this->user->company_guid)
+            ->with('roleHasPermission','roleHasPermission.hasPermission')
+            ->orderBy('level')
+            ->orderBy('created_at', 'asc')
+            ->get();
         $datas = array();
         foreach ($res as $k => $v) {
             $datas[$v->guid]['name'] = $v->name;
             $datas[$v->guid]['level'] = $v->level_cn;
             $permission = array();
             foreach ($v->roleHasPermission as $key => $val) {
-                $permission[$val->hasPermission->name]['guid'] = $val->guid;
-                $permission[$val->hasPermission->name]['action_scope'] = $val->action_scope_cn;
-                $permission[$val->hasPermission->name]['operation_number'] = $val->operation_number;
-                $permission[$val->hasPermission->name]['follow_up'] = $val->follow_up_cn;
-                $permission[$val->hasPermission->name]['status'] = $val->status;
+                $permission[$val->hasPermission->name_en]['guid'] = $val->guid;
+                $permission[$val->hasPermission->name_en]['action_scope'] = $val->action_scope_cn;
+                $permission[$val->hasPermission->name_en]['operation_number'] = $val->operation_number;
+                $permission[$val->hasPermission->name_en]['follow_up'] = $val->follow_up_cn;
+                $permission[$val->hasPermission->name_en]['status'] = $val->status;
             }
             $datas[$v->guid]['permission'] = $permission;
         }

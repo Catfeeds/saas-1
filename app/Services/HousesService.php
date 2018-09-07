@@ -179,24 +179,26 @@ class HousesService
         $permission['upload_document'] = true; // 是否允许上传证件
         $permission['del_documents'] = true; // 是否允许删除证件
         $permission['del_pic'] = true; // 是否允许删除图片
+        $permission['public_to_private'] = true; // 是否允许公盘转为私盘
+        $permission['private_to_public'] = true; // 是否允许私盘转为公盘
 
         if ($house->public_private == 1) {
             // 获取私盘业主信息
-            $ownerInfo = Access::adoptPermissionGetUser('private_owner_info');
-            if (!in_array($house->guardian_person, $ownerInfo['message'])) {
+            $ownerInfo = Access::adoptGuardianPersonGetHouse('private_owner_info');
+            if (!in_array($house->guid, $ownerInfo)) {
                 $permission['private_owner_info'] = false; // 是否允许查看业主信息
             }
         }
 
         // 上传图片
-        $uploadImage = Access::adoptPermissionGetUser('upload_pic');
-        if (!in_array($house->guardian_person, $uploadImage['message'])) {
+        $uploadImage = Access::adoptGuardianPersonGetHouse('upload_pic');
+        if (!in_array($house->guid, $uploadImage)) {
             $permission['upload_pic'] = false; // 是否允许上传图片
         }
 
         // 编辑图片
-        $editPicture = Access::adoptPermissionGetUser('edit_pic');
-        if (!in_array($house->guardian_person, $editPicture['message'])) {
+        $editPicture = Access::adoptGuardianPersonGetHouse('edit_pic');
+        if (!in_array($house->guid, $editPicture)) {
             $permission['edit_pic'] = false; // 是否允许编辑图片
         }
 
@@ -207,20 +209,20 @@ class HousesService
         }
 
         // 查看相关证件
-        $viewDocuments = Access::adoptPermissionGetUser('see_documents');
-        if (!in_array($house->guardian_person, $viewDocuments['message'])) {
+        $viewDocuments = Access::adoptGuardianPersonGetHouse('see_documents');
+        if (!in_array($house->guid, $viewDocuments)) {
             $permission['see_documents'] = false; // 是否允许查看相关证件
         }
 
         // 修改状态(转为无效)
-        $modifyStatus = Access::adoptPermissionGetUser('update_house_status');
-        if (!in_array($house->guardian_person, $modifyStatus['message'])) {
+        $modifyStatus = Access::adoptGuardianPersonGetHouse('update_house_status');
+        if (!in_array($house->guid, $modifyStatus)) {
             $permission['update_house_status'] = false; // 是否允许修改状态(转为无效)
         }
 
         // 编辑房源
-        $updateHouse = Access::adoptPermissionGetUser('edit_house');
-        if (!in_array($house->guardian_person, $updateHouse['message'])) {
+        $updateHouse = Access::adoptGuardianPersonGetHouse('edit_house');
+        if (!in_array($house->guid, $updateHouse)) {
             $permission['edit_house'] = false; // 是否允许编辑房源
         }
 
@@ -231,8 +233,8 @@ class HousesService
         }
 
         // 维护人
-        $maintainer = Access::adoptPermissionGetUser('set_guardian_person');
-        if (!in_array($house->guardian_person, $maintainer['message'])) {
+        $maintainer = Access::adoptGuardianPersonGetHouse('set_guardian_person');
+        if (!in_array($house->guid, $maintainer)) {
             $permission['set_guardian_person'] = false; // 是否允许修改维护人
         }
 
@@ -249,21 +251,33 @@ class HousesService
         }
 
         // 上传证件
-        $uploadDocument = Access::adoptPermissionGetUser('upload_document');
-        if (!in_array($house->guardian_person, $uploadDocument['message'])) {
+        $uploadDocument = Access::adoptGuardianPersonGetHouse('upload_document');
+        if (!in_array($house->guid, $uploadDocument)) {
             $permission['upload_document'] = false; // 是否允许上传证件
         }
 
         // 删除证件
-        $delDocuments = Access::adoptPermissionGetUser('del_documents');
-        if (!in_array($house->guardian_person, $delDocuments['message'])) {
+        $delDocuments = Access::adoptGuardianPersonGetHouse('del_documents');
+        if (!in_array($house->guid, $delDocuments)) {
             $permission['del_documents'] = false; // 是否允许删除证件
         }
 
         // 删除图片
-        $delPic = Access::adoptPermissionGetUser('del_pic');
-        if (!in_array($house->guardian_person, $delPic['message'])) {
+        $delPic = Access::adoptGuardianPersonGetHouse('del_pic');
+        if (!in_array($house->guid, $delPic)) {
             $permission['del_pic'] = false; // 是否允许删除图片
+        }
+
+        // 公盘转为私盘
+        $publicToPrivate = Access::adoptGuardianPersonGetHouse('public_to_private');
+        if (!in_array($house->guid, $publicToPrivate)) {
+            $permission['public_to_private'] = false; // 是否允许公盘转为私盘
+        }
+
+        // 私盘转为公盘
+        $privateToPublic = Access::adoptGuardianPersonGetHouse('private_to_public');
+        if (!in_array($house->guid, $privateToPublic)) {
+            $permission['private_to_public'] = false; // 是否允许私盘转为公盘
         }
 
         $data = array();

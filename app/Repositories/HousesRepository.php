@@ -99,21 +99,21 @@ class HousesRepository extends Model
     }
 
     // 变更人员
-    public function changePersonnel(
-        $request
-    )
+    public function changePersonnel($request, $guardian_person)
     {
-        $house = House::where(['guid' => $request->house_guid]);
-
+        $house = House::where(['guid' => $request->house_guid])->whereIn('guardian_person', $guardian_person)->first();
+        if (empty($house)) return ['status' => false, 'message' => '暂无权限'];
         if ($request->entry_person) {
-            return $house->update(['entry_person' => $request->entry_person]);
+             $house->entry_person = $request->entry_person;
         } elseif($request->guardian_person) {
-            return $house->update(['guardian_person' => $request->guardian_person]);
+             $house->guardian_person = $request->guardian_person;
         } elseif($request->pic_person) {
-            return $house->update(['pic_person' => $request->pic_person]);
+             $house->pic_person = $request->pic_person;
         } elseif($request->key_person) {
-            return $house->update(['key_person' => $request->key_person]);
+             $house->key_person = $request->key_person;
         }
+        if (!$house->save()) return ['status' => false, 'message' => '人员变更失败'];
+        return ['status' => true, 'message' => '人员变更成功'];
     }
 
     // 房源置顶

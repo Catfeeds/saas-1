@@ -10,4 +10,10 @@ class CustomerOperationRecord extends BaseModel
     {
         return $this->belongsTo('App\Models\User','user_guid','guid');
     }
+
+    public function visit()
+    {
+        return $this->hasOne(Visit::class,'cover_rel_guid', 'customer_guid')->where('model_type', 'App\Models\Customer');
+    }
+
 }

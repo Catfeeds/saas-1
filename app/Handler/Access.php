@@ -3,6 +3,7 @@
 namespace App\Handler;
 
 use App\Models\CompanyFramework;
+use App\Models\House;
 use App\Models\Permission;
 use App\Models\RoleHasPermission;
 use App\Models\User;
@@ -110,5 +111,12 @@ class Access{
         $guardian_person = self::getUser($permission->action_scope);
         return ['status' => true, 'message' => $guardian_person];
     }
+
+    // 通过维护人获取所有房源信息
+    public static function adoptGuardianPersonGetHouse($permission)
+    {
+        return House::whereIn('guardian_person', self::adoptPermissionGetUser($permission))->pluck('guid')->toArray();
+    }
+
 
 }

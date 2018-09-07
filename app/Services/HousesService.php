@@ -172,6 +172,12 @@ class HousesService
         $permission['view_documents'] = true; // 是否允许查看相关证件
         $permission['modify_status'] = true; // 是否允许修改状态(转为无效)
         $permission['update_house'] = true; // 是否允许编辑房源
+        $permission['entering_person'] = true; // 是否允修改录入人
+        $permission['maintainer'] = true; // 是否允修改维护人
+        $permission['picture_person'] = true; // 是否允修改图片人
+        $permission['key_person'] = true; // 是否允修改钥匙人
+        $permission['upload_document'] = true; // 是否允上传证件
+
 
         if ($house->public_private == 1) {
             // 获取私盘业主信息
@@ -217,6 +223,37 @@ class HousesService
             if (!in_array($house->guardian_person, $updateHouse['message'])) {
                 $permission['update_house'] = false; // 是否允许编辑房源
             }
+
+            // 录入人
+            $enteringPerson = Access::adoptPermissionGetUser('entering_person');
+            if (!in_array($house->entry_person, $enteringPerson['message'])) {
+                $permission['entering_person'] = false; // 是否允修改录入人
+            }
+
+            // 维护人
+            $maintainer = Access::adoptPermissionGetUser('maintainer');
+            if (!in_array($house->guardian_person, $maintainer['message'])) {
+                $permission['maintainer'] = false; // 是否允修改维护人
+            }
+
+            // 图片人
+            $picturePerson = Access::adoptPermissionGetUser('picture_person');
+            if (!in_array($house->pic_person, $picturePerson['message'])) {
+                $permission['picture_person'] = false; // 是否允修改图片人
+            }
+
+            // 钥匙人
+            $keyPerson = Access::adoptPermissionGetUser('key_person');
+            if (!in_array($house->key_person, $keyPerson['message'])) {
+                $permission['key_person'] = false; // 是否允修改钥匙人
+            }
+
+            // 上传证件
+            $uploadDocument = Access::adoptPermissionGetUser('upload_document');
+            if (!in_array($house->guardian_person, $uploadDocument['message'])) {
+                $permission['upload_document'] = false; // 是否允上传证件
+            }
+
 
         }
 
@@ -560,6 +597,7 @@ class HousesService
             if ($v->track) $v->setRelation('track', []);
         }
 
+        return $res;
     }
 
     // 修改房源图片

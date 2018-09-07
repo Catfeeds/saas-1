@@ -10,4 +10,5 @@ class CustomerOperationRecord extends BaseModel
     {
         return $this->belongsTo('App\Models\User','user_guid','guid');
     }
+
 }

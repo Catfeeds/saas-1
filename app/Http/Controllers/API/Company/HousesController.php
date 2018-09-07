@@ -286,7 +286,11 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
-        $res = $repository->relevantProves($request);
+        // 通过权限获取区间用户
+        $guardian_person = Access::adoptPermissionGetUser('upload_document');
+        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
+        if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限上传房源证件');
+        $res = $repository->relevantProves($request, $guardian_person['message']);
         if (!$res) return $this->sendError('修改证件图片失败');
         return $this->sendResponse(collect($request->relevant_proves_img)->map(function($img) {
             return [

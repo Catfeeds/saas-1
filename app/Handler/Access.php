@@ -97,8 +97,9 @@ class Access{
             // 个人
             $res = array($guid);
         }
-         $res[] = $guid;
-         return array_unique($res);
+
+        $res[] = $guid;
+        return array_unique($res);
     }
 
     // 通过权限获取区间用户

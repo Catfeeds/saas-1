@@ -173,7 +173,7 @@ class HousesService
         $permission['update_house_status'] = true; // 是否允许修改状态(转为无效)
         $permission['edit_house'] = true; // 是否允许编辑房源
         $permission['set_entry_person'] = true; // 是否允许修改录入人
-        $permission['set_guardian_person'] = true; // 是否允许修改维护人
+        $permission['set_guardian_person'] = true; // 是否允许修改维护人g
         $permission['set_pic_person'] = true; // 是否允许修改图片人
         $permission['set_key_person'] = true; // 是否允许修改钥匙人
         $permission['upload_document'] = true; // 是否允许上传证件

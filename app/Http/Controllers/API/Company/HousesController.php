@@ -157,7 +157,7 @@ class HousesController extends APIBaseController
     )
     {
         // 通过权限获取区间用户
-        $permission = Access::adoptPermissionGetUser('edit_picture');
+        $permission = Access::adoptPermissionGetUser('edit_pic');
         if (empty($permission['status'])) return $this->sendError($permission['message']);
         if (!in_array(Common::user()->guid, $permission['message'])) return $this->sendError('无权限修改房源图片信息');
         $res = $service->updateImg($request,$permission['message']);
@@ -187,7 +187,7 @@ class HousesController extends APIBaseController
     )
     {
         // 通过权限获取区间用户
-        $permission = Access::adoptPermissionGetUser('cancel_top');
+        $permission = Access::adoptPermissionGetUser('set_top');
         if (empty($permission['status'])) return $this->sendError($permission['message']);
         $res = $repository->cancelTop($request,$permission['message']);
         return $this->sendResponse($res,'取消置顶成功');

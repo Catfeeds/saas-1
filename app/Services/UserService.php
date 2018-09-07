@@ -165,7 +165,7 @@ class UserService
     {
         $user = User::where('guid',Common::user()->guid)->first();
         $permission = $user->role->level;
-        $guardian_person = Access::adoptPermissionGetUser($permission);
+        $guardian_person = Access::getUser($permission);
         $res = User::where(['company_guid' => Common::user()->company_guid, 'status' => 1])->whereIn('role_guid',$guardian_person);
         if (!empty($request->name)) $res = $res->where('name', 'like', '%'. $request->name.'%');
         return $res->get();

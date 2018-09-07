@@ -622,7 +622,6 @@ class HousesService
     // 修改房源图片
     public function updateImg(
         $request,
-        $guardian_person,
         $picPerson
     )
     {
@@ -639,7 +638,7 @@ class HousesService
                 $data['pic_person'] = Common::user()->guid;
             }
 
-            $house = House::where(['guid' => $request->guid])->whereIn('guardian_person',$guardian_person)->update($data);
+            $house = House::where(['guid' => $request->guid])->update($data);
             if (empty($house)) throw new \Exception('房源编辑图片失败');
 
             $img = array_merge($request->house_type_img, $request->indoor_img, $request->outdoor_img);

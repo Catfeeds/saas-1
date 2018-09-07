@@ -71,6 +71,8 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
+        $maintainer = Access::adoptGuardianPersonGetHouse('edit_house');
+        if (!in_array($house->guid,$maintainer)) return $this->sendError('无编辑房源权限');
         $res = $repository->updateHouse($house,$request);
         return $this->sendResponse($res,'更新房源成功');
     }
@@ -111,18 +113,22 @@ class HousesController extends APIBaseController
     {
         // 判断是否有对应权限
         if ($request->entry_person) {
+            $userGuid = $request->entry_person;
             $guardian_person = Access::adoptPermissionGetUser('set_entry_person');
         } elseif ($request->guardian_person) {
+            $userGuid = $request->guardian_person;
             $guardian_person = Access::adoptPermissionGetUser('set_guardian_person');
         } elseif ($request->pic_person) {
+            $userGuid = $request->pic_person;
             $guardian_person = Access::adoptPermissionGetUser('set_pic_person');
         } elseif ($request->key_person) {
+            $userGuid = $request->key_person;
             $guardian_person = Access::adoptPermissionGetUser('set_key_person');
         }
         if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
 
         // 判断权限范围
-        if (!in_array(Common::user()->guid, $guardian_person['message'])) return $this->sendError('暂无权限');
+        if (!in_array($userGuid, $guardian_person['message'])) return $this->sendError('暂无权限');
 
         $res = $repository->changePersonnel($request, $guardian_person['message']);
         if (!$res['status']) return $this->sendError($res['message']);
@@ -158,10 +164,9 @@ class HousesController extends APIBaseController
     {
         $house = House::find($request->guid);
         // 通过权限获取区间用户
-        $permission = Access::adoptPermissionGetUser('edit_pic');
-        if (empty($permission['status'])) return $this->sendError($permission['message']);
-        if (!in_array($house->guardian_person, $permission['message'])) return $this->sendError('无权限修改房源图片信息');
-        $res = $service->updateImg($request,$permission['message'],$house->pic_person);
+        $permission = Access::adoptGuardianPersonGetHouse('edit_pic');
+        if (!in_array($request->guid, $permission)) return $this->sendError('无权限修改房源图片信息');
+        $res = $service->updateImg($request, $house->pic_person);
         if (!$res) return $this->sendError('修改房源图片失败');
         return $this->sendResponse($res,'修改房源图片成功');
     }
@@ -174,9 +179,9 @@ class HousesController extends APIBaseController
     )
     {
         // 通过权限获取区间用户
-        $permission = Access::adoptPermissionGetUser('set_top');
-        if (empty($permission['status'])) return $this->sendError($permission['message']);
-        $res = $repository->setTop($request,$permission['message']);
+        $permission = Access::adoptGuardianPersonGetHouse('set_top');
+        if (!in_array($request->guid, $permission)) return $this->sendError('无房源置顶权限');
+        $res = $repository->setTop($request);
         return $this->sendResponse($res,'房源置顶成功');
     }
 
@@ -188,11 +193,9 @@ class HousesController extends APIBaseController
     )
     {
         // 通过权限获取区间用户
-        $permission = Access::adoptPermissionGetUser('set_top');
-        if (empty($permission['status'])) return $this->sendError($permission['message']);
-
-        if (!in_array())
-        $res = $repository->cancelTop($request,$permission['message']);
+        $permission = Access::adoptGuardianPersonGetHouse('set_top');
+        if (!in_array($request->guid, $permission)) return $this->sendError('无房源取消置顶权限');
+        $res = $repository->cancelTop($request);
         return $this->sendResponse($res,'取消置顶成功');
     }
 
@@ -275,10 +278,9 @@ class HousesController extends APIBaseController
     )
     {
         // 通过权限获取区间用户
-        $guardian_person = Access::adoptPermissionGetUser('update_house_status');
-        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
-        if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限修改房源状态信息');
-        $res = $service->turnedInvalid($request,$guardian_person['message']);
+        $guardian_person = Access::adoptGuardianPersonGetHouse('update_house_status');
+        if (!in_array($request->guid,$guardian_person)) return $this->sendError('无权限修改房源状态信息');
+        $res = $service->turnedInvalid($request);
         if (!$res) return $this->sendError('转为无效失败');
         return $this->sendResponse($res,'转为无效成功');
     }
@@ -290,6 +292,9 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
+        // 通过权限获取区间用户
+        $guardian_person = Access::adoptGuardianPersonGetHouse('update_house_status');
+        if (!in_array($request->guid,$guardian_person)) return $this->sendError('无权限修改房源状态信息');
         $res = $service->turnEffective($request);
         if (!$res) return $this->sendError('转为有效失败');
         return $this->sendResponse($res,'转为有效成功');

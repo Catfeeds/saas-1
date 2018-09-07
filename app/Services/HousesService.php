@@ -500,7 +500,7 @@ class HousesService
     }
 
     // 转为有效
-    public function turnEffective($request, $guardian_person)
+    public function turnEffective($request)
     {
         \DB::beginTransaction();
         try {
@@ -517,7 +517,7 @@ class HousesService
                 $public_private = '公盘';
             }
 
-            $houseStatus = House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->update($data);
+            $houseStatus = House::where('guid',$request->guid)->update($data);
             if (empty($houseStatus)) throw new \Exception('修改房源状态失败');
             $remarks = '将房源转为有效房源,并设置为:'.$public_private;
             $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,6, $remarks);

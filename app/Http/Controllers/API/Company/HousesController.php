@@ -222,12 +222,12 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
-        $guardian_person = Access::adoptPermissionGetUser('guardian_person');
-        if (empty($permission['status'])) return $this->sendError($permission['message']);
+        $guardian_person = Access::adoptPermissionGetUser('set_guardian_person');
+        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
         if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限转移房源');
         $res = $repository->transferHouse($request, $guardian_person['message']);
-        if (!$res) return $this->sendError('转移房源失败');
-        return $this->sendResponse($res,'转移房源成功');
+        if (!$res['status']) return $this->sendError($res['message']);
+        return $this->sendResponse(true,$res['message']);
     }
     
     // 转为公盘
@@ -241,8 +241,8 @@ class HousesController extends APIBaseController
         if (empty($permission['status'])) return $this->sendError($permission['message']);
         if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限变更盘别');
         $res = $repository->changeToPublic($request, $guardian_person['message']);
-        if (!$res) return $this->sendError('转为公盘失败');
-        return $this->sendResponse($res,'转为公盘成功');
+        if (!$res['status']) return $this->sendError($res['message']);
+        return $this->sendResponse(true,$res['message']);
     }
     
     // 转为私盘
@@ -256,8 +256,8 @@ class HousesController extends APIBaseController
         if (empty($permission['status'])) return $this->sendError($permission['message']);
         if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限变更盘别');
         $res = $repository->switchToPrivate($request, $guardian_person['message']);
-        if (!$res) return $this->sendError('转为私盘成功');
-        return $this->sendResponse($res,'转为私盘成功');
+        if (!$res['status']) return $this->sendError($res['message']);
+        return $this->sendResponse(true,$res['message']);
     }
 
     // 转为无效
@@ -283,11 +283,7 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-        // 通过权限获取区间用户
-        $guardian_person = Access::adoptPermissionGetUser('update_house_status');
-        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
-        if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限修改房源状态信息');
-        $res = $service->turnEffective($request, $guardian_person['message']);
+        $res = $service->turnEffective($request);
         if (!$res) return $this->sendError('转为有效失败');
         return $this->sendResponse($res,'转为有效成功');
     }

@@ -147,19 +147,33 @@ class HousesRepository extends Model
     // 转移房源
     public function transferHouse($request, $guardian_person)
     {
-        return House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->update(['guardian_person' => $request->user_guid]);
+        $house =  House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->first();
+        if (empty($house)) return ['status' => false, 'message' => '无权限转移房源'];
+        $house->guardian_person = $request->user_guid;
+        if (!$house->save()) return ['status' => false,  'message' => '房源转移失败'];
+        return ['status' => true, 'message' => '房源转移成功'];
     }
 
     // 转为公盘
     public function changeToPublic($request, $guardian_person)
     {
-        return House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->update(['guardian_person' => null, 'public_private' => 2]);
+        $house =  House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->first();
+        if (empty($house)) return ['status' => false, 'message' => '无权限变更盘别'];
+        $house->guardian_person = null;
+        $house->public_private = 2;
+        if (!$house->save()) return ['status' => false, 'message' => '转为公盘失败'];
+        return ['status' => true, 'message' => '转为公盘成功'];
     }
     
     // 转为私盘
     public function switchToPrivate($request, $guardian_person)
     {
-        return House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->update(['guardian_person' => Common::user()->guid, 'public_private' => 1]);
+        $house =  House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->first();
+        if (empty($house)) return ['status' => false, 'message' => '无权限变更盘别'];
+        $house->guardian_person = Common::user()->guid;
+        $house->public_private = 1;
+        if (!$house->save()) return ['status' => false, 'message' => '转为私盘失败'];
+        return ['status' => true, 'message' => '转为私盘成功'];
     }
     
     // 修改证件图片

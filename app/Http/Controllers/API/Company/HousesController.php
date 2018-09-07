@@ -173,9 +173,11 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
+        $guardian_person = House::where('guid',$request->guid)->pluck('guardian_person')->first();
         // 通过权限获取区间用户
         $permission = Access::adoptPermissionGetUser('set_top');
         if (empty($permission['status'])) return $this->sendError($permission['message']);
+        if (!in_array($guardian_person,$permission['message'])) return $this->sendError('无房源置顶权限');
         $res = $repository->setTop($request,$permission['message']);
         return $this->sendResponse($res,'房源置顶成功');
     }
@@ -187,11 +189,12 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
+        $guardian_person = House::where('guid',$request->guid)->pluck('guardian_person')->first();
         // 通过权限获取区间用户
         $permission = Access::adoptPermissionGetUser('set_top');
         if (empty($permission['status'])) return $this->sendError($permission['message']);
 
-        if (!in_array())
+        if (!in_array($guardian_person,$permission['message'])) return $this->sendError('无房源取消置顶权限');
         $res = $repository->cancelTop($request,$permission['message']);
         return $this->sendResponse($res,'取消置顶成功');
     }

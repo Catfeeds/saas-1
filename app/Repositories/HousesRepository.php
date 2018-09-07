@@ -117,17 +117,16 @@ class HousesRepository extends Model
     }
 
     // 房源置顶
-    public function setTop($request,$guardian_person)
+    public function setTop($request)
     {
-        return House::where(['guid' => $request->guid])->whereIn('guardian_person',
-                $guardian_person)->update(['top'
+        return House::where(['guid' => $request->guid])->update(['top'
         => 1]);
     }
     
     // 取消置顶
-    public function cancelTop($request,$guardian_person)
+    public function cancelTop($request)
     {
-        return House::where('guid',$request->guid)->whereIn('guardian_person',$guardian_person)->update(['top' => 2]);
+        return House::where('guid',$request->guid)->update(['top' => 2]);
     }
     
    // 通过楼座，楼层获取房源信息

@@ -487,7 +487,7 @@ class HousesService
     }
 
     // 转为无效
-    public function turnedInvalid($request,$guardian_person)
+    public function turnedInvalid($request)
     {
         \DB::beginTransaction();
         try {
@@ -510,7 +510,7 @@ class HousesService
             } else {
                 $remarks = '将房源转为无效,原因是:'.$status;
             }
-            $houseStatus = House::where('guid', $request->guid)->whereIn('guardian_person',$guardian_person)->update(['status' =>
+            $houseStatus = House::where('guid', $request->guid)->update(['status' =>
                 $request->status]);
             if (empty($houseStatus)) throw new \Exception('修改房源状态失败');
             $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,6, $remarks);

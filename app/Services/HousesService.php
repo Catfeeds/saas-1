@@ -202,7 +202,7 @@ class HousesService
 
         // 看房方式
         $editReturnKey = Access::adoptPermissionGetUser('edit_return_key');
-        if (!in_array($house->guardian_person, $editReturnKey['message'])) {
+        if (!in_array($house->key_person, $editReturnKey['message'])) {
             $permission['edit_return_key'] = false; // 是否允许编辑/退换钥匙
         }
 
@@ -607,7 +607,9 @@ class HousesService
 
     // 修改房源图片
     public function updateImg(
-        $request,$guardian_person
+        $request,
+        $guardian_person,
+        $picPerson
     )
     {
         \DB::beginTransaction();
@@ -619,7 +621,7 @@ class HousesService
             ];
 
             // 如果图片跟图片人都为空则为图片人
-            if (empty($request->house_type_img) && empty($request->indoor_img) && empty($request->outdoor_img) && empty($request->pic_person)) {
+            if (empty($request->house_type_img) && empty($request->indoor_img) && empty($request->outdoor_img) && empty($picPerson)) {
                 $data['pic_person'] = Common::user()->guid;
             }
 

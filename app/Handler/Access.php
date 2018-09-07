@@ -115,7 +115,11 @@ class Access{
     // 通过维护人获取所有房源信息
     public static function adoptGuardianPersonGetHouse($permission)
     {
-        return House::whereIn('guardian_person', self::adoptPermissionGetUser($permission))->pluck('guid')->toArray();
+        $guardianPerson = self::adoptPermissionGetUser($permission);
+
+        if (empty($guardianPerson['status'])) return [];
+
+        return House::whereIn('guardian_person', $guardianPerson['message'])->pluck('guid')->toArray();
     }
 
 

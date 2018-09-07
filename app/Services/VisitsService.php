@@ -82,11 +82,12 @@ class VisitsService
     {
         \DB::beginTransaction();
         try {
+            $oldRemarks = $visit->remarks;
             $visit->remarks = $request->remarks;
             if (!$visit->save()) throw new \Exception('带看修改失败');
             // 修改操作记录
             $suc = CustomerOperationRecord::where([
-                'remarks' => $visit->remarks,
+                'remarks' => $oldRemarks,
                 'customer_guid' => $visit->cover_rel_guid,
                 'created_at' => $visit->created_at
             ])->update(['remarks' => $request->remarks]);

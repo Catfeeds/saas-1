@@ -132,7 +132,7 @@ class CustomersService
                     $data['dynamic'][$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
                     // 是否允许编辑
                     $data['dynamic'][$k]['operation'] = false;
-                    if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 10 * 60 * 30) {
+                    if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 60 * 30) {
                         $guid = $v->user_guid ? $v->user_guid : $v->visit_user;
                         if ($guid == Common::user()->guid) {
                             $data['dynamic'][$k]['operation'] = true;
@@ -264,16 +264,13 @@ class CustomersService
         foreach ($res as $v) {
             // 如果是带看  查询房子的相关信息
             if ($v->type == 2) {
-                $house_guid = Visit::where([
-                    'cover_rel_guid' => $v->customer_guid,
-                    'model_type' => 'App\Models\Customer',
-                    'created_at' => $v->created_at->format('Y-m-d H:i:s')
-                ])->value('rel_guid');
-                if (empty($house_guid)) $v['house'] = '';
-                $v['house'] = Common::HouseTitle($house_guid);
-            } else {
-                $v['house'] = '';
+                if (empty($house_guid)) {
+                    $v['house'] = '';
+                } else {
+                    $v['house'] = Common::HouseTitle($house_guid);
+                }
             }
+
             if ($v->type = 1) {
                 $v->operation = false;
                 if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 60 * 30) {
@@ -282,6 +279,7 @@ class CustomersService
                     }
                 }
             }
+            $v->remarks = $v->remarks??'';
         }
         return $res;
     }

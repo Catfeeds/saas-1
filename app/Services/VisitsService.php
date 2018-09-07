@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Handler\Common;
 use App\Models\Customer;
+use App\Models\CustomerOperationRecord;
 use App\Models\Visit;
 
 class VisitsService
@@ -64,7 +65,7 @@ class VisitsService
             }
 
             if ($request->model_type == 'App\Models\Customer') {
-                $customerOperationRecords = Common::customerOperationRecords(Common::user()->guid, $request->cover_rel_guid, 2, $request->remarks);
+                $customerOperationRecords = Common::customerOperationRecords(Common::user()->guid, $request->cover_rel_guid, 2, $request->remarks, $visit->guid);
                 if (empty($customerOperationRecords)) throw new \Exception('客源带看操作记录添加失败');
             }
 
@@ -79,9 +80,25 @@ class VisitsService
     // 修改
     public function updateVisit($request, $visit)
     {
-        $visit->remarks = $request->remarks;
-        if (!$visit->save()) return false;
-        return true;
+        \DB::beginTransaction();
+        try {
+            $oldRemarks = $visit->remarks;
+            $visit->remarks = $request->remarks;
+            if (!$visit->save()) throw new \Exception('带看修改失败');
+            // 修改操作记录
+            $suc = CustomerOperationRecord::where([
+                'remarks' => $oldRemarks,
+                'customer_guid' => $visit->cover_rel_guid,
+                'created_at' => $visit->created_at
+            ])->update(['remarks' => $request->remarks]);
+            if (!$suc) throw new \Exception('带看修改失败');
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            \Log::error('带看修改失败'.$exception->getMessage());
+            return false;
+        }
     }
 
 

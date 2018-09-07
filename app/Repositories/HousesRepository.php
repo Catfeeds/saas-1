@@ -145,38 +145,54 @@ class HousesRepository extends Model
     }
     
     // 转移房源
-    public function transferHouse($request)
+    public function transferHouse($request, $guardian_person)
     {
-        return House::where('guid',$request->guid)->update(['guardian_person' => $request->user_guid]);
+        $house =  House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->first();
+        if (empty($house)) return ['status' => false, 'message' => '无权限转移房源'];
+        $house->guardian_person = $request->user_guid;
+        if (!$house->save()) return ['status' => false,  'message' => '房源转移失败'];
+        return ['status' => true, 'message' => '房源转移成功'];
     }
 
     // 转为公盘
-    public function changeToPublic($request)
+    public function changeToPublic($request, $guardian_person)
     {
-        return House::where('guid',$request->guid)->update(['guardian_person' => null, 'public_private' => 2]);
+        $house =  House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->first();
+        if (empty($house)) return ['status' => false, 'message' => '无权限变更盘别'];
+        $house->guardian_person = null;
+        $house->public_private = 2;
+        if (!$house->save()) return ['status' => false, 'message' => '转为公盘失败'];
+        return ['status' => true, 'message' => '转为公盘成功'];
     }
     
     // 转为私盘
-    public function switchToPrivate($request)
+    public function switchToPrivate($request, $guardian_person)
     {
-        return House::where('guid',$request->guid)->update(['guardian_person' => Common::user()->guid, 'public_private' => 1]);
+        $house =  House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->first();
+        if (empty($house)) return ['status' => false, 'message' => '无权限变更盘别'];
+        $house->guardian_person = Common::user()->guid;
+        $house->public_private = 1;
+        if (!$house->save()) return ['status' => false, 'message' => '转为私盘失败'];
+        return ['status' => true, 'message' => '转为私盘成功'];
     }
     
     // 修改证件图片
-    public function relevantProves($request)
+    public function relevantProves($request, $guardian_person)
     {
         \DB::beginTransaction();
         try {
-            $res = House::where('guid',$request->guid)->update(['relevant_proves_img' => json_encode($request->relevant_proves_img)]);
-            if (empty($res)) throw  new \Exception('图片上传失败');
+            $res = House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->first();
+            if (empty($res)) return ['status' => false, 'message' => '无权限上传房源证件'];
+            $res->relevant_proves_img = json_encode($request->relevant_proves_img);
+            if (!$res->save()) return ['status' => false, 'message' => '图片上传失败'];
             $suc = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'上传证件图片');
             if (!$suc) throw new \Exception('房源操作记录添加失败');
             \DB::commit();
-            return true;
+            return ['status' => true, 'message' => '图片上传成功'];
         } catch (\Exception $exception) {
             \DB::rollback();
             \Log::error('证件上传失败'.$exception->getMessage());
-            return false;
+            return ['status' => false, 'message' => '图片上传失败'];
         }
     }
 }

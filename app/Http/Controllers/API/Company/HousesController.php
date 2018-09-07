@@ -111,13 +111,13 @@ class HousesController extends APIBaseController
     {
         // 判断是否有对应权限
         if ($request->entry_person) {
-            $guardian_person = Access::adoptPermissionGetUser('entering_person');
+            $guardian_person = Access::adoptPermissionGetUser('set_entry_person');
         } elseif ($request->guardian_person) {
-            $guardian_person = Access::adoptPermissionGetUser('maintainer');
+            $guardian_person = Access::adoptPermissionGetUser('set_guardian_person');
         } elseif ($request->pic_person) {
-            $guardian_person = Access::adoptPermissionGetUser('picture_person');
+            $guardian_person = Access::adoptPermissionGetUser('set_pic_person');
         } elseif ($request->key_person) {
-            $guardian_person = Access::adoptPermissionGetUser('key_person');
+            $guardian_person = Access::adoptPermissionGetUser('set_key_person');
         }
         if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
 
@@ -259,7 +259,7 @@ class HousesController extends APIBaseController
     )
     {
         // 通过权限获取区间用户
-        $guardian_person = Access::adoptPermissionGetUser('modify_status');
+        $guardian_person = Access::adoptPermissionGetUser('update_house_status');
         if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
         if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限修改房源状态信息');
         $res = $service->turnedInvalid($request,$guardian_person['message']);

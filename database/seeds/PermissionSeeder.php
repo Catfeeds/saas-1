@@ -67,7 +67,7 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '房源-私盘房源业主信息',
-            'name_en' => 'private_house_most'
+            'name_en' => 'private_owner_info'
         ]);
 
         // 门牌号(修改相关)

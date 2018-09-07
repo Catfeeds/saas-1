@@ -165,39 +165,38 @@ class HousesService
     // 房源详情数据处理
     public function getHouseInfo($house)
     {
-        $permission['see_owner_info'] = true; // 是否允许查看业主信息
-        $permission['upload_image'] = true; // 是否允许上传图片
-        $permission['edit_picture'] = true; // 是否允许编辑图片
+        $permission['private_owner_info'] = true; // 是否允许查看业主信息
+        $permission['upload_pic'] = true; // 是否上传图片
+        $permission['edit_pic'] = true; // 是否允许编辑图片
         $permission['edit_return_key'] = true; // 是否允许编辑/退换钥匙
-        $permission['view_documents'] = true; // 是否允许查看相关证件
-        $permission['modify_status'] = true; // 是否允许修改状态(转为无效)
-        $permission['update_house'] = true; // 是否允许编辑房源
-        $permission['entering_person'] = true; // 是否允修改录入人
-        $permission['maintainer'] = true; // 是否允修改维护人
-        $permission['picture_person'] = true; // 是否允修改图片人
-        $permission['key_person'] = true; // 是否允修改钥匙人
+        $permission['see_documents'] = true; // 是否允许查看相关证件
+        $permission['update_house_status'] = true; // 是否允许修改状态(转为无效)
+        $permission['edit_house'] = true; // 是否允许编辑房源
+        $permission['set_entry_person'] = true; // 是否允修改录入人
+        $permission['set_guardian_person'] = true; // 是否允修改维护人
+        $permission['set_pic_person'] = true; // 是否允修改图片人
+        $permission['set_key_person'] = true; // 是否允修改钥匙人
         $permission['upload_document'] = true; // 是否允上传证件
-
 
         if ($house->public_private == 1) {
             // 获取私盘业主信息
-            $ownerInfo = Access::adoptPermissionGetUser('private_owner_information');
+            $ownerInfo = Access::adoptPermissionGetUser('private_owner_info');
             // 判断是否有权限
             if (empty($ownerInfo['status'])) return ['status' => false, 'message' => $ownerInfo['message']];
             if (!in_array($house->guardian_person, $ownerInfo['message'])) {
-                $permission['see_owner_info'] = false; // 是否允许查看业主信息
+                $permission['private_owner_info'] = false; // 是否允许查看业主信息
             }
 
             // 上传图片
-            $uploadImage = Access::adoptPermissionGetUser('upload_image');
+            $uploadImage = Access::adoptPermissionGetUser('upload_pic');
             if (!in_array($house->guardian_person, $uploadImage['message'])) {
-                $permission['upload_image'] = false; // 是否上传图片
+                $permission['upload_pic'] = false; // 是否上传图片
             }
 
             // 编辑图片
-            $editPicture = Access::adoptPermissionGetUser('edit_picture');
+            $editPicture = Access::adoptPermissionGetUser('edit_pic');
             if (!in_array($house->guardian_person, $editPicture['message'])) {
-                $permission['edit_picture'] = false; // 是否允许编辑图片
+                $permission['edit_pic'] = false; // 是否允许编辑图片
             }
 
             // 看房方式
@@ -207,45 +206,45 @@ class HousesService
             }
 
             // 查看相关证件
-            $viewDocuments = Access::adoptPermissionGetUser('view_documents');
+            $viewDocuments = Access::adoptPermissionGetUser('see_documents');
             if (!in_array($house->guardian_person, $viewDocuments['message'])) {
-                $permission['view_documents'] = false; // 是否允许查看相关证件
+                $permission['see_documents'] = false; // 是否允许查看相关证件
             }
 
             // 修改状态(转为无效)
-            $modifyStatus = Access::adoptPermissionGetUser('modify_status');
+            $modifyStatus = Access::adoptPermissionGetUser('update_house_status');
             if (!in_array($house->guardian_person, $modifyStatus['message'])) {
-                $permission['modify_status'] = false; // 是否允许修改状态(转为无效)
+                $permission['update_house_status'] = false; // 是否允许修改状态(转为无效)
             }
 
             // 编辑房源
-            $updateHouse = Access::adoptPermissionGetUser('update_house');
+            $updateHouse = Access::adoptPermissionGetUser('edit_house');
             if (!in_array($house->guardian_person, $updateHouse['message'])) {
-                $permission['update_house'] = false; // 是否允许编辑房源
+                $permission['edit_house'] = false; // 是否允许编辑房源
             }
 
             // 录入人
-            $enteringPerson = Access::adoptPermissionGetUser('entering_person');
+            $enteringPerson = Access::adoptPermissionGetUser('set_entry_person');
             if (!in_array($house->entry_person, $enteringPerson['message'])) {
-                $permission['entering_person'] = false; // 是否允修改录入人
+                $permission['set_entry_person'] = false; // 是否允修改录入人
             }
 
             // 维护人
             $maintainer = Access::adoptPermissionGetUser('maintainer');
-            if (!in_array($house->guardian_person, $maintainer['message'])) {
-                $permission['maintainer'] = false; // 是否允修改维护人
+            if (!in_array($house->guardian_person, $maintainer['set_guardian_person'])) {
+                $permission['set_guardian_person'] = false; // 是否允修改维护人
             }
 
             // 图片人
-            $picturePerson = Access::adoptPermissionGetUser('picture_person');
+            $picturePerson = Access::adoptPermissionGetUser('set_pic_person');
             if (!in_array($house->pic_person, $picturePerson['message'])) {
-                $permission['picture_person'] = false; // 是否允修改图片人
+                $permission['set_pic_person'] = false; // 是否允修改图片人
             }
 
             // 钥匙人
-            $keyPerson = Access::adoptPermissionGetUser('key_person');
+            $keyPerson = Access::adoptPermissionGetUser('set_key_person');
             if (!in_array($house->key_person, $keyPerson['message'])) {
-                $permission['key_person'] = false; // 是否允修改钥匙人
+                $permission['set_key_person'] = false; // 是否允修改钥匙人
             }
 
             // 上传证件
@@ -591,7 +590,7 @@ class HousesService
                 }
             }
         }
-        
+
         return $res;
     }
 

@@ -591,6 +591,7 @@ class HousesService
                 }
             }
         }
+        
         return $res;
     }
 

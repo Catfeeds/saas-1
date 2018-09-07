@@ -173,9 +173,8 @@ class HousesController extends APIBaseController
     )
     {
         // 通过权限获取区间用户
-        $permission = Access::adoptPermissionGetUser('pinned_listing');
+        $permission = Access::adoptPermissionGetUser('set_top');
         if (empty($permission['status'])) return $this->sendError($permission['message']);
-        if (!in_array(Common::user()->guid,$permission['message'])) return $this->sendError('无权限置顶房源信息');
         $res = $repository->setTop($request,$permission['message']);
         return $this->sendResponse($res,'房源置顶成功');
     }
@@ -187,7 +186,10 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
-        $res = $repository->cancelTop($request);
+        // 通过权限获取区间用户
+        $permission = Access::adoptPermissionGetUser('cancel_top');
+        if (empty($permission['status'])) return $this->sendError($permission['message']);
+        $res = $repository->cancelTop($request,$permission['message']);
         return $this->sendResponse($res,'取消置顶成功');
     }
 

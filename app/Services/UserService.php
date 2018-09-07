@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Handler\Access;
 use App\Handler\Common;
 use App\Models\Role;
 use App\Models\User;
@@ -162,7 +163,10 @@ class UserService
     // 获取公司下所有在职人员
     public function getAllUser($request)
     {
-        $res = User::where(['company_guid' => Common::user()->company_guid, 'status' => 1]);
+        $user = User::where('guid',Common::user()->guid)->first();
+        $permission = $user->role->level;
+        $guardian_person = Access::adoptPermissionGetUser($permission);
+        $res = User::where(['company_guid' => Common::user()->company_guid, 'status' => 1])->whereIn('role_guid',$guardian_person);
         if (!empty($request->name)) $res = $res->where('name', 'like', '%'. $request->name.'%');
         return $res->get();
     }

@@ -577,10 +577,9 @@ class HousesService
     // 获取房源动态
     public function getDynamic($request)
     {
-        $res = HouseOperationRecord::with('user:guid,name,tel','track')->where('house_guid', $request->house_guid);
+        $res = HouseOperationRecord::with('user:guid,name,tel')->where('house_guid', $request->house_guid);
         if (!empty($request->type)) $res = $res->where('type', $request->type);
         $res = $res->latest()->get();
-
         // 判断是否允许编辑
         foreach ($res as $v) {
             if ($v->type = 1) {
@@ -591,12 +590,7 @@ class HousesService
                     }
                 }
             }
-
-            $v->with('track')->where('created_at',$v->created_at);
-            $v->track_guid = $v->track->guid;
-            if ($v->track) $v->setRelation('track', []);
         }
-
         return $res;
     }
 

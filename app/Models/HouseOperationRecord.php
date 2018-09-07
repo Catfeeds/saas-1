@@ -28,10 +28,4 @@ class HouseOperationRecord extends BaseModel
             ];
         })->values();
     }
-
-    // 关联跟进
-    public function track()
-    {
-        return $this->hasOne(Track::class,'rel_guid', 'house_guid')->where(['model_type' => 'App\Models\House']);
-    }
 }

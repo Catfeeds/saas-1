@@ -274,6 +274,14 @@ class CustomersService
             } else {
                 $v['house'] = '';
             }
+            if ($v->type = 1) {
+                $v->operation = false;
+                if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 60 * 30) {
+                    if ($v->user_guid == Common::user()->guid) {
+                        $v->operation = true;
+                    }
+                }
+            }
         }
         return $res;
     }

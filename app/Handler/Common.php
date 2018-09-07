@@ -88,40 +88,47 @@ class Common
     }
 
     // 添加房源操作记录
-    public static function houseOperationRecords(
+    public static function houseOperationRecords
+    (
         $user_guid,
         $house_guid,
         $type,
         $remarks,
-        $img=null
+        $img=null,
+        $track_guid = null
     )
     {
         $houseOperationRecord = HouseOperationRecord::create([
             'guid' => self::getUuid(),
             'user_guid' => $user_guid,
             'house_guid' => $house_guid,
+            'track_guid' => $track_guid,
             'type' => $type,
             'remarks' => $remarks,
-            'img' => $img
+            'img' => $img,
+
         ]);
         if (empty($houseOperationRecord)) return false;
         return true;
     }
 
     // 添加客源操作记录
-    public static function customerOperationRecords(
+    public static function customerOperationRecords
+    (
         $user_guid,
         $customer_guid,
         $type,
-        $remarks
+        $remarks,
+        $track_guid = null
     )
     {
         $customerOperationRecords = CustomerOperationRecord::create([
             'guid' => self::getUuid(),
             'user_guid' => $user_guid,
             'customer_guid' => $customer_guid,
+            'track_guid' => $track_guid,
             'type' => $type,
-            'remarks' => $remarks,
+            'remarks' => $remarks
         ]);
         if (empty($customerOperationRecords)) return false;
         return true;

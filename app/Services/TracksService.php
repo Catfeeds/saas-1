@@ -26,11 +26,11 @@ class TracksService
 
             // 写入跟进
             if ($request->model_type == 'App\Models\House') {
-                $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->rel_guid, 1, $request->tracks_info);
+                $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->rel_guid,  1,$request->tracks_info,null,$track->guid);
                 if (empty($houseOperationRecords)) throw new \Exception('房源跟进操作记录添加失败');
             } elseif ($request->model_type == 'App\Models\Customer') {
                 $customerOperationRecords = Common::customerOperationRecords(Common::user()->guid,
-                    $request->rel_guid,1, $request->tracks_info);
+                    $request->rel_guid, 1, $request->tracks_info, $track->guid);
                 if (empty($customerOperationRecords)) throw new \Exception('客源跟进操作记录失败');
             }
             \DB::commit();
@@ -46,28 +46,11 @@ class TracksService
     {
         \DB::beginTransaction();
         try {
-            $oldTracksInfo = $track->tracks_info;
-
             $track->tracks_info = $request->tracks_info;
             if (!$track->save()) throw new \Exception('修改跟进失败');
-
-            // 修改条件
-            $where = [
-                'user_guid' => Common::user()->guid,
-                'remarks' => $oldTracksInfo,
-                'created_at' => $track->created_at
-            ];
-
-            if ($request->model_type == 'App\Models\CustomerOperationRecord') {
-                $where['customer_guid'] = $track->rel_guid;
-            } else {
-                $where['house_guid'] = $track->rel_guid;
-            }
-
             // 修改操作记录
-            $operationRecord = $request->model_type::where($where)->update(['remarks' => $request->tracks_info]);
+            $operationRecord = $request->model_type::where('track_guid', $track->guid)->update(['remarks' => $request->tracks_info]);
             if (empty($operationRecord)) throw new \Exception('房源/客源跟进记录修改失败');
-
             \DB::commit();
             return $track;
         } catch (\Exception $exception) {

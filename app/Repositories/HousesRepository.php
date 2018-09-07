@@ -181,16 +181,18 @@ class HousesRepository extends Model
     {
         \DB::beginTransaction();
         try {
-            $res = House::where('guid',$request->guid)->hwereIn('guardian_person', $guardian_person)->update(['relevant_proves_img' => json_encode($request->relevant_proves_img)]);
-            if (empty($res)) throw  new \Exception('图片上传失败');
+            $res = House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->first();
+            if (empty($res)) return ['status' => false, 'message' => '无权限上传房源证件'];
+            $res->relevant_proves_img = json_encode($request->relevant_proves_img);
+            if (!$res->save()) return ['status' => false, 'message' => '图片上传失败'];
             $suc = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'上传证件图片');
             if (!$suc) throw new \Exception('房源操作记录添加失败');
             \DB::commit();
-            return true;
+            return ['status' => true, 'message' => '图片上传成功'];
         } catch (\Exception $exception) {
             \DB::rollback();
             \Log::error('证件上传失败'.$exception->getMessage());
-            return false;
+            return ['status' => false, 'message' => '图片上传失败'];
         }
     }
 }

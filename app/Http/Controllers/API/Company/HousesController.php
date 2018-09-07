@@ -238,7 +238,7 @@ class HousesController extends APIBaseController
     )
     {
         $guardian_person = Access::adoptPermissionGetUser('private_to_public');
-        if (empty($permission['status'])) return $this->sendError($permission['message']);
+        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
         if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限变更盘别');
         $res = $repository->changeToPublic($request, $guardian_person['message']);
         if (!$res['status']) return $this->sendError($res['message']);
@@ -253,7 +253,7 @@ class HousesController extends APIBaseController
     )
     {
         $guardian_person = Access::adoptPermissionGetUser('public_to_private');
-        if (empty($permission['status'])) return $this->sendError($permission['message']);
+        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
         if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限变更盘别');
         $res = $repository->switchToPrivate($request, $guardian_person['message']);
         if (!$res['status']) return $this->sendError($res['message']);
@@ -300,7 +300,7 @@ class HousesController extends APIBaseController
         if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
         if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限上传房源证件');
         $res = $repository->relevantProves($request, $guardian_person['message']);
-        if (!$res) return $this->sendError('修改证件图片失败');
+        if (!$res['status']) return $this->sendError($res['message']);
         return $this->sendResponse(collect($request->relevant_proves_img)->map(function($img) {
             return [
                 'name' => $img,

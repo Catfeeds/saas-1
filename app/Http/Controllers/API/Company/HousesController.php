@@ -222,7 +222,10 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
-        $res = $repository->transferHouse($request);
+        $guardian_person = Access::adoptPermissionGetUser('guardian_person');
+        if (empty($permission['status'])) return $this->sendError($permission['message']);
+        if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限转移房源');
+        $res = $repository->transferHouse($request, $guardian_person['message']);
         if (!$res) return $this->sendError('转移房源失败');
         return $this->sendResponse($res,'转移房源成功');
     }
@@ -234,7 +237,10 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
-        $res = $repository->changeToPublic($request);
+        $guardian_person = Access::adoptPermissionGetUser('private_to_public');
+        if (empty($permission['status'])) return $this->sendError($permission['message']);
+        if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限变更盘别');
+        $res = $repository->changeToPublic($request, $guardian_person['message']);
         if (!$res) return $this->sendError('转为公盘失败');
         return $this->sendResponse($res,'转为公盘成功');
     }
@@ -246,7 +252,10 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
-        $res = $repository->switchToPrivate($request);
+        $guardian_person = Access::adoptPermissionGetUser('public_to_private');
+        if (empty($permission['status'])) return $this->sendError($permission['message']);
+        if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限变更盘别');
+        $res = $repository->switchToPrivate($request, $guardian_person['message']);
         if (!$res) return $this->sendError('转为私盘成功');
         return $this->sendResponse($res,'转为私盘成功');
     }
@@ -274,7 +283,11 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-        $res = $service->turnEffective($request);
+        // 通过权限获取区间用户
+        $guardian_person = Access::adoptPermissionGetUser('update_house_status');
+        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
+        if (!in_array(Common::user()->guid,$guardian_person['message'])) return $this->sendError('无权限修改房源状态信息');
+        $res = $service->turnEffective($request, $guardian_person['message']);
         if (!$res) return $this->sendError('转为有效失败');
         return $this->sendResponse($res,'转为有效成功');
     }

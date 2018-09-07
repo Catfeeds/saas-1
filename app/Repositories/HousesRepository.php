@@ -145,21 +145,21 @@ class HousesRepository extends Model
     }
     
     // 转移房源
-    public function transferHouse($request)
+    public function transferHouse($request, $guardian_person)
     {
-        return House::where('guid',$request->guid)->update(['guardian_person' => $request->user_guid]);
+        return House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->update(['guardian_person' => $request->user_guid]);
     }
 
     // 转为公盘
-    public function changeToPublic($request)
+    public function changeToPublic($request, $guardian_person)
     {
-        return House::where('guid',$request->guid)->update(['guardian_person' => null, 'public_private' => 2]);
+        return House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->update(['guardian_person' => null, 'public_private' => 2]);
     }
     
     // 转为私盘
-    public function switchToPrivate($request)
+    public function switchToPrivate($request, $guardian_person)
     {
-        return House::where('guid',$request->guid)->update(['guardian_person' => Common::user()->guid, 'public_private' => 1]);
+        return House::where('guid',$request->guid)->whereIn('guardian_person', $guardian_person)->update(['guardian_person' => Common::user()->guid, 'public_private' => 1]);
     }
     
     // 修改证件图片

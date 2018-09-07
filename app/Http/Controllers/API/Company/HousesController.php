@@ -25,7 +25,7 @@ class HousesController extends APIBaseController
     )
     {
         // 通过权限获取区间用户
-        $guardian_person = Access::adoptPermissionGetUser('list_display');
+        $guardian_person = Access::adoptPermissionGetUser('house_list');
         if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
         $res = $repository->houseList($request, $service, $guardian_person['message']);
         return $this->sendResponse($res,'房源列表获取成功');

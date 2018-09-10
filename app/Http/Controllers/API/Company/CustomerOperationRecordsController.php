@@ -18,6 +18,7 @@ class CustomerOperationRecordsController extends APIBaseController
     )
     {
         $res = $service->getDynamic($request);
-        return $this->sendResponse($res, '动态获取成功');
+        if (!$res['status']) return $this->sendError($res['message']);
+        return $this->sendResponse($res['message'], '动态获取成功');
     }
 }

@@ -48,6 +48,18 @@ class VisitsController extends APIBaseController
     }
 
 
+    // 客源删除带看
+    public function destroy
+    (
+        Visit $visit,
+        VisitsService $service
+    )
+    {
+        $res = $service->delVisit($visit);
+        if (!$res['status']) return $this->sendError($res['message']);
+        return $this->sendResponse(true, $res['message']);
+    }
+
 
 
 

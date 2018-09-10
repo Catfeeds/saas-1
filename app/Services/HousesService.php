@@ -7,6 +7,8 @@ use App\Handler\Common;
 use App\Models\BuildingBlock;
 use App\Models\House;
 use App\Models\HouseOperationRecord;
+use App\Models\Permission;
+use App\Models\RoleHasPermission;
 use App\Models\SeeHouseWay;
 use App\Models\User;
 
@@ -695,5 +697,21 @@ class HousesService
         }
 
         return $permission;
+    }
+
+    // 默认权限
+    public function defaultPermissions($role_guid)
+    {
+        if ('level' == 1) {
+
+        } elseif ('level' == 2) {
+
+        } elseif ('level' == 3) {
+
+        } elseif ('level' == 4) {
+
+        } elseif ('level' == 5) {
+
+        }
     }
 }

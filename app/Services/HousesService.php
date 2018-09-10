@@ -698,30 +698,4 @@ class HousesService
 
         return $permission;
     }
-
-    // 默认权限
-    public function defaultPermissions(
-        $role_guid
-    )
-    {
-        if ('level' == 1) {
-            $permissions = config('default_permission.company');
-        } elseif ('level' == 2) {
-            $permissions = config('default_permission.area');
-        } elseif ('level' == 3) {
-            $permissions = config('default_permission.store');
-        } elseif ('level' == 4) {
-            $permissions = config('default_permission.grouping');
-        } elseif ('level' == 5) {
-            $permissions = config('default_permission.personal');
-        }
-
-        foreach ($permissions as $k => $v) {
-
-            
-        }
-
-
-
-    }
 }

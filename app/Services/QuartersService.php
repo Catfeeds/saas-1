@@ -88,7 +88,12 @@ class QuartersService
     {
         \DB::beginTransaction();
         try {
-            Role::where('guid',$request->guid)->update(['level' => $request->level]);
+            $role = Role::where('guid',$request->guid)->update(['level' => $request->level]);
+            if (empty($role)) throw new \Exception('岗位级别修改失败');
+
+            $defaultPermissions = $this->defaultPermissions($request);
+            if (empty($defaultPermissions)) throw new \Exception('默认角色设置失败');
+
             \DB::commit();
             return true;
         } catch (\Exception $exception) {
@@ -124,4 +129,45 @@ class QuartersService
             return false;
         }
     }
+
+    // 默认权限   TODO
+    public function defaultPermissions(
+        $request
+    )
+    {
+        $permissions = array();
+        if ($request->level == 1) {
+            $permissions = config('default_permission.company');
+        } elseif ($request->level == 2) {
+            $permissions = config('default_permission.area');
+        } elseif ($request->level == 3) {
+            $permissions = config('default_permission.store');
+        } elseif ($request->level == 4) {
+            $permissions = config('default_permission.grouping');
+        } elseif ($request->level == 5) {
+            $permissions = config('default_permission.personal');
+        }
+
+        foreach ($permissions as $v) {
+
+            $res = RoleHasPermission::where([
+                'role_guid' => $request->guid,
+                'permission_guid' => Permission::where('name_en', $v['name_en'])->first()->guid
+            ])->update([
+                'action_scope' => $v['action_scope'],
+                'operation_number' => $v['operation_number'],
+                'follow_up' => $v['follow_up'],
+                'status' => 1
+            ]);
+            dd($res);
+
+//            \Log::info($res);
+
+
+            if (empty($res)) return false;
+        }
+
+        return true;
+    }
+
 }

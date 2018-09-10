@@ -4,7 +4,7 @@ return [
     'company' => [
         [
             'name_en' => 'house',// 房源
-            'action_scope' => 1,
+            'action_scope' => '',
             'operation_number' => '',
             'follow_up' => '',
         ],

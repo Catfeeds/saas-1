@@ -4,7 +4,10 @@ namespace App\Models;
 
 class RoleHasPermission extends BaseModel
 {
-    protected $appends = ['action_scope_cn', 'follow_up_cn'];
+    protected $appends = [
+        'action_scope_cn',
+        'follow_up_cn'
+    ];
 
     public function hasPermission()
     {

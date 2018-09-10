@@ -659,5 +659,39 @@ class HousesService
             return false;
         }
     }
+    // 房源权限
+    public function propertyPermission($house)
+    {
+        $permission['edit_owner_info'] = true;//是否允许修改删除房源业主信息
+        $permission['update_house_number'] = true;//是否允许修改房源门牌号
+        $permission['update_house_grade'] = true;//是否允许修改房源等级
+        $permission['update_house_price'] = true;//是否允许修改房源价格
+        $permission['update_house_other'] = true;//是否允许修改房源其他信息
+        $editOwnerInfo = Access::adoptGuardianPersonGetHouse('edit_owner_info');
+        if (!in_array($house->guid,$editOwnerInfo)) {
+            $permission['edit_owner_info'] = false;
+        }
 
+        $updateHouseNumber = Access::adoptGuardianPersonGetHouse('update_house_number');
+        if (!in_array($house->guid,$updateHouseNumber)) {
+            $permission['update_house_number'] = false;
+        }
+
+        $updateHouseGrade = Access::adoptGuardianPersonGetHouse('update_house_grade');
+        if (!in_array($house->guid,$updateHouseGrade)) {
+            $permission['update_house_grade'] = false;
+        }
+
+        $updateHousePrice = Access::adoptGuardianPersonGetHouse('update_house_price');
+        if (!in_array($house->guid,$updateHousePrice)) {
+            $permission['update_house_price'] = false;
+        }
+
+        $updateHouseOther = Access::adoptGuardianPersonGetHouse('update_house_other');
+        if (!in_array($house->guid,$updateHouseOther)) {
+            $permission['update_house_other'] = false;
+        }
+
+        return $permission;
+    }
 }

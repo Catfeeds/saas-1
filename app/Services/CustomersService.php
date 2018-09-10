@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Handler\Access;
 use App\Handler\Common;
 use App\Models\Customer;
 use App\Models\CustomerOperationRecord;
@@ -11,12 +12,12 @@ use App\Models\Visit;
 class CustomersService
 {
     // 客源列表
-    public function getList($request)
+    public function getList($request, $guardian_person)
     {
         return Customer::where([
             'company_guid' => 'ed8090e4a6b811e8bf9a416618026100',
             'status' => 1
-        ])->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
+        ])->whereIn('guardian_person', $guardian_person)->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
     }
 
     // 添加客源
@@ -282,5 +283,39 @@ class CustomersService
             $v->remarks = $v->remarks??'';
         }
         return $res;
+    }
+
+    // 获取修改相关权限
+    public function getPermission($customer)
+    {
+        $data = [];
+        $data['contact'] = true;
+        $data['level'] = true;
+        $data['other'] = true;
+        $data['entry_person'] = true;
+        $data['guardian_person'] = true;
+
+        // 判断是否有修改联系方式权限
+        $contact = Access::adoptGuardianPersonGetCustomer('customer_contact_way');
+
+        if (!in_array($customer->guid, $contact)) $data['contact'] = false;
+
+        // 判断是否有修改客源等级权限
+        $level = Access::adoptGuardianPersonGetCustomer('update_customer_grade');
+        if (!in_array($customer->guid,$level)) $data['level'] = false;
+
+        // 判断是否有修改其他信息权限
+        $other = Access::adoptGuardianPersonGetCustomer('update_customer_other');
+        if (!in_array($customer->guid, $other))  $data['other'] = false;
+
+        // 判断是否有修改录入人权限
+        $entry_person = Access::adoptPermissionGetUser('set_customer_entry_person');
+        if (!in_array($customer->entry_person, $entry_person['message'])) $data['entry_person'] = false;
+
+        // 判断是否有修改维护人的权限
+        $guardian_person = Access::adoptGuardianPersonGetCustomer('set_customer_guardian_person');
+        if (!in_array($customer->guid, $guardian_person))  $data['guardian_person'] = false;
+
+        return $data;
     }
 }

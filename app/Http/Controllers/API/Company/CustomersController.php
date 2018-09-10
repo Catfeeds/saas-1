@@ -62,8 +62,13 @@ class CustomersController extends APIBaseController
     }
 
     // 客源修改之前原始数据
-    public function edit(Customer $customer)
+    public function edit
+    (
+        Customer $customer,
+        CustomersService $service
+    )
     {
+        $customer->permisson = $service->getPermission($customer);
         return $this->sendResponse($customer, '修改之前原始数据');
     }
 

@@ -3,6 +3,7 @@
 namespace App\Handler;
 
 use App\Models\CompanyFramework;
+use App\Models\Customer;
 use App\Models\House;
 use App\Models\Permission;
 use App\Models\RoleHasPermission;
@@ -22,7 +23,8 @@ class Access{
         $user = Common::user();
         $role_guid = $user->role->guid;
         $permission_guid = Permission::where('name_en', $name)->value('guid');
-        if (!empty($permission_guid)) return RoleHasPermission::where(['permission_guid' => $permission_guid, 'role_guid' => $role_guid])->first();
+        if (empty($permission_guid)) return [];
+        return RoleHasPermission::where(['permission_guid' => $permission_guid, 'role_guid' => $role_guid])->first();
     }
 
     // 获取登录人的所有权限
@@ -105,7 +107,6 @@ class Access{
     // 通过权限获取区间用户
     public static function adoptPermissionGetUser($permission)
     {
-        // 先判断是否有房源列表权限
         $permission = self::permission($permission);
         if (empty($permission)) return ['status' => false, 'message' => '暂无权限'];
         // 判断作用域
@@ -121,6 +122,15 @@ class Access{
         if (empty($guardianPerson['status'])) return [];
 
         return House::whereIn('guardian_person', $guardianPerson['message'])->pluck('guid')->toArray();
+    }
+
+
+    // 通过维护人获取所有客源
+    public static function adoptGuardianPersonGetCustomer($permission)
+    {
+        $guardianPerson = self::adoptPermissionGetUser($permission);
+        if (empty($guardianPerson['status'])) return [];
+        return Customer::whereIn('guardian_person', $guardianPerson['message'])->pluck('guid')->toArray();
     }
 
 

@@ -124,10 +124,10 @@ class House extends BaseModel
     {
         switch ($this->public_private) {
             case 1:
-                return '私';
+                return '私盘';
                 break;
             case 2:
-                return '公';
+                return '公盘';
                 break;
                 default;
                 break;

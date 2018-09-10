@@ -116,7 +116,6 @@ class UserService
     
     // 人员离职
     public function resignation($request)
-
     {
         return User::where(['guid' => $request->guid])->update(['status' => $request->status]);
     }

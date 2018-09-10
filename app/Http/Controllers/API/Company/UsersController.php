@@ -81,7 +81,7 @@ class UsersController extends APIBaseController
         // 验证该用户是否还有资源
         $validate = $this->getUserHouseCustomer($request);
         if (empty($validate)) return $this->sendError('请转移该用户手上的资源在进行离职操作');
-        $res = $service->resignation($request->guid);
+        $res = $service->resignation($request);
         return $this->sendResponse($res, '离职成功');
     }
 

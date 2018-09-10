@@ -112,6 +112,7 @@ class HousesService
         }]);
         $user = $res->record->pluck('name','tel')->toArray();
         $count = count($user);
+        $user = array_values($user);
         switch ($type) {
             case 1:
                 if (!$count) {

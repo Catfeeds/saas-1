@@ -86,7 +86,15 @@ class QuartersService
     //修改角色级别
     public function updateRoleLevel($request)
     {
-        return Role::where('guid',$request->guid)->update(['level' => $request->level]);
+        \DB::beginTransaction();
+        try {
+            Role::where('guid',$request->guid)->update(['level' => $request->level]);
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            return false;
+        }
     }
 
     // 修改角色权限

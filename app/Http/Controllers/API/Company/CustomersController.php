@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Company;
 
+use App\Handler\Access;
 use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\CustomersRequest;
@@ -18,7 +19,24 @@ class CustomersController extends APIBaseController
         CustomersService $service
     )
     {
-        $res = $service->getList($request);
+        // 公客范围
+        $public = Access::adoptPermissionGetUser('public_customer_show');
+
+        // 私客范围
+        $private = Access::adoptPermissionGetUser('private_customer_show');
+
+        //  公私客范围都为空, 则直接返回
+        if (!$public['status'] && !$private['status']) return $this->sendError('无客源列表权限');
+
+        if (!$public['status'] && $private['status']) $guardian_person = $private['message'];
+
+        if ($public['status'] && !$private['status']) $guardian_person = $public['message'];
+
+        if ($public['status'] && $private['status']) $guardian_person = array_merge($private['message'], $public['message']);
+
+        $guardian_person  = array_unique($guardian_person);
+
+        $res = $service->getList($request, $guardian_person);
         return $this->sendResponse($res, '客源列表获取成功');
     }
 

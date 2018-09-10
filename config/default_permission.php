@@ -202,7 +202,7 @@ return [
         ],
         [
             'name_en' => 'customer',// 客源
-            'action_scope' => 1,
+            'action_scope' => '',
             'operation_number' => '',
             'follow_up' => '',
         ],
@@ -319,7 +319,7 @@ return [
     'area' => [
         [
             'name_en' => 'house',// 房源
-            'action_scope' => 2,
+            'action_scope' => '',
             'operation_number' => '',
             'follow_up' => '',
         ],
@@ -517,7 +517,7 @@ return [
         ],
         [
             'name_en' => 'customer',// 客源
-            'action_scope' => 2,
+            'action_scope' => '',
             'operation_number' => '',
             'follow_up' => '',
         ],
@@ -634,7 +634,7 @@ return [
     'store' => [
         [
             'name_en' => 'house',// 房源
-            'action_scope' => 3,
+            'action_scope' => '',
             'operation_number' => '',
             'follow_up' => '',
         ],
@@ -832,7 +832,7 @@ return [
         ],
         [
             'name_en' => 'customer',// 客源
-            'action_scope' => 3,
+            'action_scope' => '',
             'operation_number' => '',
             'follow_up' => '',
         ],
@@ -949,7 +949,7 @@ return [
     'grouping' => [
         [
             'name_en' => 'house',// 房源
-            'action_scope' => 4,
+            'action_scope' => '',
             'operation_number' => '',
             'follow_up' => '',
         ],
@@ -1147,7 +1147,7 @@ return [
         ],
         [
             'name_en' => 'customer',// 客源
-            'action_scope' => 4,
+            'action_scope' => '',
             'operation_number' => '',
             'follow_up' => '',
         ],
@@ -1264,7 +1264,7 @@ return [
     'personal' => [
         [
             'name_en' => 'house',// 房源
-            'action_scope' => 5,
+            'action_scope' => '',
             'operation_number' => '',
             'follow_up' => '',
         ],
@@ -1462,7 +1462,7 @@ return [
         ],
         [
             'name_en' => 'customer',// 客源
-            'action_scope' => 5,
+            'action_scope' => '',
             'operation_number' => '',
             'follow_up' => '',
         ],

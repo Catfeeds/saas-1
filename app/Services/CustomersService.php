@@ -15,7 +15,7 @@ class CustomersService
     public function getList($request, $guardian_person)
     {
         return Customer::where([
-            'company_guid' => 'ed8090e4a6b811e8bf9a416618026100',
+            'company_guid' => Common::user()->company_guid,
             'status' => 1
         ])->whereIn('guardian_person', $guardian_person)->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
     }
@@ -51,22 +51,34 @@ class CustomersService
     // 更新客源
     public function updateCustomer($customer, $request)
     {
-        $customer->level = $request->level;
-        $customer->guest = $request->guest;
-        $customer->customer_info = $request->customer_info;
-        $customer->remarks = $request->remarks;
-        $customer->intention = $request->intention;
-        $customer->block = $request->block;
-        $customer->building = $request->building;
-        $customer->house_type = $request->house_type;
-        $customer->min_price = $request->min_price;
-        $customer->max_price = $request->max_price;
-        $customer->min_acreage = $request->min_acreage;
-        $customer->max_acreage = $request->max_acreage;
-        $customer->type = $request->type;
-        $customer->renovation = $request->renovation;
-        $customer->min_floor = $request->min_floor;
-        $customer->max_floor = $request->max_floor;
+        // 联系方式权限
+        if ($customer->permission['contact']) {
+            $customer->customer_info = $request->customer_info;
+        }
+
+        // 客源等级权限
+        if ($customer->permission['level']) {
+            $customer->level = $request->level;
+        }
+
+        // 其他信息权限
+        if ($customer->permission['other']) {
+            $customer->guest = $request->guest;
+            $customer->remarks = $request->remarks;
+            $customer->intention = $request->intention;
+            $customer->block = $request->block;
+            $customer->building = $request->building;
+            $customer->house_type = $request->house_type;
+            $customer->min_price = $request->min_price;
+            $customer->max_price = $request->max_price;
+            $customer->min_acreage = $request->min_acreage;
+            $customer->max_acreage = $request->max_acreage;
+            $customer->type = $request->type;
+            $customer->renovation = $request->renovation;
+            $customer->min_floor = $request->min_floor;
+            $customer->max_floor = $request->max_floor;
+        }
+
         if (!$customer->save()) return false;
         return true;
     }
@@ -75,6 +87,29 @@ class CustomersService
     public function getCustomerInfo($guid)
     {
         $res = Customer::with('entryPerson:guid,name,tel', 'guardianPerson:guid,name,tel', 'track', 'track.user', 'visit')->where('guid', $guid)->first();
+        $permission = array();
+        $permission['public_change_private'] = true; // 是否有公客转私客权限
+        $permission['private_change_public'] = true; // 是否有私客转公客权限
+        $permission['customer_change_invalid'] = true; // 是否有转为无效权限
+        $permission['entry_person'] = true; // 是否有修改录入人权限
+        $permission['guardian_person'] = true; // 是否有修改维护人的权限
+        $publicChangePrivate = Access::adoptGuardianPersonGetHouse('public_change_private');
+        if (!in_array($guid,$publicChangePrivate)) $permission['public_change_private'] = false;
+
+        $privateChangePublic = Access::adoptGuardianPersonGetHouse('private_change_public');
+        if (!in_array($guid,$privateChangePublic)) $permission['private_change_public'] = false;
+
+        $customerChangeInvalid = Access::adoptGuardianPersonGetHouse('customer_change_invalid');
+        if (!in_array($guid,$customerChangeInvalid)) $permission['customer_change_invalid'] = false;
+
+        // 判断是否有修改录入人权限
+        $entry_person = Access::adoptPermissionGetUser('set_customer_entry_person');
+        if (!in_array($res->entry_person, $entry_person['message'])) $permission['entry_person'] = false;
+
+        // 判断是否有修改维护人的权限
+        $guardian_person = Access::adoptGuardianPersonGetCustomer('set_customer_guardian_person');
+        if (!in_array($guid, $guardian_person))  $permission['guardian_person'] = false;
+
         $data = [];
         // 带看权限
         $data['visit_permission'] = true;
@@ -82,6 +117,7 @@ class CustomersService
         if (!in_array($guid, $permission)) {
             $data['visit_permission'] = false;
         }
+        $data['permission'] = $permission;
         $data['guid'] = $res->guid;
         $data['level'] = $res->level_cn;
         $data['guest'] = $res->guest_cn;
@@ -314,12 +350,9 @@ class CustomersService
         $data['contact'] = true;
         $data['level'] = true;
         $data['other'] = true;
-        $data['entry_person'] = true;
-        $data['guardian_person'] = true;
 
         // 判断是否有修改联系方式权限
         $contact = Access::adoptGuardianPersonGetCustomer('customer_contact_way');
-
         if (!in_array($customer->guid, $contact)) $data['contact'] = false;
 
         // 判断是否有修改客源等级权限
@@ -329,14 +362,6 @@ class CustomersService
         // 判断是否有修改其他信息权限
         $other = Access::adoptGuardianPersonGetCustomer('update_customer_other');
         if (!in_array($customer->guid, $other))  $data['other'] = false;
-
-        // 判断是否有修改录入人权限
-        $entry_person = Access::adoptPermissionGetUser('set_customer_entry_person');
-        if (!in_array($customer->entry_person, $entry_person['message'])) $data['entry_person'] = false;
-
-        // 判断是否有修改维护人的权限
-        $guardian_person = Access::adoptGuardianPersonGetCustomer('set_customer_guardian_person');
-        if (!in_array($customer->guid, $guardian_person))  $data['guardian_person'] = false;
 
         return $data;
     }

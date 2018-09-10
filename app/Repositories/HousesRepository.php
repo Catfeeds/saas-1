@@ -63,25 +63,26 @@ class HousesRepository extends Model
     // 更新房源
     public function updateHouse($house, $request)
     {
+        // 有修改业主信息权限
         if ($house->permission['edit_owner_info']) {
-            $house->owner_info = $request->owner_info;
+            $house->owner_info = $request->owner_info;//业主信息
         }
-
+        // 有修改门牌号权限
         if ($house->permission['update_house_number']) {
-            $house->floor = $request->floor;
-            $house->house_number = $request->house_number;
-            $house->building_block_guid = $request->building_block_guid;
+            $house->floor = $request->floor;//楼层
+            $house->house_number = $request->house_number;//房号
+            $house->building_block_guid = $request->building_block_guid;//楼座
         }
-
+        // 有修改房源等级权限
         if ($house->permission['update_house_grade']) {
-            $house->grade = $request->grade;
+            $house->grade = $request->grade;//房源等级
         }
-
+        // 有修改房源价格权限
         if ($house->permission['update_house_price']) {
-            $house->price = $request->price;
-            $house->price_unit = $request->price_unit;
+            $house->price = $request->price;//租金
+            $house->price_unit = $request->price_unit;//租金单位
         }
-
+        // 有修改其他信息权限
         if ($house->permission['update_house_other']) {
             $house->house_type = 1;
             $house->public_private = $request->public_private;

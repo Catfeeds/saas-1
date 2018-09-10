@@ -30,9 +30,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     */
     Route::resource('users','UsersController');
     // 冻结
-    Route::get('freeze/{guid}','UsersController@freeze');
+    Route::get('freeze','UsersController@freeze');
     // 离职
-    Route::get('resignation/{guid}','UsersController@resignation');
+    Route::get('resignation','UsersController@resignation');
     // 岗位下拉数据
     Route::get('get_all_quarters', 'UsersController@getAllQuarters');
     // 重置密码

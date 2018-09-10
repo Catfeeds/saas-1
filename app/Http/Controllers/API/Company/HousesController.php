@@ -24,32 +24,6 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-        $data = [
-            [
-                'name' => '测试',
-                'fanwei' => '测试范围',
-                'shuliang' => '20'
-            ],
-            [
-                'name' => '测试',
-                'fanwei' => '测试范围',
-                'shuliang' => ''
-            ]
-        ];
-
-        foreach ($data as $k => $v) {
-            dd($k, $v);
-
-            // 通过名称获取权限guid
-
-            // 通过权限guid,角色guid修改
-
-
-        }
-
-
-
-
         // 通过权限获取区间用户
         $guardian_person = Access::adoptPermissionGetUser('house_list');
         if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);

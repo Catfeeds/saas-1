@@ -15,7 +15,7 @@ class CustomersService
     public function getList($request, $guardian_person)
     {
         return Customer::where([
-            'company_guid' => 'ed8090e4a6b811e8bf9a416618026100',
+            'company_guid' => Common::user()->company_guid,
             'status' => 1
         ])->whereIn('guardian_person', $guardian_person)->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
     }

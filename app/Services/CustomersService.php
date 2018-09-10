@@ -111,6 +111,12 @@ class CustomersService
         if (!in_array($guid, $guardian_person))  $permission['guardian_person'] = false;
 
         $data = [];
+        // 带看权限
+        $data['visit_permission'] = true;
+        $permission = Access::adoptGuardianPersonGetCustomer('see_customer_visit');
+        if (!in_array($guid, $permission)) {
+            $data['visit_permission'] = false;
+        }
         $data['permission'] = $permission;
         $data['guid'] = $res->guid;
         $data['level'] = $res->level_cn;
@@ -178,6 +184,7 @@ class CustomersService
                 }
             }
         }
+
         return $data;
     }
 
@@ -294,9 +301,24 @@ class CustomersService
     //获取客源动态
     public function getDynamic($request)
     {
+
+        // 判断有无查看带看权限
+        $customer = Access::adoptGuardianPersonGetCustomer('see_customer_visit');
+        $permission = in_array($request->customer_guid, $customer);
+
         $res = CustomerOperationRecord::with('user:guid,name,tel')->where('customer_guid', $request->customer_guid);
-        if (!empty($request->type)) $res = $res->where('type', $request->type);
+
+        // 如果没有权限, 则全部里面不显示带看信息
+        if (!$permission) $res = $res->where('type', '!=', 2);
+
+        // 如果查看带看
+        if (!empty($request->type) && $request->type == 2 && !$permission) {
+            return ['status' => false, 'message' => '无权限查看该客源带看'];
+        } elseif (!empty($request->type)) {
+            $res = $res->where('type', $request->type);
+        }
         $res = $res->latest()->get();
+
         if (empty($res)) return [];
         foreach ($res as $v) {
             // 如果是带看  查询房子的相关信息
@@ -318,7 +340,7 @@ class CustomersService
             }
             $v->remarks = $v->remarks??'';
         }
-        return $res;
+        return ['status' => true, 'message' => $res];
     }
 
     // 获取修改相关权限

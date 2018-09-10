@@ -33,4 +33,16 @@ class TracksController extends APIBaseController
         if (!$res) return $this->sendError('修改跟进信息失败');
         return $this->sendResponse($res,'修改跟进信息成功');
     }
+
+    public function destroy
+    (
+        Track $track,
+        TracksRequest $request,
+        TracksService $service
+    )
+    {
+       $res = $service->delTrack($track, $request);
+       if (!$res['status']) return $this->sendError($res['message']);
+       return $this->sendResponse(true, '跟进删除成功');
+    }
 }

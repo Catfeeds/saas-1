@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Handler\Access;
 use App\Handler\Common;
 use App\Models\Customer;
 use App\Models\CustomerOperationRecord;
@@ -98,6 +99,31 @@ class VisitsService
             \DB::rollback();
             \Log::error('带看修改失败'.$exception->getMessage());
             return false;
+        }
+    }
+
+    // 删除带看、对应的操作记录
+    public function delVisit($visit)
+    {
+        \DB::beginTransaction();
+        try {
+            // 判断权限
+            $customer = Access::adoptGuardianPersonGetCustomer('del_customer_visit');
+            if (!in_array($visit->cover_rel_guid, $customer)) return ['status' => false, 'message' => '无权限删除该客源带看'];
+
+            // 删除对应的操作记录
+            $suc = CustomerOperationRecord::where(['track_guid' => $visit->guid, 'type' =>2 ])->delete();
+            if (!$suc) return ['status' => false , 'message' => '操作记录删除失败'];
+
+            // 删除带看
+            $res = $visit->delete();
+            if (!$res) return ['status' => false, 'message' => '带看删除失败'];
+            \DB::commit();
+            return ['status' => true, 'message' => '带看删除成功'];
+        } catch(\Exception $exception) {
+            \DB::rollback();
+            \Log::error('带看删除失败'.$exception->getMessage());
+            return ['status' => false, 'message' => '带看删除失败'];
         }
     }
 

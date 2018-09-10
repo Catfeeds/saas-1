@@ -51,6 +51,7 @@ class CustomersController extends APIBaseController
         return $this->sendResponse($res, '客源添加成功');
     }
 
+    // 客源详情
     public function show
     (
         $guid,

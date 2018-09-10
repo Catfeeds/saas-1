@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Handler\Access;
 use App\Handler\Common;
+use App\Models\CustomerOperationRecord;
+use App\Models\HouseOperationRecord;
 use App\Models\Track;
 
 class TracksService
@@ -56,6 +59,44 @@ class TracksService
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;
+        }
+    }
+
+    // 删除房源/客源跟进
+    public function delTrack($track, $request)
+    {
+
+        \DB::beginTransaction();
+        try {
+            // 如果是删除房源跟进,判断房源权限
+            if ($request->model_type == 'App\Models\House') {
+                $house = Access::adoptGuardianPersonGetHouse('del_track');
+                if (!in_array($track->rel_guid, $house)) return ['status' => false, 'message' => '无权限删除该房源跟进'];
+
+                // 删除对应的房源操作记录
+                $res = HouseOperationRecord::where('track_guid', $track->guid)->delete();
+                if (!$res) return ['status' => false, 'message' => '房源操作记录删除失败'];
+            }
+
+            // 如果删除客源跟进, 判断客源权限
+            if ($request->model_type == 'App\Models\Customer') {
+                $customer = Access::adoptGuardianPersonGetCustomer('customer_del_track');
+                if (!in_array($track->rel_guid, $customer)) return ['status' => false, 'message' => '无权限删除该客源跟进'];
+
+                // 删除对应的客源操作记录
+                $res = CustomerOperationRecord::where('track_guid', $track->guid)->delete();
+                if (!$res) return ['status' => false, 'message' => '客源操作记录删除失败'];
+            }
+            // 删除跟进
+            $suc = $track->delete();
+            if (!$suc) return ['status' => false, 'message' => '跟进删除失败'];
+
+            \DB::commit();
+            return ['status' => true, 'message' => '跟进删除成功'];
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            \Log::error('跟进删除失败'.$exception->getMessage());
+            return ['status' => false, 'message' => '跟进删除失败'];
         }
     }
 

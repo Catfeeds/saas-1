@@ -16,4 +16,10 @@ class CompanyFramework extends BaseModel
     {
         return $this->hasMany(User::class, 'rel_guid', 'guid');
     }
+    
+    // 通过下级获取上级
+    public function upper()
+    {
+        return $this->belongsTo(CompanyFramework::class, 'parent_guid', 'guid');
+    }
 }

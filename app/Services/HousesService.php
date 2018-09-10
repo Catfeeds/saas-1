@@ -97,7 +97,7 @@ class HousesService
         $houses['orientation'] = $res->orientation_cn; //朝向
         $houses['type'] = $res->type_cn; //类型
         $houses['floor'] = $res->floor. '层'; //楼层
-        $houses['total_floor'] = $res->total_floor?'共' . $res->total_floor . '层': '-' ; //总楼层
+        $houses['total_floor'] = $res->buildingBlock->total_floor?'共' . $res->buildingBlock->total_floor. '层':'-';
         $houses['top'] = $res->top == 1 ? true : false; // 置顶
         $houses['track_user'] = !$res->track->isEmpty() ? $res->track->sortByDesc('created_at')->first()->user->name : optional($res->entryPerson)->name;
         $houses['track_time'] = $res->track_time; //跟进时间
@@ -205,7 +205,7 @@ class HousesService
 
         // 提交钥匙
         $submitKey = Access::adoptGuardianPersonGetHouse('submit_key');
-        if (!in_array($house->guid, $submitKey['message'])) {
+        if (!in_array($house->guid, $submitKey)) {
             $permission['submit_key'] = false; // 是否允许提交钥匙
         }
 

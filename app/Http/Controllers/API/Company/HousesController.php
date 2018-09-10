@@ -60,6 +60,7 @@ class HousesController extends APIBaseController
     )
     {
         $house->allGuid = $service->adoptBuildingBlockGetCity($house->building_block_guid);
+        $house->permission = $service->propertyPermission($house);
         return $this->sendResponse($house,'获取1更新之前原始数据成功');
     }
 

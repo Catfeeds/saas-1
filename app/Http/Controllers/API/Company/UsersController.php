@@ -5,9 +5,12 @@ namespace App\Http\Controllers\API\Company;
 use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\UsersRequest;
+use App\Models\Customer;
+use App\Models\House;
 use App\Models\User;
 use App\Services\LoginsService;
 use App\Services\UserService;
+use Illuminate\Http\Request;
 
 class UsersController extends APIBaseController
 {
@@ -43,36 +46,42 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res,'修改用户修改成功');
     }
 
-    // 删除用户 TODO 必须移除所有相关数据维护人,不可恢复
+    // 删除用户
     public function destroy
     (
         User $user,
         UserService $service
     )
     {
+        // 验证该用户是否还有资源
+        $validate = $this->getUserHouseCustomer($user->guid);
+        if (empty($validate)) return $this->sendError('请转移该用户手上的资源在进行离职操作');
         $res = $service->del($user);
         return $this->sendResponse($res,'删除用户成功');
     }
 
-    // 冻结用户 TODO 所有相关信息保留,可以恢复
+    // 冻结用户
     public function freeze
     (
-        $guid,
+        UsersRequest $request,
         UserService $service
     )
     {
-        $res = $service->freeze($guid);
+        $res = $service->freeze($request->guid);
         return $this->sendResponse($res,'冻结成功');
     }
 
-    // 人员离职 TODO 必须移除所有相关数据维护人
+    // 人员离职
     public function resignation
     (
-        $guid,
+        UsersRequest $request,
         UserService $service
     )
     {
-        $res = $service->resignation($guid);
+        // 验证该用户是否还有资源
+        $validate = $this->getUserHouseCustomer($request->guid);
+        if (empty($validate)) return $this->sendError('请转移该用户手上的资源在进行离职操作');
+        $res = $service->resignation($request->guid);
         return $this->sendResponse($res, '离职成功');
     }
 
@@ -167,8 +176,7 @@ class UsersController extends APIBaseController
         if (!$res['status']) return $this->sendError($res['message']);
         return $this->sendResponse(true, $res['message']);
     }
-
-
+    
     // 获取公司下所有人员
     public function getAllUser(
         UserService $service,
@@ -185,5 +193,27 @@ class UsersController extends APIBaseController
                 'storefront' => empty($v->companyFramework)?'':$v->companyFramework->name
             ];
         }),'获取公司下所有人员成功');
+    }
+
+    // 获取用户房源,客源资源数据
+    public function getUserHouseCustomer(
+        $guid
+    )
+    {
+        // 查询房源
+        $house = House::where([
+            'guardian_person' => $guid,
+            'status' => 1
+        ])->get();
+        if (!$house->isEmpty()) return false;
+
+        // 查询客户
+        $customer = Customer::where([
+            'guardian_person' => $guid,
+            'status' => 1
+        ])->get();
+        if (!$customer->isEmpty()) return false;
+
+        return true;
     }
 }

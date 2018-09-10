@@ -40,6 +40,11 @@ class UsersRequest extends FormRequest
                 return [
                     'tel.in' => '用户必须存在',
                 ];
+            case 'freeze':
+            case 'resignation':
+                return [
+                    'guid.in' => '用户必须存在',
+                ];
             default:
                 return [
 
@@ -111,6 +116,17 @@ class UsersRequest extends FormRequest
                         'max:16',
                         Rule::in(
                             User::all()->pluck('tel')->toArray()
+                        )
+                    ]
+                ];
+            case 'freeze':
+            case 'resignation':
+                return [
+                    'guid' => [
+                        'required',
+                        'max:64',
+                        Rule::in(
+                            User::all()->pluck('guid')->toArray()
                         )
                     ]
                 ];

@@ -19,6 +19,8 @@ class CompanyFrameworksService
             // 获取区域下组guid
             $groupGuid = CompanyFramework::whereIn('parent_guid', $storefrontGuid)->pluck('guid')->toArray();
             $guid = array_merge($storefrontGuid, $groupGuid);
+            // 区域
+            $guid[] = $request->area_guid;
             return User::whereIn('rel_guid', $guid)->with(['role', 'companyFramework'])->paginate($request->per_page??10);
         } elseif($request->storefront_guid) {
             // 获取门店下组guid

@@ -71,7 +71,7 @@ class Access{
             // 组所有guid
             $groupGuid = CompanyFramework::whereIn('parent_guid', $storefrontGuid)->pluck('guid')->toArray();
 
-            $guids = array_merge($storefrontGuid, $groupGuid);
+            $guids = array_merge($storefrontGuid, $groupGuid, $areaGuid);
 
             $res =  User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 3) {

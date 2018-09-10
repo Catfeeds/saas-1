@@ -96,6 +96,8 @@ class Access{
         } elseif ($actionScope == 5) {
             // 个人
             $res = array($guid);
+        } elseif ($actionScope == 6) {
+            $res = array();
         }
 
         $res[] = $guid;

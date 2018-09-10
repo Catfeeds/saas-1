@@ -22,7 +22,7 @@ class BuildingBlock extends BaseModel
     public function getPropertyFeeCnAttribute()
     {
         if (empty($this->property_fee)) return '暂无';
-        return $this->property_fee.'元/平';
+        return $this->property_fee.'元/㎡';
     }
     
 }

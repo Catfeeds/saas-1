@@ -39,7 +39,6 @@ class HousesRepository extends Model
             'acreage' => $request->acreage,//面积
             'split' => $request->split,//可拆分
             'mini_acreage' => $request->mini_acreage,//最小面积
-            'total_floor' => $request->total_floor,//总楼层
             'floor_height' => $request->floor_height,//层高
             'register_company' => $request->register_company,//注册公司
             'type' => $request->type,//写字楼类型
@@ -79,7 +78,6 @@ class HousesRepository extends Model
         $house->acreage = $request->acreage;
         $house->split = $request->split;
         $house->mini_acreage = $request->mini_acreage;
-        $house->total_floor = $request->total_floor;
         $house->floor_height = $request->floor_height;
         $house->register_company = $request->register_company;
         $house->type = $request->type;

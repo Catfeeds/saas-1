@@ -338,7 +338,7 @@ class HousesService
         $data['increasing_situation_remark'] = $house->increasing_situation_remark; // 递增情况
         $data['split'] = $house->split_cn; // 拆分
         $data['mini_acreage'] = empty($house->mini_acreage)?'暂无':$house->mini_acreage.'㎡'; // 最小面积
-        $data['floor_height'] = empty($house->floor_height)?'暂无':$house->floor_height.'米'; // 层高
+        $data['floor_height'] = empty($house->floor_height)?'暂无':$house->floor_height.'m'; // 层高
         $data['property_fee'] = $house->buildingBlock->property_fee_cn; // 物业费
         $data['register_company'] = $house->register_company_cn; // 是否注册
         $data['open_bill'] = $house->open_bill_cn; // 可开发票
@@ -659,6 +659,7 @@ class HousesService
             return false;
         }
     }
+
     // 房源权限
     public function propertyPermission($house)
     {

@@ -27,7 +27,7 @@ class QuartersController extends APIBaseController
         return $this->sendResponse($res,'添加角色成功');
     }
 
-    //修改角色名称
+    // 修改角色名称
     public function updateRoleName
     (
         QuartersRequest $request,
@@ -38,7 +38,7 @@ class QuartersController extends APIBaseController
         return $this->sendResponse($res,'修改角色名称成功');
     }
 
-    //修改角色级别
+    // 修改角色级别
     public function updateRoleLevel
     (
         QuartersRequest $request,

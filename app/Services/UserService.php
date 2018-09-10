@@ -109,15 +109,16 @@ class UserService
     }
 
     // 冻结用户
-    public function freeze($guid)
+    public function freeze($request)
     {
-        return User::where(['guid' => $guid])->update(['status' => 3]);
+        return User::where(['guid' => $request->guid])->update(['status' => $request->status]);
     }
     
     // 人员离职
-    public function resignation($guid)
+    public function resignation($request)
+
     {
-        return User::where(['guid' => $guid])->update(['status' => 2]);
+        return User::where(['guid' => $request->guid])->update(['status' => $request->status]);
     }
 
     // 获取公司下的全部岗位

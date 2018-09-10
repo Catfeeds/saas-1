@@ -32,12 +32,12 @@ class UsersController extends APIBaseController
         $user->detailInfo;
         $user->level = optional(optional($user)->role)->level;
 
-        // 人员组织架构
-        $user->two_name = $user->companyFramework->name;
-        $user->two_guid = $user->companyFramework->guid;
+        // 二级组织
+        $user->second_name = optional($user->companyFramework)->name;
+        $user->second_guid = optional($user->companyFramework)->guid;
         // 一级组织
-        $user->one_guid = optional($user->companyFramework->upper)->guid;
-        $user->one_name = optional($user->companyFramework->upper)->name;
+        $user->first_guid = optional(optional($user->companyFramework)->upper)->guid;
+        $user->first_name = optional(optional($user->companyFramework)->upper)->name;
         return $this->sendResponse($user, '员工修改之前原始数据');
     }
 

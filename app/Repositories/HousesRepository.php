@@ -63,34 +63,50 @@ class HousesRepository extends Model
     // 更新房源
     public function updateHouse($house, $request)
     {
-        $house->house_type = 1;
-        $house->owner_info = $request->owner_info;
-        $house->floor = $request->floor;
-        $house->house_number = $request->house_number;
-        $house->building_block_guid = $request->building_block_guid;
-        $house->grade = $request->grade;
-        $house->public_private = $request->public_private;
-        $house->price = $request->price;
-        $house->price_unit = $request->price_unit;
-        $house->payment_type = $request->payment_type;
-        $house->increasing_situation_remark = $request->increasing_situation_remark;
-        $house->cost_detail = Common::arrayToObject($request->cost_detail);
-        $house->acreage = $request->acreage;
-        $house->split = $request->split;
-        $house->mini_acreage = $request->mini_acreage;
-        $house->floor_height = $request->floor_height;
-        $house->register_company = $request->register_company;
-        $house->type = $request->type;
-        $house->orientation = $request->orientation;
-        $house->renovation = $request->renovation;
-        $house->open_bill = $request->open_bill;
-        $house->station_number = $request->station_number;
-        $house->rent_free = $request->rent_free;
-        $house->support_facilities = Common::arrayToObject($request->support_facilities);
-        $house->source = $request->source;
-        $house->actuality = $request->actuality;
-        $house->shortest_lease = $request->shortest_lease;
-        $house->remarks = $request->remarks;
+        if ($house->permission['edit_owner_info']) {
+            $house->owner_info = $request->owner_info;
+        }
+
+        if ($house->permission['update_house_number']) {
+            $house->floor = $request->floor;
+            $house->house_number = $request->house_number;
+            $house->building_block_guid = $request->building_block_guid;
+        }
+
+        if ($house->permission['update_house_grade']) {
+            $house->grade = $request->grade;
+        }
+
+        if ($house->permission['update_house_price']) {
+            $house->price = $request->price;
+            $house->price_unit = $request->price_unit;
+        }
+
+        if ($house->permission['update_house_other']) {
+            $house->house_type = 1;
+            $house->public_private = $request->public_private;
+            $house->payment_type = $request->payment_type;
+            $house->increasing_situation_remark = $request->increasing_situation_remark;
+            $house->cost_detail = Common::arrayToObject($request->cost_detail);
+            $house->acreage = $request->acreage;
+            $house->split = $request->split;
+            $house->mini_acreage = $request->mini_acreage;
+            $house->total_floor = $request->total_floor;
+            $house->floor_height = $request->floor_height;
+            $house->register_company = $request->register_company;
+            $house->type = $request->type;
+            $house->orientation = $request->orientation;
+            $house->renovation = $request->renovation;
+            $house->open_bill = $request->open_bill;
+            $house->station_number = $request->station_number;
+            $house->rent_free = $request->rent_free;
+            $house->support_facilities = Common::arrayToObject($request->support_facilities);
+            $house->source = $request->source;
+            $house->actuality = $request->actuality;
+            $house->shortest_lease = $request->shortest_lease;
+            $house->remarks = $request->remarks;
+        }
+
         $house->guardian_person = Common::user()->guid;
         if (!$house->save()) return false;
         return true;

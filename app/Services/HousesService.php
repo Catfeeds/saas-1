@@ -168,6 +168,7 @@ class HousesService
         $permission['private_owner_info'] = true; // 是否允许查看业主信息
         $permission['upload_pic'] = true; // 是否上传图片
         $permission['edit_pic'] = true; // 是否允许编辑图片
+        $permission['submit_key'] = true; // 是否允许提交钥匙
         $permission['edit_return_key'] = true; // 是否允许编辑/退换钥匙
         $permission['see_documents'] = true; // 是否允许查看相关证件
         $permission['update_house_status'] = true; // 是否允许修改状态(转为无效)
@@ -200,6 +201,12 @@ class HousesService
         $editPicture = Access::adoptGuardianPersonGetHouse('edit_pic');
         if (!in_array($house->guid, $editPicture)) {
             $permission['edit_pic'] = false; // 是否允许编辑图片
+        }
+
+        // 提交钥匙
+        $submitKey = Access::adoptGuardianPersonGetHouse('submit_key');
+        if (!in_array($house->guid, $submitKey['message'])) {
+            $permission['submit_key'] = false; // 是否允许提交钥匙
         }
 
         // 看房方式

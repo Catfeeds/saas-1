@@ -244,5 +244,138 @@ class PermissionSeeder extends Seeder
             'name' => '房源-列表展示',
             'name_en' => 'house_list'
         ]);
+
+        // 客源
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源',
+            'name_en' => 'customer'
+        ]);
+
+        // 私客上限
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-私客上限',
+            'name_en' => 'private_customer_most'
+        ]);
+
+        // 公客展示范围
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-公客展示范围',
+            'name_en' => 'public_customer_show'
+        ]);
+
+        // 私客展示范围
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-私客展示范围',
+            'name_en' => 'private_customer_show'
+        ]);
+
+        // 公客转为私客
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-公客转为私客',
+            'name_en' => 'public_change_private'
+        ]);
+
+        // 私客转为公客
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-私客转为公客',
+            'name_en' => 'private_change_public'
+        ]);
+
+        // 电脑端公盘
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-电脑端公盘',
+            'name_en' => 'pc_public_customer'
+        ]);
+
+        // 私客查看范围
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-私客查看范围',
+            'name_en' => 'private_see_range'
+        ]);
+
+        // 联系方式
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-联系方式',
+            'name_en' => 'customer_contact_way'
+        ]);
+
+        // 客源等级
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-客源等级',
+            'name_en' => 'update_customer_grade'
+        ]);
+
+        // 其他信息
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-其他信息',
+            'name_en' => 'update_customer_other'
+        ]);
+
+        // 录入人
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-录入人',
+            'name_en' => 'set_customer_entry_person'
+        ]);
+
+        // 维护人
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-维护人',
+            'name_en' => 'set_customer_guardian_person'
+        ]);
+
+        // 转为无效
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-转为无效',
+            'name_en' => 'customer_change_invalid'
+        ]);
+
+        // 查看联系方式写跟进
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-查看联系方式写跟进',
+            'name_en' => 'customer_write_follow_up'
+        ]);
+        
+        // 删除跟进
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-删除跟进',
+            'name_en' => 'customer_del_track'
+        ]);
+
+        // 查看带看
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-查看带看',
+            'name_en' => 'see_customer_visit'
+        ]);
+
+        // 删除带看
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-删除带看',
+            'name_en' => 'del_customer_visit'
+        ]);
+
+        // 删除客源
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-删除客源',
+            'name_en' => 'del_customer'
+        ]);
     }
 }

@@ -116,7 +116,7 @@ class House extends BaseModel
     // 室内图
     public function getIndoorImgCnAttribute()
     {
-        return $this->indoor_img?config('setting.qiniu_url').$this->indoor_img[0]. config('setting.qiniu_suffix'):config('setting.pc_building_house_default_img');
+        return $this->indoor_img?config('setting.qiniu_url').$this->indoor_img[0]:config('setting.pc_building_house_default_img');
     }
 
     // 公私盘中文
@@ -369,7 +369,7 @@ class House extends BaseModel
         return collect($this->relevant_proves_img)->map(function ($img) {
             return [
                 'name' => $img,
-                'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
+                'url' => config('setting.qiniu_url') . $img,
             ];
         })->values();
     }
@@ -380,7 +380,7 @@ class House extends BaseModel
         return collect($this->indoor_img)->map(function ($img) {
             return [
                 'name' => $img,
-                'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
+                'url' => config('setting.qiniu_url') . $img,
             ];
         })->values();
     }
@@ -391,7 +391,7 @@ class House extends BaseModel
         return collect($this->house_type_img)->map(function ($img) {
             return [
                 'name' => $img,
-                'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
+                'url' => config('setting.qiniu_url') . $img,
             ];
         })->values();
     }
@@ -402,7 +402,7 @@ class House extends BaseModel
         return collect($this->outdoor_img)->map(function ($img) {
             return [
                 'name' => $img,
-                'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
+                'url' => config('setting.qiniu_url') . $img,
             ];
         })->values();
     }

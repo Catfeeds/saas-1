@@ -95,6 +95,24 @@ class CustomersService
         $data['entry_person'] = $res->entryPerson;  // 录入人信息
         $data['guardian_person'] = $res->guardianPerson; // 维护人
         $data['created_at'] = $res->created_at->format('Y-m-d H:i:s');
+        $data['public_change_private'] = true;//是否有公客转私客权限
+        $data['private_change_public'] = true;//是否有私客转公客权限
+        $data['customer_change_invalid'] = true;//是否有转为无效权限
+
+        $publicChangePrivate = Access::adoptGuardianPersonGetHouse('public_change_private');
+        if (!in_array($guid,$publicChangePrivate)) {
+            $data['public_change_private'] = false;
+        }
+
+        $privateChangePublic = Access::adoptGuardianPersonGetHouse('private_change_public');
+        if (!in_array($guid,$privateChangePublic)) {
+            $data['private_change_public'] = false;
+        }
+
+        $customerChangeInvalid = Access::adoptGuardianPersonGetHouse('customer_change_invalid');
+        if (!in_array($guid,$customerChangeInvalid)) {
+            $data['customer_change_invalid'] = false;
+        }
 
         // 获取动态(跟进,带看) 最新4条数据
         $item = CustomerOperationRecord::where('customer_guid', $guid)

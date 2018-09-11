@@ -44,9 +44,6 @@ class QuartersService
     //添加角色
     public function addRole($request)
     {
-        //获取全部权限
-        $permissionId = Permission::all()->pluck('guid')->toArray();
-
         \DB::beginTransaction();
         try {
             $role = Role::create([
@@ -62,8 +59,6 @@ class QuartersService
 
             $res = self::defaultPermissions($request);
             if (empty($res)) throw new \Exception('岗位级别修改失败');
-
-
             \DB::commit();
             return true;
         } catch (\Exception $exception) {
@@ -71,7 +66,6 @@ class QuartersService
             \Log::error('角色添加失败'.$exception->getMessage());
             return false;
         }
-
     }
 
     // 修改角色名称

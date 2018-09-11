@@ -125,7 +125,6 @@ class CustomersService
         if ($res->guest == 2) {
             $privateCustomerShow = Access::adoptGuardianPersonGetCustomer('private_customer_show');
             if (!in_array($guid,$privateCustomerShow)) $permission['private_customer_show'] = false;
-        } else {
             $permission['private_customer_show'] = true; // 私客查看范围
         }
 

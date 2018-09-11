@@ -96,13 +96,13 @@ class CustomersService
         $permission['visit_permission'] = true; // 是否允许带看
         $permission['edit_customer'] = true; // 是否允许编辑客源
 
-        $publicChangePrivate = Access::adoptGuardianPersonGetHouse('public_change_private');
+        $publicChangePrivate = Access::adoptGuardianPersonGetCustomer('public_change_private');
         if (!in_array($guid,$publicChangePrivate)) $permission['public_change_private'] = false;
 
-        $privateChangePublic = Access::adoptGuardianPersonGetHouse('private_change_public');
+        $privateChangePublic = Access::adoptGuardianPersonGetCustomer('private_change_public');
         if (!in_array($guid,$privateChangePublic)) $permission['private_change_public'] = false;
 
-        $customerChangeInvalid = Access::adoptGuardianPersonGetHouse('customer_change_invalid');
+        $customerChangeInvalid = Access::adoptGuardianPersonGetCustomer('customer_change_invalid');
         if (!in_array($guid,$customerChangeInvalid)) $permission['customer_change_invalid'] = false;
 
         // 判断是否有修改录入人权限

@@ -16,7 +16,7 @@ class QuartersService
         $this->user = Common::user();
     }
 
-    //岗位设置列表
+    // 岗位设置列表
     public function roleHasPermissionList()
     {
         $res = Role::where('company_guid', $this->user->company_guid)
@@ -41,7 +41,7 @@ class QuartersService
         return $datas;
     }
 
-    //添加角色
+    // 添加角色
     public function addRole($request)
     {
         \DB::beginTransaction();
@@ -104,7 +104,7 @@ class QuartersService
         ]);
     }
 
-    //删除角色及相关权限关联
+    // 删除角色及相关权限关联
     public function delRole($guid)
     {
         $role = Role::where('guid', $guid)->first();
@@ -150,9 +150,9 @@ class QuartersService
                     'guid' => Common::getUuid(),
                     'role_guid' => $request->role_guid,
                     'permission_guid' => $permissionGuid,
-                    'action_scope' => $request->action_scope,
-                    'operation_number' => $request->operation_number,
-                    'follow_up' => $request->follow_up,
+                    'action_scope' => $v['action_scope'],
+                    'operation_number' => $v['operation_number'],
+                    'follow_up' => $v['follow_up'],
                     'status' => 1
                 ]);
                 if (empty($roleHasPermission)) return false;

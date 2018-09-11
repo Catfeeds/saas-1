@@ -35,7 +35,8 @@ class House extends BaseModel
         'indoor_img_url',
         'house_type_img_url',
         'outdoor_img_url',
-        'status_cn'
+        'status_cn',
+        'lower_cn'
     ];
 
     // 房源关联钥匙
@@ -90,6 +91,18 @@ class House extends BaseModel
     public function seeHouseWay()
     {
         return $this->belongsTo('App\Models\SeeHouseWay','guid','house_guid');
+    }
+
+    // 关联共享记录
+    public function shareRecord()
+    {
+        return $this->hasMany(HouseShareRecord::class, 'house_guid', 'guid')->orderBy('created_at', 'desc');
+    }
+
+    // 房子关联公司
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_guid', 'guid');
     }
 
     // 价格单位   price_unit_cn
@@ -427,10 +440,23 @@ class House extends BaseModel
         }
     }
 
-    // 关联共享记录
-    public function shareRecord()
+
+
+
+    // 下架中文 lower_cn
+    public function getLowerCnAttribute()
     {
-        return $this->hasMany(HouseShareRecord::class, 'house_guid', 'guid');
+        switch ($this->lower_frame) {
+            case 1:
+                return '平台下架';
+                break;
+            case 2:
+                return '自主下架';
+                break;
+                default;
+                break;
+        }
     }
+    
     
 }

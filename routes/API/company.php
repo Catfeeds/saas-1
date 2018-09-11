@@ -160,7 +160,14 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     |--------------------------------------------------------------------------
     */
 
+    // 共享房源
     Route::resource('shares', 'SharesController');
+
+    // 公司共享
+    Route::get('company_shares', 'SharesController@companyShares');
+
+    // 公司共享房源详情
+    Route::get('company_show', 'SharesController@companyShow');
 
     /*
     |--------------------------------------------------------------------------

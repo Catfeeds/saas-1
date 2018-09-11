@@ -753,7 +753,7 @@ class HousesService
             $res = House::where('guid', $request->guid)->update([
                 'release_source' => null,
                 'share' => 2,
-                'lower_frame' => '自主下架'
+                'lower_frame' => 2
             ]);
             if (!$res) throw new \Exception('房源下架失败');
 

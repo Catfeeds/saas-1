@@ -66,6 +66,11 @@ class CreateHousesTable extends Migration
             $table->char('pic_person',32)->nullable()->comment('图片人');
             $table->char('key_person',32)->nullable()->comment('钥匙人');
 
+            // 房源共享
+            $table->string('release_source', 32)->nullable()->comment('发布来源(平台/公司guid)');
+            $table->tinyInteger('share')->nullable()->comment('是否共享 1: 共享 2: 不共享');
+            $table->tinyInteger('lower_frame')->nullable()->comment('下架 1: 平台下架 2: 自主下架');
+
             // 有无钥匙
             $table->tinyInteger('have_key')->default(2)->comment('有无钥匙 1: 有 2: 没有');
             // 房源状态

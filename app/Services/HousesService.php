@@ -7,6 +7,8 @@ use App\Handler\Common;
 use App\Models\BuildingBlock;
 use App\Models\House;
 use App\Models\HouseOperationRecord;
+use App\Models\Permission;
+use App\Models\RoleHasPermission;
 use App\Models\SeeHouseWay;
 use App\Models\User;
 

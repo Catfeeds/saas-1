@@ -93,6 +93,18 @@ class House extends BaseModel
         return $this->belongsTo('App\Models\SeeHouseWay','guid','house_guid');
     }
 
+    // 关联共享记录
+    public function shareRecord()
+    {
+        return $this->hasMany(HouseShareRecord::class, 'house_guid', 'guid')->orderBy('created_at', 'desc');
+    }
+
+    // 房子关联公司
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_guid', 'guid');
+    }
+
     // 价格单位   price_unit_cn
     public function getPriceUnitCnAttribute()
     {
@@ -428,11 +440,7 @@ class House extends BaseModel
         }
     }
 
-    // 关联共享记录
-    public function shareRecord()
-    {
-        return $this->hasMany(HouseShareRecord::class, 'house_guid', 'guid')->orderBy('created_at', 'desc');
-    }
+
 
 
     // 下架中文 lower_cn

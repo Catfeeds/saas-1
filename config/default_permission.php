@@ -314,6 +314,12 @@ return [
             'operation_number' => null,
             'follow_up' => null,
         ],
+        [
+            'name_en' => 'edit_customer',// 客源-编辑客源
+            'action_scope' => 1,
+            'operation_number' => null,
+            'follow_up' => null,
+        ],
     ],
 
     'area' => [
@@ -626,6 +632,12 @@ return [
         [
             'name_en' => 'del_customer',// 客源-删除客源
             'action_scope' => 6,
+            'operation_number' => null,
+            'follow_up' => null,
+        ],
+        [
+            'name_en' => 'edit_customer',// 客源-编辑客源
+            'action_scope' => 2,
             'operation_number' => null,
             'follow_up' => null,
         ],
@@ -944,6 +956,12 @@ return [
             'operation_number' => null,
             'follow_up' => null,
         ],
+        [
+            'name_en' => 'edit_customer',// 客源-编辑客源
+            'action_scope' => 3,
+            'operation_number' => null,
+            'follow_up' => null,
+        ],
     ],
 
     'grouping' => [
@@ -1259,6 +1277,12 @@ return [
             'operation_number' => null,
             'follow_up' => null,
         ],
+        [
+            'name_en' => 'edit_customer',// 客源-编辑客源
+            'action_scope' => 4,
+            'operation_number' => null,
+            'follow_up' => null,
+        ],
     ],
 
     'personal' => [
@@ -1571,6 +1595,12 @@ return [
         [
             'name_en' => 'del_customer',// 客源-删除客源
             'action_scope' => 6,
+            'operation_number' => null,
+            'follow_up' => null,
+        ],
+        [
+            'name_en' => 'edit_customer',// 客源-编辑客源
+            'action_scope' => 5,
             'operation_number' => null,
             'follow_up' => null,
         ],

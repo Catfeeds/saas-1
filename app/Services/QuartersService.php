@@ -16,7 +16,7 @@ class QuartersService
         $this->user = Common::user();
     }
 
-    //岗位设置列表
+    // 岗位设置列表
     public function roleHasPermissionList()
     {
         $res = Role::where('company_guid', $this->user->company_guid)
@@ -41,12 +41,9 @@ class QuartersService
         return $datas;
     }
 
-    //添加角色
+    // 添加角色
     public function addRole($request)
     {
-        //获取全部权限
-        $permissionId = Permission::all()->pluck('guid')->toArray();
-
         \DB::beginTransaction();
         try {
             $role = Role::create([
@@ -55,18 +52,13 @@ class QuartersService
                 'name' => $request->name,
                 'level' => $request->level
             ]);
+            if (empty($role)) throw new \Exception('添加角色失败');
 
-            foreach ($permissionId as $v) {
-                RoleHasPermission::create([
-                    'guid' => Common::getUuid(),
-                    'role_guid' => $role->guid,
-                    'permission_guid' => $v,
-                    'action_scope' => $role->level,
-                    'operation_number' => 30,
-                    'follow_up' => 1
-                ]);
-            }
+            // 设置参数
+            $request->offsetSet('role_guid', $role->guid);
 
+            $res = self::defaultPermissions($request);
+            if (empty($res)) throw new \Exception('岗位级别修改失败');
             \DB::commit();
             return true;
         } catch (\Exception $exception) {
@@ -74,7 +66,6 @@ class QuartersService
             \Log::error('角色添加失败'.$exception->getMessage());
             return false;
         }
-
     }
 
     // 修改角色名称
@@ -113,7 +104,7 @@ class QuartersService
         ]);
     }
 
-    //删除角色及相关权限关联
+    // 删除角色及相关权限关联
     public function delRole($guid)
     {
         $role = Role::where('guid', $guid)->first();
@@ -131,7 +122,7 @@ class QuartersService
     }
 
     // 默认权限
-    public function defaultPermissions(
+    public static function defaultPermissions(
         $request
     )
     {
@@ -149,17 +140,29 @@ class QuartersService
         }
 
         foreach ($permissions as $v) {
+            $permissionGuid = Permission::where('name_en', $v['name_en'])->first()->guid;
             $res = RoleHasPermission::where([
                 'role_guid' => $request->guid,
-                'permission_guid' => Permission::where('name_en', $v['name_en'])->first()->guid
-            ])->update([
-                'action_scope' => $v['action_scope'],
-                'operation_number' => $v['operation_number'],
-                'follow_up' => $v['follow_up'],
-                'status' => 1
-            ]);
-
-            if (empty($res)) return false;
+                'permission_guid' => $permissionGuid
+            ])->first();
+            if (empty($res)) {
+                $roleHasPermission = RoleHasPermission::create([
+                    'guid' => Common::getUuid(),
+                    'role_guid' => $request->role_guid,
+                    'permission_guid' => $permissionGuid,
+                    'action_scope' => $v['action_scope'],
+                    'operation_number' => $v['operation_number'],
+                    'follow_up' => $v['follow_up'],
+                    'status' => 1
+                ]);
+                if (empty($roleHasPermission)) return false;
+            } else {
+                $res->action_scope = $v['action_scope'];
+                $res->operation_number = $v['operation_number'];
+                $res->follow_up = $v['follow_up'];
+                $res->status = 1;
+                if (empty($res->save())) return false;
+            }
         }
 
         return true;

@@ -169,7 +169,6 @@ class HousesService
     // 房源详情数据处理
     public function getHouseInfo($house)
     {
-        $permission['private_owner_info'] = true; // 是否允许查看业主信息
         $permission['upload_pic'] = true; // 是否上传图片
         $permission['edit_pic'] = true; // 是否允许编辑图片
         $permission['submit_key'] = true; // 是否允许提交钥匙
@@ -190,9 +189,8 @@ class HousesService
         if ($house->public_private == 1) {
             // 获取私盘业主信息
             $ownerInfo = Access::adoptGuardianPersonGetHouse('private_owner_info');
-            if (!in_array($house->guid, $ownerInfo)) {
-                $permission['private_owner_info'] = false; // 是否允许查看业主信息
-            }
+            if (!in_array($house->guid, $ownerInfo)) $permission['private_owner_info'] = false; // 是否允许查看业主信息
+            $permission['private_owner_info'] = true; // 是否允许查看业主信息
         }
 
         // 上传图片
@@ -595,6 +593,14 @@ class HousesService
         \DB::beginTransaction();
         try {
             $house = House::where('guid',$request->guid)->first();
+
+            // 判断是否有权限
+            if ($house->public_private == 1) {
+                // 获取私盘业主信息
+                $ownerInfo = Access::adoptGuardianPersonGetHouse('private_owner_info');
+                if (!in_array($request->guid, $ownerInfo)) throw new \Exception('暂无权限');
+            }
+
             $data = [];
             if (empty($house->buildingBlock->unit)) {
                 $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;

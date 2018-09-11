@@ -21,17 +21,17 @@ class CompanyFrameworksService
             $guid = array_merge($storefrontGuid, $groupGuid);
             // 区域
             $guid[] = $request->area_guid;
-            return User::whereIn('rel_guid', $guid)->with(['role', 'companyFramework'])->paginate($request->per_page??10);
+            return User::whereIn('rel_guid', $guid)->with(['role', 'companyFramework'])->paginate($request->per_page??20);
         } elseif($request->storefront_guid) {
             // 获取门店下组guid
             $storefrontGuid = CompanyFramework::where('parent_guid', $request->storefront_guid)->pluck('guid')->toArray();
             // 将门店guid拼接到关联数据中
             $storefrontGuid[] = $request->storefront_guid;
-            return User::whereIn('rel_guid', $storefrontGuid)->with(['role', 'companyFramework'])->paginate($request->per_page??10);
+            return User::whereIn('rel_guid', $storefrontGuid)->with(['role', 'companyFramework'])->paginate($request->per_page??20);
         } elseif($request->group_guid) {
-            return User::where('rel_guid', $request->group_guid)->with(['role', 'companyFramework'])->paginate($request->per_page??10);
+            return User::where('rel_guid', $request->group_guid)->with(['role', 'companyFramework'])->paginate($request->per_page??20);
         } else {
-            return User::where('company_guid', Common::user()->company_guid)->with(['role', 'companyFramework'])->paginate($request->per_page??10);
+            return User::where('company_guid', Common::user()->company_guid)->with(['role', 'companyFramework'])->paginate($request->per_page??20);
         }
     }
 

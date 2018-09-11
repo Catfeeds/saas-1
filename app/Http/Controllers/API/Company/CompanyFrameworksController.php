@@ -12,7 +12,7 @@ use App\Models\CompanyFramework;
 
 class CompanyFrameworksController extends APIBaseController
 {
-    //片区,门店,分组 3级菜单
+    // 片区,门店,分组 3级菜单
     public function index
     (
         CompanyFrameworksRepository $repository

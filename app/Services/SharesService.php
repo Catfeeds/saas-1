@@ -28,6 +28,11 @@ class SharesService
             $houses[$key]['floor'] = $v->floor. '层'; //楼层
             $houses[$key]['total_floor'] = $v->buildingBlock->total_floor?'共' . $v->buildingBlock->total_floor. '层':'-';
             $houses[$key]['share'] = $v->lower_frame ? $v->lower_frame : optional($v->shareRecord->sortByDesc('created_at')->first())->remarks;
+            if ($v->share == 1) {
+                $houses[$key]['share'] = optional($v->shareRecord->sortByDesc('created_at')->first())->remarks;
+           } elseif ($v->share == 2) {
+                $houses[$key]['share'] = $v->lower_cn;
+            }
         }
         return $res->setCollection(collect($houses));
     }
@@ -35,7 +40,7 @@ class SharesService
     // 共享房源详情
     public function getInfo($guid)
     {
-        $house = House::where('guid', $guid)->with(['buildingBlock', 'buildingBlock.building'])->first();
+        $house = House::where('guid', $guid)->with(['buildingBlock', 'buildingBlock.building', 'shareRecord'])->first();
         $data = [];
         $data['img'] = $house->indoor_img_cn; // 图片
         $data['indoor_img'] = $house->indoor_img; // 室内图未处理
@@ -79,14 +84,13 @@ class SharesService
         $data['rent_free'] = empty($house->rent_free)?'暂无':$house->rent_free.'天'; // 免租期
         $data['shortest_lease'] = $house->shortest_lease??'暂无'; // 最短租期
         $data['support_facilities'] = empty($house->support_facilities)?'暂无':implode(',',$house->support_facilities); // 配套设施
-
         if ($house->share == 1) {
-            // 如果为上架
+            // 上架
             $data['share'] = $house->share;  // 标识
             $data['share_info'] = $house->shareRecord->sortByDesc('created_at')->first()->remarks; // 信息
         } else {
-            // 否则为下架
-            $data['share_info'] = $house->shareRecord->sortByAsc('created_at')->get();
+            // 下架
+            $data['share_info'] = $house->shareRecord;
         }
         return $data;
     }

@@ -35,7 +35,8 @@ class House extends BaseModel
         'indoor_img_url',
         'house_type_img_url',
         'outdoor_img_url',
-        'status_cn'
+        'status_cn',
+        'lower_cn'
     ];
 
     // 房源关联钥匙
@@ -430,7 +431,24 @@ class House extends BaseModel
     // 关联共享记录
     public function shareRecord()
     {
-        return $this->hasMany(HouseShareRecord::class, 'house_guid', 'guid');
+        return $this->hasMany(HouseShareRecord::class, 'house_guid', 'guid')->orderBy('created_at', 'acs');
     }
+
+
+    // 下架中文 lower_cn
+    public function getLowerCnAttribute()
+    {
+        switch ($this->lower_frame) {
+            case 1:
+                return '平台下架';
+                break;
+            case 2:
+                return '自主下架';
+                break;
+                default;
+                break;
+        }
+    }
+    
     
 }

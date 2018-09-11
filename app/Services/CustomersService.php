@@ -95,6 +95,7 @@ class CustomersService
         $permission['guardian_person'] = true; // 是否有修改维护人的权限
         $permission['visit_permission'] = true; // 是否允许带看
         $permission['edit_customer'] = true; // 是否允许编辑客源
+
         $publicChangePrivate = Access::adoptGuardianPersonGetHouse('public_change_private');
         if (!in_array($guid,$publicChangePrivate)) $permission['public_change_private'] = false;
 
@@ -119,6 +120,14 @@ class CustomersService
         // 是否允许编辑客源
         $editCustomer = Access::adoptGuardianPersonGetCustomer('edit_customer');
         if (!in_array($guid,$editCustomer)) $permission['edit_customer'] = false;
+
+        // 私客查看范围
+        if ($res->guest == 2) {
+            $privateCustomerShow = Access::adoptGuardianPersonGetCustomer('private_customer_show');
+            if (!in_array($guid,$privateCustomerShow)) $permission['private_customer_show'] = false;
+        } else {
+            $permission['private_customer_show'] = true; // 私客查看范围
+        }
 
         $data = [];
         $data['permission'] = $permission;
@@ -288,14 +297,20 @@ class CustomersService
     {
         \DB::beginTransaction();
         try {
-            $customer_info = Customer::where(['guid' => $request->guid])->pluck('customer_info')->first();
-            if (empty($customer_info)) throw new \Exception('获取客源信息失败');
+            $customer = Customer::where(['guid' => $request->guid])->first();
+            if (empty($customer)) throw new \Exception('获取客源信息失败');
+
+            // 私客查看范围(判断是否有权限)
+            if ($customer->guest == 2) {
+                $privateCustomerShow = Access::adoptGuardianPersonGetCustomer('private_customer_show');
+                if (!in_array($request->guid,$privateCustomerShow)) throw new \Exception('暂无权限');
+            }
 
             $customerOperationRecords = Common::customerOperationRecords(Common::user()->guid, $request->guid, 3, '查看了客源联系方式');
             if (empty($customerOperationRecords)) throw new \Exception('查看客源信息添加操作记录失败');
 
             \DB::commit();
-            return $customer_info;
+            return $customer->customer_info;
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;
@@ -305,7 +320,6 @@ class CustomersService
     //获取客源动态
     public function getDynamic($request)
     {
-
         // 判断有无查看带看权限
         $customer = Access::adoptGuardianPersonGetCustomer('see_customer_visit');
         $permission = in_array($request->customer_guid, $customer);

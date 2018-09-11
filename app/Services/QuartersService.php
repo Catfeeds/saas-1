@@ -55,17 +55,11 @@ class QuartersService
                 'name' => $request->name,
                 'level' => $request->level
             ]);
+            if (empty($role)) throw new \Exception('添加角色失败');
 
-            foreach ($permissionId as $v) {
-                RoleHasPermission::create([
-                    'guid' => Common::getUuid(),
-                    'role_guid' => $role->guid,
-                    'permission_guid' => $v,
-                    'action_scope' => $role->level,
-                    'operation_number' => 30,
-                    'follow_up' => 1
-                ]);
-            }
+            $res = self::defaultPermissions($request);
+            if (empty($res)) throw new \Exception('岗位级别修改失败');
+
 
             \DB::commit();
             return true;
@@ -131,7 +125,7 @@ class QuartersService
     }
 
     // 默认权限
-    public function defaultPermissions(
+    public static function defaultPermissions(
         $request
     )
     {
@@ -149,17 +143,34 @@ class QuartersService
         }
 
         foreach ($permissions as $v) {
+            $permissionGuid = Permission::where('name_en', $v['name_en'])->first()->guid;
             $res = RoleHasPermission::where([
                 'role_guid' => $request->guid,
-                'permission_guid' => Permission::where('name_en', $v['name_en'])->first()->guid
-            ])->update([
-                'action_scope' => $v['action_scope'],
-                'operation_number' => $v['operation_number'],
-                'follow_up' => $v['follow_up'],
-                'status' => 1
-            ]);
+                'permission_guid' => $permissionGuid
+            ])->first();
+            if (empty($res)) {
+                RoleHasPermission::create([
+                    'guid' => Common::getUuid(),
+                    'role_guid' => $request->role_guid,
+                    'permission_guid' => $permissionGuid,
+                    'action_scope' => $request->action_scope,
+                    'operation_number' => $request->operation_number,
+                    'follow_up' => $request->follow_up
+                ]);
+            } else {
+                $suc = RoleHasPermission::where([
+                    'role_guid' => $request->guid,
+                    'permission_guid' => $permissionGuid
+                ])->update([
+                    'action_scope' => $v['action_scope'],
+                    'operation_number' => $v['operation_number'],
+                    'follow_up' => $v['follow_up'],
+                    'status' => 1
+                ]);
 
-            if (empty($res)) return false;
+                if (empty($suc)) return false;
+            }
+
         }
 
         return true;

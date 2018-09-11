@@ -94,6 +94,7 @@ class CustomersService
         $permission['entry_person'] = true; // 是否有修改录入人权限
         $permission['guardian_person'] = true; // 是否有修改维护人的权限
         $permission['visit_permission'] = true; // 是否允许带看
+        $permission['edit_customer'] = true; // 是否允许编辑客源
         $publicChangePrivate = Access::adoptGuardianPersonGetHouse('public_change_private');
         if (!in_array($guid,$publicChangePrivate)) $permission['public_change_private'] = false;
 
@@ -115,7 +116,10 @@ class CustomersService
         $seeCustomerVisit = Access::adoptGuardianPersonGetCustomer('see_customer_visit');
         if (!in_array($guid, $seeCustomerVisit)) $data['visit_permission'] = false;
 
-        $data = [];
+        // 是否允许编辑客源
+        $editCustomer = Access::adoptGuardianPersonGetCustomer('edit_customer');
+        if (!in_array($guid,$editCustomer)) $permission['edit_customer'] = false;
+       $data = [];
         $data['permission'] = $permission;
         $data['guid'] = $res->guid;
         $data['level'] = $res->level_cn;

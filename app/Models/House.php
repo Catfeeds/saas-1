@@ -426,4 +426,11 @@ class House extends BaseModel
             return '无效-其他';
         }
     }
+
+    // 关联共享记录
+    public function shareRecord()
+    {
+        return $this->hasMany(HouseShareRecord::class, 'house_guid', 'guid');
+    }
+    
 }

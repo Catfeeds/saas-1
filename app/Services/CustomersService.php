@@ -150,13 +150,25 @@ class CustomersService
         $data['guardian_person'] = $res->guardianPerson; // 维护人
         $data['created_at'] = $res->created_at->format('Y-m-d H:i:s');
 
+
+        if ($permission['visit_permission']) {
+            $item = CustomerOperationRecord::where('customer_guid', $guid)
+                ->whereIn('type', [1, 2])
+                ->latest()
+                ->take(4)
+                ->pluck('type', 'created_at')
+                ->toArray();
+        } else {
+            $item = CustomerOperationRecord::where('customer_guid', $guid)
+                ->where('type', 1)
+                ->latest()
+                ->take(4)
+                ->pluck('type', 'created_at')
+                ->toArray();
+        }
+
         // 获取动态(跟进,带看) 最新4条数据
-        $item = CustomerOperationRecord::where('customer_guid', $guid)
-            ->whereIn('type', [1, 2])
-            ->latest()
-            ->take(4)
-            ->pluck('type', 'created_at')
-            ->toArray();
+
         $dynamic = [];
         foreach ($item as $k => $v) {
             if ($v == 1) {

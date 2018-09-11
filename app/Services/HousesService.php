@@ -7,6 +7,7 @@ use App\Handler\Common;
 use App\Models\BuildingBlock;
 use App\Models\House;
 use App\Models\HouseOperationRecord;
+use App\Models\HouseShareRecord;
 use App\Models\Permission;
 use App\Models\RoleHasPermission;
 use App\Models\SeeHouseWay;
@@ -434,6 +435,10 @@ class HousesService
         $data['status'] = $house->status;
         $data['status_cn'] = $house->status_cn;
 
+        // 是否共享
+        $data['share'] = $house->share;
+
+
         return $data;
     }
 
@@ -704,4 +709,69 @@ class HousesService
 
         return $permission;
     }
+
+    // 发布共享房源
+    public function shareHouse($request)
+    {
+        $user = Common::user();
+
+        \DB::beginTransaction();
+        try {
+            // 如果是共享房源
+          $res = House::where('guid', $request->guid)->update([
+              'release_source' => $user->company_guid,
+              'share' => 1
+          ]);
+
+          if (!$res) throw new \Exception('房源共享失败');
+
+          $record = HouseShareRecord::create([
+              'guid' => Common::getUuid(),
+              'house_guid' => $request->guid,
+              'remarks' => $user->name. '-'. optional($user->role)->name.' 发布共享'
+          ]);
+
+          if (!$record) throw new \Exception('房源共享记录添加失败');
+
+          \DB::commit();
+          return true;
+        } catch (\Exception $exception) {
+          \DB::rollback();
+          \Log::error('房源共享失败'.$exception->getMessage());
+          return false;
+        }
+    }
+
+
+    // 共享房源下架
+    public function unShare($request)
+    {
+        $user = Common::user();
+
+        \DB::beginTransaction();
+
+        try {
+            $res = House::where('guid', $request->guid)->update([
+                'release_source' => null,
+                'share' => 2,
+                'lower_frame' => '自主下架'
+            ]);
+            if (!$res) throw new \Exception('房源下架失败');
+
+            $record = HouseShareRecord::create([
+                'guid' => Common::getUuid(),
+                'house_guid' => $request->guid,
+                'remarks' => $user->name. '-'. optional($user->role)->name.' 下架'
+            ]);
+
+            if (!$record) throw new \Exception('房源共享记录添加失败');
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            \Log::error('房源下架失败'.$exception->getMessage());
+            return false;
+        }
+    }
+
 }

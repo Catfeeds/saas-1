@@ -27,12 +27,13 @@ class SharesService
             $houses[$key]['type'] = $v->type_cn; //类型
             $houses[$key]['floor'] = $v->floor. '层'; //楼层
             $houses[$key]['total_floor'] = $v->buildingBlock->total_floor?'共' . $v->buildingBlock->total_floor. '层':'-';
-            $houses[$key]['share'] = $v->lower_frame ? $v->lower_frame : optional($v->shareRecord->sortByDesc('created_at')->first())->remarks;
+            $share = $v->shareRecord->sortByDesc('created_at')->first();
             if ($v->share == 1) {
-                $houses[$key]['share'] = optional($v->shareRecord->sortByDesc('created_at')->first())->remarks;
+                $houses[$key]['share'] = optional($share)->remarks;
            } elseif ($v->share == 2) {
                 $houses[$key]['share'] = $v->lower_cn;
             }
+            $houses[$key]['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
         }
         return $res->setCollection(collect($houses));
     }

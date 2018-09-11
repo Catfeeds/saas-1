@@ -431,7 +431,7 @@ class House extends BaseModel
     // 关联共享记录
     public function shareRecord()
     {
-        return $this->hasMany(HouseShareRecord::class, 'house_guid', 'guid')->orderBy('created_at', 'acs');
+        return $this->hasMany(HouseShareRecord::class, 'house_guid', 'guid')->orderBy('created_at', 'desc');
     }
 
 

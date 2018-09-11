@@ -25,6 +25,7 @@ class HousesRepository extends Model
             'guid' => Common::getUuid(),
             'house_type' => 1,
             'company_guid' => Common::user()->company_guid,
+            'house_identifier' => 'WH-'.time().rand(1,1000),
             'owner_info' => $request->owner_info,//业主电话
             'floor' => $request->floor,//所在楼层
             'house_number' => $request->house_number,//房号
@@ -59,29 +60,33 @@ class HousesRepository extends Model
     }
 
     // 更新房源
-    public function updateHouse($house, $request)
+    public function updateHouse(
+        $house,
+        $request,
+        $permission
+    )
     {
         // 有修改业主信息权限
-        if ($house->permission['edit_owner_info']) {
+        if ($permission['edit_owner_info']) {
             $house->owner_info = $request->owner_info;//业主信息
         }
         // 有修改门牌号权限
-        if ($house->permission['update_house_number']) {
+        if ($permission['update_house_number']) {
             $house->floor = $request->floor;//楼层
             $house->house_number = $request->house_number;//房号
             $house->building_block_guid = $request->building_block_guid;//楼座
         }
         // 有修改房源等级权限
-        if ($house->permission['update_house_grade']) {
+        if ($permission['update_house_grade']) {
             $house->grade = $request->grade;//房源等级
         }
         // 有修改房源价格权限
-        if ($house->permission['update_house_price']) {
+        if ($permission['update_house_price']) {
             $house->price = $request->price;//租金
             $house->price_unit = $request->price_unit;//租金单位
         }
         // 有修改其他信息权限
-        if ($house->permission['update_house_other']) {
+        if ($permission['update_house_other']) {
             $house->house_type = 1;
             $house->public_private = $request->public_private;
             $house->payment_type = $request->payment_type;
@@ -90,7 +95,6 @@ class HousesRepository extends Model
             $house->acreage = $request->acreage;
             $house->split = $request->split;
             $house->mini_acreage = $request->mini_acreage;
-            $house->total_floor = $request->total_floor;
             $house->floor_height = $request->floor_height;
             $house->register_company = $request->register_company;
             $house->type = $request->type;
@@ -105,8 +109,8 @@ class HousesRepository extends Model
             $house->shortest_lease = $request->shortest_lease;
             $house->remarks = $request->remarks;
         }
-
         $house->guardian_person = Common::user()->guid;
+
         if (!$house->save()) return false;
         return true;
     }
@@ -165,14 +169,13 @@ class HousesRepository extends Model
     // 转为公盘
     public function changeToPublic($request)
     {
-         return House::where('guid',$request->guid)->update(['guardian_person' => null, 'public_private' => 2]);
+         return House::where('guid',$request->guid)->update(['public_private' => 2]);
     }
     
     // 转为私盘
     public function switchToPrivate($request)
     {
-        return House::where('guid',$request->guid)
-                    ->update(['guardian_person' => Common::user()->guid, 'public_private'=> 1 ]);
+        return House::where('guid',$request->guid)->update(['public_private'=> 1 ]);
     }
     
     // 修改证件图片

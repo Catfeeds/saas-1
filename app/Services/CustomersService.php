@@ -49,20 +49,24 @@ class CustomersService
     }
 
     // 更新客源
-    public function updateCustomer($customer, $request)
+    public function updateCustomer(
+        $customer,
+        $request,
+        $permission
+    )
     {
         // 联系方式权限
-        if ($customer->permission['contact']) {
+        if ($permission['contact']) {
             $customer->customer_info = $request->customer_info;
         }
 
         // 客源等级权限
-        if ($customer->permission['level']) {
+        if ($permission['level']) {
             $customer->level = $request->level;
         }
 
         // 其他信息权限
-        if ($customer->permission['other']) {
+        if ($permission['other']) {
             $customer->guest = $request->guest;
             $customer->remarks = $request->remarks;
             $customer->intention = $request->intention;

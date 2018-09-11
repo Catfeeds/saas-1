@@ -16,6 +16,8 @@ class CreateHousesTable extends Migration
         Schema::create('houses', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('guid主键');
             $table->char('company_guid', 32)->nullable()->comment('公司guid');
+            $table->string('house_identifier')->nullable()->comment('房源编号');
+
             // 主要信息
             $table->tinyInteger('house_type')->default(1)->comment('房源类型 1: 写字楼 2: 住宅 3: 别墅 4: 商铺 5: 厂房 6: 仓库 7: 车位 8: 土地');
 

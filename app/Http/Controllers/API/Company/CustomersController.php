@@ -82,8 +82,8 @@ class CustomersController extends APIBaseController
     )
     {
         // 获取客源编辑指定信息权限
-        $customer->permission = $service->getPermission($customer);
-        $res = $service->updateCustomer($customer, $request);
+        $permission = $service->getPermission($customer);
+        $res = $service->updateCustomer($customer, $request, $permission);
         if (!$res) return $this->sendError('客源修改失败');
         return $this->sendResponse($res, '客源修改成功');
     }

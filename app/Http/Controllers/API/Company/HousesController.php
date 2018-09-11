@@ -76,8 +76,8 @@ class HousesController extends APIBaseController
         $maintainer = Access::adoptGuardianPersonGetHouse('edit_house');
         if (!in_array($house->guid,$maintainer)) return $this->sendError('无编辑房源权限');
         // 获取房源编辑指定信息权限
-        $house->permission = $service->propertyPermission($house);
-        $res = $repository->updateHouse($house,$request);
+        $permission = $service->propertyPermission($house);
+        $res = $repository->updateHouse($house, $request, $permission);
         return $this->sendResponse($res,'更新房源成功');
     }
 

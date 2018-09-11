@@ -188,10 +188,7 @@ class HousesService
         if ($house->public_private == 1) {
             // 获取私盘业主信息
             $ownerInfo = Access::adoptGuardianPersonGetHouse('private_owner_info');
-            if (!in_array($house->guid, $ownerInfo)) {
-                $permission['private_owner_info'] = false; // 是否允许查看业主信息
-            }
-        } else {
+            if (!in_array($house->guid, $ownerInfo)) $permission['private_owner_info'] = false; // 是否允许查看业主信息
             $permission['private_owner_info'] = true; // 是否允许查看业主信息
         }
 

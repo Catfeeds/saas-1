@@ -573,14 +573,21 @@ class HousesService
     {
         \DB::beginTransaction();
         try {
-            $ownerInfo = House::where('guid',$request->guid)->pluck('owner_info')->first();
-            if (empty($ownerInfo)) throw new \Exception('获取业主信息失败');
+            $house = House::where('guid',$request->guid)->first();
+            if (empty($house)) throw new \Exception('获取业主信息失败');
+
+            // 判断是否有权限
+            if ($house->public_private == 1) {
+                // 获取私盘业主信息
+                $ownerInfo = Access::adoptGuardianPersonGetHouse('private_owner_info');
+                if (!in_array($request->guid, $ownerInfo)) throw new \Exception('暂无权限');
+            }
 
             $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid,4,'查看了房源的业主信息');
             if (empty($houseOperationRecords)) throw  new \Exception('查看业主信息添加操作记录失败');
 
             \DB::commit();
-            return $ownerInfo;
+            return $house->owner_info;
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;
@@ -593,14 +600,6 @@ class HousesService
         \DB::beginTransaction();
         try {
             $house = House::where('guid',$request->guid)->first();
-
-            // 判断是否有权限
-            if ($house->public_private == 1) {
-                // 获取私盘业主信息
-                $ownerInfo = Access::adoptGuardianPersonGetHouse('private_owner_info');
-                if (!in_array($request->guid, $ownerInfo)) throw new \Exception('暂无权限');
-            }
-
             $data = [];
             if (empty($house->buildingBlock->unit)) {
                 $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number;

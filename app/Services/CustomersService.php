@@ -114,12 +114,13 @@ class CustomersService
 
         // 是否允许带看
         $seeCustomerVisit = Access::adoptGuardianPersonGetCustomer('see_customer_visit');
-        if (!in_array($guid, $seeCustomerVisit)) $data['visit_permission'] = false;
+        if (!in_array($guid, $seeCustomerVisit)) $permission['visit_permission'] = false;
 
         // 是否允许编辑客源
         $editCustomer = Access::adoptGuardianPersonGetCustomer('edit_customer');
         if (!in_array($guid,$editCustomer)) $permission['edit_customer'] = false;
-       $data = [];
+
+        $data = [];
         $data['permission'] = $permission;
         $data['guid'] = $res->guid;
         $data['level'] = $res->level_cn;

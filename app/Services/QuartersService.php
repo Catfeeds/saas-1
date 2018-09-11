@@ -57,6 +57,9 @@ class QuartersService
             ]);
             if (empty($role)) throw new \Exception('添加角色失败');
 
+            // 设置参数
+            $request->offsetSet('role_guid', $role->guid);
+
             $res = self::defaultPermissions($request);
             if (empty($res)) throw new \Exception('岗位级别修改失败');
 
@@ -149,7 +152,7 @@ class QuartersService
                 'permission_guid' => $permissionGuid
             ])->first();
             if (empty($res)) {
-                RoleHasPermission::create([
+                $roleHasPermission = RoleHasPermission::create([
                     'guid' => Common::getUuid(),
                     'role_guid' => $request->role_guid,
                     'permission_guid' => $permissionGuid,
@@ -157,20 +160,14 @@ class QuartersService
                     'operation_number' => $request->operation_number,
                     'follow_up' => $request->follow_up
                 ]);
+                if (empty($roleHasPermission)) return false;
             } else {
-                $suc = RoleHasPermission::where([
-                    'role_guid' => $request->guid,
-                    'permission_guid' => $permissionGuid
-                ])->update([
-                    'action_scope' => $v['action_scope'],
-                    'operation_number' => $v['operation_number'],
-                    'follow_up' => $v['follow_up'],
-                    'status' => 1
-                ]);
-
-                if (empty($suc)) return false;
+                $res->action_scope = $v['action_scope'];
+                $res->operation_number = $v['operation_number'];
+                $res->follow_up = $v['follow_up'];
+                $res->status = $v['status'];
+                if (empty($res->save())) return false;
             }
-
         }
 
         return true;

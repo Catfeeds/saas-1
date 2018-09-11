@@ -77,13 +77,13 @@ class QuartersService
 
     }
 
-    //修改角色名称
+    // 修改角色名称
     public function updateRoleName($request)
     {
         return Role::where('guid',$request->guid)->update(['name' => $request->name]);
     }
 
-    //修改角色级别
+    // 修改角色级别
     public function updateRoleLevel($request)
     {
         \DB::beginTransaction();
@@ -130,7 +130,7 @@ class QuartersService
         }
     }
 
-    // 默认权限   TODO
+    // 默认权限
     public function defaultPermissions(
         $request
     )
@@ -149,7 +149,6 @@ class QuartersService
         }
 
         foreach ($permissions as $v) {
-
             $res = RoleHasPermission::where([
                 'role_guid' => $request->guid,
                 'permission_guid' => Permission::where('name_en', $v['name_en'])->first()->guid
@@ -159,10 +158,6 @@ class QuartersService
                 'follow_up' => $v['follow_up'],
                 'status' => 1
             ]);
-            dd($res);
-
-//            \Log::info($res);
-
 
             if (empty($res)) return false;
         }

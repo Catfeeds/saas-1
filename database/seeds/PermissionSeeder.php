@@ -377,5 +377,12 @@ class PermissionSeeder extends Seeder
             'name' => '客源-删除客源',
             'name_en' => 'del_customer'
         ]);
+
+        // 编辑客源
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '客源-编辑客源',
+            'name_en' =>  'edit_customer'
+        ]);
     }
 }

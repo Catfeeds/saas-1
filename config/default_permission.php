@@ -11,7 +11,7 @@ return [
         [
             'name_en' => 'private_plate_most',// 房源-私盘房源上限
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -41,7 +41,7 @@ return [
         [
             'name_en' => 'computer_view',// 房源-电脑端朝查看公盘房源业主信息
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -209,7 +209,7 @@ return [
         [
             'name_en' => 'private_customer_most',// 客源-私客上限
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -239,7 +239,7 @@ return [
         [
             'name_en' => 'pc_public_customer',// 客源-电脑端公盘
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -326,7 +326,7 @@ return [
         [
             'name_en' => 'private_plate_most',// 房源-私盘房源上限
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -356,7 +356,7 @@ return [
         [
             'name_en' => 'computer_view',// 房源-电脑端朝查看公盘房源业主信息
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -524,7 +524,7 @@ return [
         [
             'name_en' => 'private_customer_most',// 客源-私客上限
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -554,7 +554,7 @@ return [
         [
             'name_en' => 'pc_public_customer',// 客源-电脑端公盘
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -641,7 +641,7 @@ return [
         [
             'name_en' => 'private_plate_most',// 房源-私盘房源上限
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -671,7 +671,7 @@ return [
         [
             'name_en' => 'computer_view',// 房源-电脑端朝查看公盘房源业主信息
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -839,7 +839,7 @@ return [
         [
             'name_en' => 'private_customer_most',// 客源-私客上限
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -869,7 +869,7 @@ return [
         [
             'name_en' => 'pc_public_customer',// 客源-电脑端公盘
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -956,7 +956,7 @@ return [
         [
             'name_en' => 'private_plate_most',// 房源-私盘房源上限
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -986,7 +986,7 @@ return [
         [
             'name_en' => 'computer_view',// 房源-电脑端朝查看公盘房源业主信息
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -1154,7 +1154,7 @@ return [
         [
             'name_en' => 'private_customer_most',// 客源-私客上限
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -1184,7 +1184,7 @@ return [
         [
             'name_en' => 'pc_public_customer',// 客源-电脑端公盘
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -1271,7 +1271,7 @@ return [
         [
             'name_en' => 'private_plate_most',// 房源-私盘房源上限
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -1301,7 +1301,7 @@ return [
         [
             'name_en' => 'computer_view',// 房源-电脑端朝查看公盘房源业主信息
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -1469,7 +1469,7 @@ return [
         [
             'name_en' => 'private_customer_most',// 客源-私客上限
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [
@@ -1499,7 +1499,7 @@ return [
         [
             'name_en' => 'pc_public_customer',// 客源-电脑端公盘
             'action_scope' => null,
-            'operation_number' => 999,
+            'operation_number' => 9999,
             'follow_up' => null,
         ],
         [

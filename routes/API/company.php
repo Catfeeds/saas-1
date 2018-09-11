@@ -146,6 +146,21 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     //获取房源动态
     Route::resource('house_operation_records', 'HouseOperationRecordsController');
 
+    //  房源共享
+    Route::post('share_house', 'HousesController@shareHouse');
+
+    // 下架共享房源
+    Route::post('un_share', 'HousesController@unShare');
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 共享房源
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource('shares', 'SharesController');
 
     /*
     |--------------------------------------------------------------------------

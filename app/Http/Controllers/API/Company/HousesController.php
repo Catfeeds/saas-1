@@ -348,4 +348,29 @@ class HousesController extends APIBaseController
         if (!$res) return $this->sendError('获取门牌号失败');
         return $this->sendResponse($res,'获取门牌号成功');
     }
+
+    // 房源共享
+    public function shareHouse
+    (
+        HousesRequest $request,
+        HousesService $service
+    )
+    {
+        $res = $service->shareHouse($request);
+        if (!$res) return $this->sendError('房源共享失败');
+        return $this->sendResponse($res, '房源共享成功');
+    }
+
+    // 下架共享房源
+    public function unShare
+    (
+        HousesRequest $request,
+        HousesService $service
+    )
+    {
+        $res = $service->unShare($request);
+        if (!$res) return $this->sendError('房源下架失败');
+        return $this->sendResponse($res, '房源下架成功');
+    }
+
 }

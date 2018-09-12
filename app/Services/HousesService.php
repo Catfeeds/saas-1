@@ -542,10 +542,8 @@ class HousesService
             $public_private = '';
             if ($request->type == 1) {
                 $data['guardian_person'] = Common::user()->guid;
-                $data['public_private'] = 1;
                 $public_private = '私盘';
             } elseif ($request->type == 2) {
-                $data['guardian_person'] = '';
                 $data['public_private'] = 2;
                 $public_private = '公盘';
             }

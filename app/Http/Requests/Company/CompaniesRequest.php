@@ -25,12 +25,14 @@ class CompaniesRequest extends FormRequest
             case 'store':
                 return [
                     'name.unique' => '公司名称不能重复添加',
-                    'tel.not_in' => '用户电话不能重复'
+                    'tel.not_in' => '用户电话不能重复',
+                    'company_tel' => '公司电话不能重复'
                 ];
             case 'update':
                 return [
                     'name.not_in' => '公司名称不能重复添加',
-                    'tel.not_in' => '用户电话不能重复'
+                    'tel.not_in' => '用户电话不能重复',
+                    'company_tel' => '公司电话不能重复'
                 ];
         }
     }
@@ -45,9 +47,16 @@ class CompaniesRequest extends FormRequest
             case 'store':
                 return [
                     'name' => 'required|max:128|unique:companies',
-                    'slogan' => 'nullable|max:512',
-                    'license' => 'nullable|max:512',
-                    'address' => 'nullable|max:256',
+                    'address' => 'required|max:256',
+                    'city_guid' => 'required|max:32',
+                    'area_guid' => 'required|max:32',
+                    'company_tel' => [
+                        'required',
+                        'max:16',
+                        Rule::notIn(
+                            Company::all()->pluck('company_tel')->toArray()
+                        )
+                    ],
                     'tel' => [
                         'required',
                         'max:16',
@@ -55,14 +64,21 @@ class CompaniesRequest extends FormRequest
                             User::all()->pluck('tel')->toArray()
                         )
                     ],
-                    'password' => 'required|min:6|max:18',
+                    'username' => 'required|max:64',
                 ];
             case 'update':
                 return [
                     'name' => 'required|max:128|unique:companies',
-                    'slogan' => 'nullable|max:512',
-                    'license' => 'nullable|max:512',
                     'address' => 'nullable|max:256',
+                    'city_guid' => 'required|max:32',
+                    'area_guid' => 'required|max:32',
+                    'company_tel' => [
+                        'required',
+                        'max:16',
+                        Rule::notIn(
+                            Company::all()->pluck('company_tel')->toArray()
+                        )
+                    ],
                     'tel' => [
                         'required',
                         'max:16',
@@ -70,7 +86,7 @@ class CompaniesRequest extends FormRequest
                             User::all()->pluck('tel')->toArray()
                         )
                     ],
-                    'password' => 'required|min:6|max:18',
+                    'username' => 'required|max:64',
                 ];
             default:
                 {

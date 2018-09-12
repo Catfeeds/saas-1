@@ -98,11 +98,14 @@ class Access{
         } elseif ($actionScope == 5) {
             // 个人
             $res = array($guid);
-        } elseif ($actionScope == 6) {
-            $res = array();
         }
 
         $res[] = $guid;
+
+        if ($actionScope == 6) {
+            $res = array();
+        }
+
         return array_unique($res);
     }
 

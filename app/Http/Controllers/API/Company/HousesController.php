@@ -61,7 +61,7 @@ class HousesController extends APIBaseController
     {
         $house->allGuid = $service->adoptBuildingBlockGetCity($house->building_block_guid);
         $house->permission = $service->propertyPermission($house);
-        return $this->sendResponse($house,'获取1更新之前原始数据成功');
+        return $this->sendResponse($house,'获取更新之前原始数据成功');
     }
 
     // 更新房源信息
@@ -232,12 +232,8 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
-        // 判断是否有权限
-        $guardian_person = Access::adoptPermissionGetUser('set_guardian_person');
-        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
-
         // 判断作用域
-        $house = Access::adoptGuardianPersonGetHouse($guardian_person['message']);
+        $house = Access::adoptGuardianPersonGetHouse('set_guardian_person');
         if (!in_array($request->guid, $house)) return $this->sendError('无权限转移房源');
 
         $res = $repository->transferHouse($request);

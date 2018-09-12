@@ -141,13 +141,13 @@ class HousesService
                 break;
             case 3:
                 if (!$count) {
-                    return '最近暂无图片上传';
+                    return '最近暂无图片编辑';
                 } elseif ($count == 1) {
-                    return current($user).'最近上传图片';
+                    return current($user).'最近编辑图片';
                 } elseif ($count == 2) {
-                    return current($user).'、'. end($user).'最近上传图片';
+                    return current($user).'、'. end($user).'最近编辑图片';
                 } else {
-                    return $user[0].'、'.$user[1].'、'.$user[2].'等'.$count.'人最近上传图片';
+                    return $user[0].'、'.$user[1].'、'.$user[2].'等'.$count.'人最近编辑图片';
                 }
                 break;
             case 4:
@@ -185,13 +185,6 @@ class HousesService
         $permission['del_pic'] = true; // 是否允许删除图片
         $permission['public_to_private'] = true; // 是否允许公盘转为私盘
         $permission['private_to_public'] = true; // 是否允许私盘转为公盘
-
-        if ($house->public_private == 1) {
-            // 获取私盘业主信息
-            $ownerInfo = Access::adoptGuardianPersonGetHouse('private_owner_info');
-            if (!in_array($house->guid, $ownerInfo)) $permission['private_owner_info'] = false; // 是否允许查看业主信息
-            $permission['private_owner_info'] = true; // 是否允许查看业主信息
-        }
 
         // 上传图片
         $uploadImage = Access::adoptGuardianPersonGetHouse('upload_pic');
@@ -573,21 +566,31 @@ class HousesService
     {
         \DB::beginTransaction();
         try {
-            $house = House::where('guid',$request->guid)->first();
+            $house = House::where('guid',$request->guid)->with('guardianPerson')->first();
             if (empty($house)) throw new \Exception('获取业主信息失败');
 
             // 判断是否有权限
             if ($house->public_private == 1) {
                 // 获取私盘业主信息
                 $ownerInfo = Access::adoptGuardianPersonGetHouse('private_owner_info');
-                if (!in_array($request->guid, $ownerInfo)) throw new \Exception('暂无权限');
+                if (!in_array($request->guid, $ownerInfo)) {
+                    // 无权限
+                    $data = [
+                        'name' => $house->guardianPerson->name,
+                        'tel' => $house->guardianPerson->tel
+                    ];
+                } else {
+                    $data = $house->owner_info;
+                };
+            } else {
+                $data = $house->owner_info;
             }
 
             $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid,4,'查看了房源的业主信息');
             if (empty($houseOperationRecords)) throw  new \Exception('查看业主信息添加操作记录失败');
 
             \DB::commit();
-            return $house->owner_info;
+            return $data;
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;
@@ -621,11 +624,16 @@ class HousesService
     // 获取房源动态
     public function getDynamic($request)
     {
-        $res = HouseOperationRecord::with('user:guid,name,tel')->where('house_guid', $request->house_guid);
+        $res = HouseOperationRecord::with(['user:guid,name,tel', 'visit.accompanyUser'])->where('house_guid', $request->house_guid);
         if (!empty($request->type)) $res = $res->where('type', $request->type);
         $res = $res->latest()->get();
         // 判断是否允许编辑
         foreach ($res as $v) {
+            if (empty($request->type) || $request->type == 2) {
+                $v->accompanyUser = empty($v->visit)?'':$v->visit->accompanyUser->name;
+                $v->visitCustomer = empty($v->visit)?'':$v->visit->visitCustomerHouse->customer_info[0]['name'];
+            }
+
             if ($v->type = 1) {
                 $v->operation = false;
                 if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 60 * 30) {
@@ -656,6 +664,8 @@ class HousesService
             // 如果图片跟图片人都为空则为图片人
             if (empty($request->house_type_img) && empty($request->indoor_img) && empty($request->outdoor_img) && empty($picPerson)) {
                 $data['pic_person'] = Common::user()->guid;
+            } elseif (empty($request->house_type_img) && empty($request->indoor_img) && empty($request->outdoor_img)) {
+                $data['pic_person'] = '';
             }
 
             $house = House::where(['guid' => $request->guid])->update($data);

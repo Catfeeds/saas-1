@@ -10,7 +10,7 @@ use App\Services\VisitsService;
 
 class VisitsController extends APIBaseController
 {
-    //房源或客源带看列表
+    // 房源或客源带看列表
     public function index
     (
         VisitsRepository $repository,
@@ -22,7 +22,7 @@ class VisitsController extends APIBaseController
         return $this->sendResponse($res, '带看获取成功');
     }
 
-    //添加房源或客源带看
+    // 添加房源或客源带看
     public function store
     (
         VisitsService $service,
@@ -34,7 +34,7 @@ class VisitsController extends APIBaseController
         return $this->sendResponse($res, '带看登记成功');
     }
 
-    //编辑带看
+    // 编辑带看
     public function update
     (
         VisitsService $service,

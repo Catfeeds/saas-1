@@ -320,7 +320,7 @@ class HousesController extends APIBaseController
         return $this->sendResponse(collect($request->relevant_proves_img)->map(function($img) {
             return [
                 'name' => $img,
-                'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
+                'url' => config('setting.qiniu_url') . $img,
             ];
         }),'修改证件图片成功');
     }

@@ -163,8 +163,16 @@ class UserService
     // 获取公司下所有在职人员
     public function getAllUser($request)
     {
-        $userGuid = Access::getUser(Common::user()->role->level);
-        $res = User::where(['company_guid' => Common::user()->company_guid, 'status' => 1])->whereIn('guid', $userGuid);
+        $res = User::where([
+            'company_guid' => Common::user()->company_guid,
+            'status' => 1
+        ]);
+
+        if ($request->range != 'all') {
+            $userGuid = Access::getUser(Common::user()->role->level);
+            $res = $res->whereIn('guid', $userGuid);;
+        }
+
         if (!empty($request->name)) $res = $res->where('name', 'like', '%'. $request->name.'%');
         return $res->get();
     }

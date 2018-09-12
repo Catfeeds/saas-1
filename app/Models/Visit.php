@@ -22,6 +22,17 @@ class Visit extends BaseModel
         return $this->hasOne(User::class,'guid', 'accompany');
     }
 
+    // 带看客户
+    public function visitCustomerHouse()
+    {
+        if ($this->model_type == 'App\Models\House') {
+            return $this->belongsTo('App\Models\Customer','rel_guid','guid');
+        } else {
+            return $this->belongsTo('App\Models\House','rel_guid','guid');
+        }
+    }
+
+
     // 关联房源
     public function house()
     {

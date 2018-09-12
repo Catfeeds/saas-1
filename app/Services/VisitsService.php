@@ -51,17 +51,7 @@ class VisitsService
 
             // 添加操作记录
             if ($request->model_type == 'App\Models\House') {
-                // 查询客户
-                $customer = Customer::find($request->rel_guid);
-
-                // 备注
-                if ($request->remarks) {
-                    $remarks = '带看信息备注:'.$request->remarks.';带看的客户:'. $customer->customer_info[0]['name'] .';陪看人:'.$visit->accompanyUser->name;
-                } else {
-                    $remarks = '带看的客户:'. $customer->customer_info[0]['name'] .';陪看人:'.$visit->accompanyUser->name;
-                }
-
-                $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->cover_rel_guid, 2, $remarks, $request->visit_img);
+                $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->cover_rel_guid, 2, $request->remarks, json_encode($request->visit_img),null, $visit->guid);
                 if (empty($houseOperationRecords)) throw new \Exception('房源/客源带看操作记录添加失败');
             }
 

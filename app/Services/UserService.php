@@ -170,7 +170,7 @@ class UserService
 
         if ($request->range != 'all') {
             $userGuid = Access::getUser(Common::user()->role->level);
-            $res = $res->whereIn('guid', $userGuid);;
+            $res = $res->whereIn('guid', $userGuid);
         }
 
         if (!empty($request->name)) $res = $res->where('name', 'like', '%'. $request->name.'%');

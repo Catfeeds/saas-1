@@ -86,6 +86,7 @@ class MigrateData extends Command
                 'increasing_situation_remark' => $v->increasing_situation.$v->increasing_situation_remark,
                 'cost_detail' => $v->cost_detail,
                 'acreage' => $v->constru_acreage,
+                'min_acreage' => $v->min_acreage,
                 'split' => $v->split,
                 'register_company' => $v->register_company,
                 'type' => $v->office_building_type,

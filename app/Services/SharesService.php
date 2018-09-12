@@ -60,9 +60,9 @@ class SharesService
         } else {
             $data['floor'] = $house->floor;
         }
-        $data['orientation'] = $house->orientation_cn??'-'; //朝向
-        $data['renovation'] = $house->renovation_cn??'-';  //装修程度
-        $data['type'] = $house->type_cn; //类型
+        $data['orientation'] = $house->orientation_cn??'暂无'; //朝向
+        $data['renovation'] = $house->renovation_cn??'暂无';  //装修程度
+        $data['type'] = $house->type_cn??'暂无'; //类型
         // 费用明细
         $data['cost_detail'] = empty($house->cost_detail)?'暂无':implode(',', $house->cost_detail);
         $data['source'] = $house->source_cn; // 来源渠道

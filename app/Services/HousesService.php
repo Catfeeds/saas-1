@@ -187,6 +187,7 @@ class HousesService
         $permission['del_pic'] = true; // 是否允许删除图片
         $permission['public_to_private'] = true; // 是否允许公盘转为私盘
         $permission['private_to_public'] = true; // 是否允许私盘转为公盘
+        $permission['set_top'] = true; // 是否允许置顶
 
         // 上传图片
         $uploadImage = Access::adoptGuardianPersonGetHouse('upload_pic');
@@ -282,6 +283,11 @@ class HousesService
         $privateToPublic = Access::adoptGuardianPersonGetHouse('private_to_public');
         if (!in_array($house->guid, $privateToPublic)) {
             $permission['private_to_public'] = false; // 是否允许私盘转为公盘
+        }
+
+        $setTop = Access::adoptGuardianPersonGetHouse('set_top');
+        if (!in_array($house->guid, $setTop)) {
+            $permission['set_top'] = false; // 是否允许置顶
         }
 
         $data = array();

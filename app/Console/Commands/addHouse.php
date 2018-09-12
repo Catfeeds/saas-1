@@ -40,7 +40,7 @@ class addHouse extends Command
      */
     public function handle()
     {
-        $users = User::where(['company_guid' => 'ed8090e4a6b811e8bf9a416222'])->get();
+        $users = User::where(['company_guid' => 'qweqwe'])->get();
         $house_number = 101;
 
         foreach ($users as $user) {
@@ -55,11 +55,11 @@ class addHouse extends Command
 
                 'public_private' => 1, // 公盘
 
-                'building_block_guid' => '134f8f529ad211e8a421144fd7c018f6',//楼座guid
+                'building_block_guid' => '5446885ab65011e885ae3d01f340c4f8',//楼座guid
 
                 'house_type' => 1,
 
-                'company_guid' => 'ed8090e4a6b811e8bf9a416222',
+                'company_guid' => 'qweqwe',
 
                 'floor' => 100, //所在楼层
 
@@ -107,11 +107,11 @@ class addHouse extends Command
 
                 'public_private' => 2, // 公盘
 
-                'building_block_guid' => '134f8f529ad211e8a421144fd7c018f6',//楼座guid
+                'building_block_guid' => '5446885ab65011e885ae3d01f340c4f8',//楼座guid
 
                 'house_type' => 1,
 
-                'company_guid' => 'ed8090e4a6b811e8bf9a416222',
+                'company_guid' => 'qweqwe',
 
                 'floor' => 100, //所在楼层
 

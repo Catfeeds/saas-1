@@ -28,7 +28,7 @@ class HouseOperationRecord extends BaseModel
     // 图片 img_cn
     public function getImgCnAttribute()
     {
-        return collect(json_decode($this->img))->map(function ($img) {
+        return collect($this->img)->map(function ($img) {
             return [
                 'name' => $img,
                 'url' => config('setting.qiniu_url') . $img,

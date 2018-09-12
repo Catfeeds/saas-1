@@ -620,7 +620,7 @@ class HousesService
             }
             if (empty($data)) throw new \Exception('获取门牌号失败');
 
-            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,4,'查看了房源的业门牌号信息');
+            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,4,'查看了房源的门牌号信息');
             if (empty($houseOperationRecords)) throw new \Exception('查看门牌号添加操作记录失败');
             \DB::commit();
             return $data;

@@ -577,13 +577,16 @@ class HousesService
                     // 无权限
                     $data = [
                         'name' => $house->guardianPerson->name,
-                        'tel' => $house->guardianPerson->tel
+                        'tel' => $house->guardianPerson->tel,
+                        'type' => 2
                     ];
                 } else {
                     $data = $house->owner_info;
+                    $data['type'] = 1;
                 };
             } else {
                 $data = $house->owner_info;
+                $data['type'] = 1;
             }
 
             $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid,4,'查看了房源的业主信息');

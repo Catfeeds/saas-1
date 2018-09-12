@@ -654,7 +654,7 @@ class HousesService
             ];
 
             // 如果图片跟图片人都为空则为图片人
-            if (empty($request->house_type_img) && empty($request->indoor_img) && empty($request->outdoor_img) && empty($picPerson)) {
+            if ((!empty($request->house_type_img) || !empty($request->indoor_img) || !empty($request->outdoor_img)) && empty($picPerson)) {
                 $data['pic_person'] = Common::user()->guid;
             }
 

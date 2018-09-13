@@ -104,6 +104,7 @@ class HousesService
         $houses['total_floor'] = $res->buildingBlock->total_floor?'共' . $res->buildingBlock->total_floor. '层':'-';
         $houses['top'] = $res->top == 1 ? true : false; // 置顶
         $houses['track_user'] = !$res->track->isEmpty() ? $res->track->sortByDesc('created_at')->first()->user->name : optional($res->entryPerson)->name;
+        $houses['guardian_person'] = $res->guardianPerson->name;    // 维护人
         $houses['track_time'] = $res->track_time; //跟进时间
         return $houses;
     }
@@ -208,8 +209,8 @@ class HousesService
         }
 
         // 看房方式
-        $editReturnKey = Access::adoptPermissionGetUser('edit_return_key');
-        if (!in_array($house->key_person, $editReturnKey['message'])) {
+        $editReturnKey = Access::adoptGuardianPersonGetHouse('edit_return_key');
+        if (!in_array($house->guid, $editReturnKey)) {
             $permission['edit_return_key'] = false; // 是否允许编辑/退换钥匙
         }
 

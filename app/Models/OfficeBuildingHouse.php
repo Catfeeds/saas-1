@@ -29,7 +29,8 @@ class OfficeBuildingHouse extends Model
         'rent_price' => 'float',
         'increasing_situation' => 'float',
         'pay_commission' => 'float',
-        'storefront' => 'array'
+        'storefront' => 'array',
+        'see_house_time_cn'
     ];
 
     protected $appends = [
@@ -52,6 +53,15 @@ class OfficeBuildingHouse extends Model
         return $this->hasMany('App\Models\Track','house_id','id');
     }
 
+
+    //关联人员
+    public function user()
+    {
+        return $this->belongsTo(MediaUser::class,'guardian', 'id');
+    }
+
+
+
     /**
      * 说明: 楼座
      *
@@ -62,6 +72,34 @@ class OfficeBuildingHouse extends Model
     {
         return $this->belongsTo(MediaBuildingBlock::class);
     }
+
+
+    // 看房时间
+    public function getSeeHouseTimeCnAttribute()
+    {
+        $str = '';
+        switch ($this->see_house_time) {
+            case 1:
+                $str = '随时';
+                break;
+            case 2:
+                $str = '非工作时间';
+                break;
+            case 3:
+                $str = '电话预约';
+                break;
+                default;
+                break;
+        }
+        if ($str && $this->see_house_time_remark) {
+            $str .= ',看房时间备注:'.$this->see_house_time_remark;
+        }
+        return $str;
+    }
+
+
+
+
 
     /**
      * 说明: 户型拼接

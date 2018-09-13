@@ -5,10 +5,12 @@ namespace App\Console\Commands;
 use App\Handler\Common;
 use App\Models\Building;
 use App\Models\BuildingBlock;
+use App\Models\Company;
 use App\Models\House;
 use App\Models\MediaBuilding;
 use App\Models\MediaBuildingBlock;
 use App\Models\OfficeBuildingHouse;
+use App\Models\User;
 use Illuminate\Console\Command;
 
 class MigrateData extends Command
@@ -46,7 +48,7 @@ class MigrateData extends Command
     {
         $data = [];
         //查询全部的房子
-        $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building')->get();
+        $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building','user')->get();
         foreach ($house as $v) {
             // 房源对应的楼盘名称
             $building_name = $v->buildingBlock->building->name;
@@ -68,10 +70,49 @@ class MigrateData extends Command
                 'unit' => $unit,
                 'unit_unit' => $unit_unit
             ])->value('guid');
+            // 查询新表的人员对应的guid
+            $user = User::where('tel', $v->user->tel)->value('guid');
+            $pic_person = '';
+            if ($v->house_type_img || $v->indoor_img) {
+                $pic_person = $user;
+            }
             // 插入新房源表
+            //备注
+            $remarks = '';
+            // 几室几厅
+            if ($v->HouseType) {
+                $remarks .= $v->HouseType;
+            }
+            // 房源描述
+            if ($v->house_description) {
+                $remarks .= ',房源描述:'.$v->house_description;
+            }
+            // 入住时间
+            if ($v->check_in_time) {
+                $remarks .=',入住时间'. $v->check_in_time;
+            }
+            // 付佣
+            if ($v->pay_commission) {
+                $remarks .='付佣:'.$v->pay_commission.'%';
+            }
+            // 实勘
+            if ($v->prospecting == 1) {
+                $remarks .= ',已实勘';
+            }
+            // 看房时间
+            if ($v->see_house_time) {
+                $remarks .=',看房时间'.$v->see_house_time_cn;
+            }
+            // 房源状态
+            if ($v->house_proxy_type == 1) {
+                $remarks .='状态:独家';
+            } else {
+                $remarks .='状态:委托';
+            }
+            $remarks = trim($remarks, ',');
             $res = House::create([
                 'guid' => Common::getUuid(),
-                'company_guid' => '5cbda21eb5a811e898ca08002772f793',
+                'company_guid' => 'a3d2f99cb70111e8b97808002772f793',
                 'house_identifier' => 'WH-'.time().rand(1,1000),
                 'house_type' => 1,
                 'owner_info' => $v->owner_info,
@@ -82,39 +123,33 @@ class MigrateData extends Command
                 'public_private' => 1,
                 'price' => $v->unit_price,
                 'price_unit' => 2,
-                'payment_type' => $v->payment_type, // 对应不一致
-                'increasing_situation_remark' => $v->increasing_situation.$v->increasing_situation_remark, // 有值就拼
+                'payment_type' => $v->payment_type,
+                'increasing_situation_remark' => $v->increasing_situation.'%'. $v->increasing_situation_remark ? ','.$v->increasing_situation_remark:'',
                 'cost_detail' => $v->cost_detail,
                 'acreage' => $v->constru_acreage,
                 'min_acreage' => $v->min_acreage,
                 'split' => $v->split,
                 'register_company' => $v->register_company,
                 'type' => $v->office_building_type,
-                'orientation' => $v->orientation, // 对应不一致
+                'orientation' => $v->orientation,
                 'renovation' => $v->renovation,
                 'open_bill' => $v->open_bill,
                 'station_number' => $v->station_number,
-                'rent_free' => $v->rent_free * 30,
+                'rent_free' => $v->rent_free == 12 ? '' : $v->rent_free*30,
                 'support_facilities' => $v->support_facilities,
-                'source' => $v->source, // 默认为空
-                'actuality' => 1,
-                'shortest_lease' => $v->shortest_lease, // 对应不一致
-                'remarks' => $v->remarks,
+                'shortest_lease' => $v->shortest_lease,
                 'house_type_img' => $v->house_type_img,
                 'indoor_img' => $v->indoor_img,
-                'entry_person' => $v->guardian,
-                'guardian_person' => $v->guardian,
-                'pic_person' => $v->guardian, // 待处理
-                'key_person' => $v->guardian, // 待处理
-                'have_key' => 1, // 待处理
-                'status' => 1,  // 除了有效 ，其他全部无效-其他
+                'entry_person' => $user,
+                'guardian_person' => $user,
+                'pic_person' => $pic_person,
+                'status' => $v->house_busine_state == 1 ? 1: 7,
                 'top' => 2, // 默认不置顶
-                'track_time' => date('Y-m-d H:i:s', $v->start_track_time)
-                // 几室几厅、房源描述、入住时间、付佣拼上方式、实勘、看房方式、 房源状态  到新系统备注
+                'track_time' => date('Y-m-d H:i:s', $v->start_track_time),
+                'remarks' => $remarks
             ]);
             if (!$res) $data[] = $v->id;
         }
-
         return $data;
     }
 }

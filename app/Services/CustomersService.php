@@ -37,7 +37,7 @@ class CustomersService
         $privateCustomer = Customer::where('guest','2')->whereIn('guardian_person', $privateWhere)->pluck('guid')->toArray();
 
         // 所有客源guid
-        $customerGuid  = array_unique(array_merge($publicCustomer, $privateCustomer));
+        $customerGuid  = array_merge($publicCustomer, $privateCustomer);
 
         return Customer::where('guid', $customerGuid)->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
     }

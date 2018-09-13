@@ -51,7 +51,7 @@ class VisitsService
 
             // 添加操作记录
             if ($request->model_type == 'App\Models\House') {
-                $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->cover_rel_guid, 2, $request->remarks, json_encode($request->visit_img),null, $visit->guid);
+                $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->cover_rel_guid, 2, $request->remarks, $request->visit_img,null, $visit->guid);
                 if (empty($houseOperationRecords)) throw new \Exception('房源/客源带看操作记录添加失败');
             }
 

@@ -688,7 +688,7 @@ class HousesService
             if (empty($house)) throw new \Exception('房源编辑图片失败');
 
             $img = array_merge($request->house_type_img, $request->indoor_img, $request->outdoor_img);
-            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'', $img);
+            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'修改了图片', $img);
             if (empty($houseOperationRecords)) throw new \Exception('编辑图片添加操作记录失败');
 
             \DB::commit();

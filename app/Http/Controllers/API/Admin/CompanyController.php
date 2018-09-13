@@ -5,6 +5,7 @@ use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\CompaniesRequest;
 use App\Models\Company;
 use App\Repositories\CompaniesRepository;
+use App\Services\QuartersService;
 
 class CompanyController extends APIBaseController
 {
@@ -62,5 +63,17 @@ class CompanyController extends APIBaseController
         $res = curl(config('hosts.building').'/api/get_all_select?number=2','GET');
         if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有下拉数据成功');
+    }
+
+    // 账户启用状态
+    public function enabledState
+    (
+        CompaniesRequest $request,
+        CompaniesRepository $repository
+    )
+    {
+        $res = $repository->enabledState($request);
+        if (!$res) return $this->sendError('修改用户状态失败');
+        return $this->sendResponse($res,'修改账户状态成功');
     }
 }

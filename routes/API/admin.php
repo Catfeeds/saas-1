@@ -22,6 +22,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
         Route::resource('company', 'CompanyController');
         // 获取城市下的区域
         Route::get('get_area','CompanyController@getArea');
+        // 修改状态
+        Route::get('update_status','CompanyController@enabledState');
     });
 
 

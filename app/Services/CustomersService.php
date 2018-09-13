@@ -39,7 +39,7 @@ class CustomersService
         // 所有客源guid
         $customerGuid  = array_merge($publicCustomer, $privateCustomer);
 
-        return Customer::where('guid', $customerGuid)->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
+        return Customer::whereIn('guid', $customerGuid)->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
     }
 
     // 添加客源

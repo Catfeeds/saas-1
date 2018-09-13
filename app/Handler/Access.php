@@ -61,10 +61,7 @@ class Access{
             ])->pluck('guid')->toArray();
         } elseif ($actionScope == 2) {
             // 区域所有guid
-            $areaGuid = CompanyFramework::where([
-                'company_guid' => Common::user()->company_guid,
-                'level' => 1
-            ])->pluck('guid')->toArray();
+            $areaGuid = CompanyFramework::where('guid', Common::user()->companyFramework->guid)->pluck('guid')->toArray();
 
             // 门店所有guid
             $storefrontGuid = CompanyFramework::whereIn('parent_guid' ,$areaGuid)->pluck('guid')->toArray();
@@ -76,10 +73,7 @@ class Access{
             $res =  User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 3) {
             // 门店
-            $storefrontGuid = CompanyFramework::where([
-                'company_guid' => Common::user()->company_guid,
-                'level' => 2
-            ])->pluck('guid')->toArray();
+            $storefrontGuid = CompanyFramework::where('guid', Common::user()->companyFramework->guid)->pluck('guid')->toArray();
 
             // 组所有guid
             $groupGuid = CompanyFramework::whereIn('parent_guid', $storefrontGuid)->pluck('guid')->toArray();
@@ -89,20 +83,20 @@ class Access{
             $res = User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 4) {
             // 组
-            $groupGuid = CompanyFramework::where([
-                'company_guid' => Common::user()->company_guid,
-                'level' => 3
-            ])->pluck('guid')->toArray();
+            $groupGuid = CompanyFramework::where('guid', Common::user()->companyFramework->guid)->pluck('guid')->toArray();
 
             $res = User::whereIn('rel_guid', $groupGuid)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 5) {
             // 个人
             $res = array($guid);
-        } elseif ($actionScope == 6) {
-            $res = array();
         }
 
         $res[] = $guid;
+
+        if ($actionScope == 6) {
+            $res = array();
+        }
+
         return array_unique($res);
     }
 

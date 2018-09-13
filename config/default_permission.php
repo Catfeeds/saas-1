@@ -1396,7 +1396,7 @@ return [
         ],
         [
             'name_en' => 'edit_house',// 房源-编辑房源
-            'action_scope' => 4,
+            'action_scope' => 5,
             'operation_number' => null,
             'follow_up' => null,
         ],

@@ -184,7 +184,7 @@ class HousesRepository extends Model
         \DB::beginTransaction();
         try {
             $res = House::where('guid',$request->guid)->update(['relevant_proves_img' => json_encode($request->relevant_proves_img)]);
-            $suc = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'上传证件图片', json_encode($request->relevant_proves_img));
+            $suc = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'上传证件图片', $request->relevant_proves_img);
             if (!$suc) throw new \Exception('房源操作记录添加失败');
             \DB::commit();
             return $res;

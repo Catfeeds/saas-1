@@ -16,10 +16,11 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('guid主键');
             $table->string('name',128)->nullable()->comment('公司名称');
-            $table->string('slogan',512)->nullable()->comment('公司口号');
-            $table->string('license',512)->nullable()->comment('营业执照');
+            $table->char('city_guid',32)->nullable()->comment('公司所在城市guid');
+            $table->char('area_guid',32)->nullable()->comment('公司所在区域guid');
             $table->string('address',256)->nullable()->comment('公司地址');
-            $table->string('city_name',32)->nullable()->comment('公司所在城市');
+            $table->string('company_tel',16)->nullable()->comment('公司电话');
+            $table->tinyInteger('status')->nullable()->comment('账户启用状态 1: 启用 2: 禁用');
             $table->timestamps();
         });
         \DB::statement("alter table `companies` comment'公司表'");

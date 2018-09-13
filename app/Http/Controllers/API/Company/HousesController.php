@@ -61,7 +61,7 @@ class HousesController extends APIBaseController
     {
         $house->allGuid = $service->adoptBuildingBlockGetCity($house->building_block_guid);
         $house->permission = $service->propertyPermission($house);
-        return $this->sendResponse($house,'获取1更新之前原始数据成功');
+        return $this->sendResponse($house,'获取更新之前原始数据成功');
     }
 
     // 更新房源信息
@@ -167,9 +167,13 @@ class HousesController extends APIBaseController
     )
     {
         $house = House::find($request->guid);
-        // 通过权限获取区间用户
-        $permission = Access::adoptGuardianPersonGetHouse('edit_pic');
-        if (!in_array($request->guid, $permission)) return $this->sendError('无权限修改房源图片信息');
+
+        // 上传图片
+        $uploadImage = Access::adoptGuardianPersonGetHouse('upload_pic');
+        if (!in_array($house->guid, $uploadImage)) {
+            $permission['upload_pic'] = false; // 是否允许上传图片
+        }
+
         $res = $service->updateImg($request, $house->pic_person);
         if (!$res) return $this->sendError('修改房源图片失败');
         return $this->sendResponse($res,'修改房源图片成功');
@@ -232,12 +236,8 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
-        // 判断是否有权限
-        $guardian_person = Access::adoptPermissionGetUser('set_guardian_person');
-        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
-
         // 判断作用域
-        $house = Access::adoptGuardianPersonGetHouse($guardian_person['message']);
+        $house = Access::adoptGuardianPersonGetHouse('set_guardian_person');
         if (!in_array($request->guid, $house)) return $this->sendError('无权限转移房源');
 
         $res = $repository->transferHouse($request);
@@ -320,7 +320,7 @@ class HousesController extends APIBaseController
         return $this->sendResponse(collect($request->relevant_proves_img)->map(function($img) {
             return [
                 'name' => $img,
-                'url' => config('setting.qiniu_url') . $img . config('setting.qiniu_suffix'),
+                'url' => config('setting.qiniu_url') . $img,
             ];
         }),'修改证件图片成功');
     }

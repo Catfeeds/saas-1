@@ -212,7 +212,7 @@ class House extends BaseModel
                 return '中装修';
                 break;
             case 4:
-                return '间装修';
+                return '简装修';
                 break;
             case 5:
                 return '毛坯';

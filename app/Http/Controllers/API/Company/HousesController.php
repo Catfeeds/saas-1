@@ -167,9 +167,19 @@ class HousesController extends APIBaseController
     )
     {
         $house = House::find($request->guid);
-        // 通过权限获取区间用户
-        $permission = Access::adoptGuardianPersonGetHouse('edit_pic');
-        if (!in_array($request->guid, $permission)) return $this->sendError('无权限修改房源图片信息');
+
+        if (empty($house->house_type_img) && empty($house->indoor_img) && empty($house->outdoor_img)) {
+            // 上传图片
+            $uploadImage = Access::adoptGuardianPersonGetHouse('upload_pic');
+            if (!in_array($house->guid, $uploadImage)) {
+                $permission['upload_pic'] = false; // 是否允许上传图片
+            }
+        } else {
+            // 通过权限获取区间用户
+            $permission = Access::adoptGuardianPersonGetHouse('edit_pic');
+            if (!in_array($request->guid, $permission)) return $this->sendError('无权限修改房源图片信息');
+        }
+
         $res = $service->updateImg($request, $house->pic_person);
         if (!$res) return $this->sendError('修改房源图片失败');
         return $this->sendResponse($res,'修改房源图片成功');

@@ -12,7 +12,21 @@ class CompaniesRepository extends Model
     // 公司列表
     public function getList($request)
     {
-        return Company::paginate($request->per_page??10);
+        $data = [];
+        $res = Company::with('user', 'city:guid,name')->paginate($request->per_page??10);
+        foreach ($res as $key => $v) {
+            $data[$key]['guid'] = $v->guid;
+            $data[$key]['status'] = $v->status;
+            $data[$key]['company_name'] = $v->name;
+            $data[$key]['city'] = $v->city['name'];
+            $data[$key]['address'] = $v->address;
+            $user = $v->user->where('created_at',$v->created_at)->toArray();
+            $data[$key]['name'] = $user[0]['name'];
+            $data[$key]['tel'] = $user[0]['tel'];
+        }
+
+        return $res->setCollection(collect($data));
+
     }
     // 添加公司信息
     public function addCompany($request)
@@ -37,6 +51,7 @@ class CompaniesRepository extends Model
                 'password' => bcrypt($request->tel),
                 'company_guid' => $company->guid,
             ]);
+
             if (empty($user)) throw new \Exception('用户信息同步失败');
 
             \DB::commit();
@@ -74,6 +89,16 @@ class CompaniesRepository extends Model
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;
+        }
+    }
+
+    // 启用状态
+    public function enabledState($request)
+    {
+        if ($request->status == 1) {
+            return Company::where('guid',$request->guid)->update(['status' => $request->status]);
+        } elseif ($request->guid == 2) {
+            return Company::where('guid',$request->guid)->update(['status' => $request->status]);
         }
     }
 }

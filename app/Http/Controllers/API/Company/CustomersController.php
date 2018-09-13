@@ -103,7 +103,7 @@ class CustomersController extends APIBaseController
     )
     {
         // 判断权限
-        $permission = Access::adoptGuardianPersonGetHouse('customer_change_invalid');
+        $permission = Access::adoptGuardianPersonGetCustomer('customer_change_invalid');
         if (!in_array($request->guid,$permission)) return $this->sendError('无客源转为无效权限');
         $res = $service->invalid($request);
         if (!$res) return $this->sendError('设置失败');
@@ -118,9 +118,9 @@ class CustomersController extends APIBaseController
     )
     {
         // 判断权限
-        $publicChangePrivate = Access::adoptGuardianPersonGetHouse('public_change_private');
+        $publicChangePrivate = Access::adoptGuardianPersonGetCustomer('public_change_private');
         if ($request->guest == 2 && !in_array($request->guid,$publicChangePrivate)) return $this->sendError('无公客转私客权限');
-        $privateChangePublic = Access::adoptGuardianPersonGetHouse('private_change_public');
+        $privateChangePublic = Access::adoptGuardianPersonGetCustomer('private_change_public');
         if ($request->guest == 1 && !in_array($request->guid,$privateChangePublic)) return $this->sendError('无私客转公客权限');
         $res = $service->updateGuest($request);
         if (!$res) return $this->sendError('设置失败');

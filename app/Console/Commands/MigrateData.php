@@ -83,7 +83,7 @@ class MigrateData extends Command
                 'price' => $v->unit_price,
                 'price_unit' => 2,
                 'payment_type' => $v->payment_type, // 对应不一致
-                'increasing_situation_remark' => $v->increasing_situation.$v->increasing_situation_remark,
+                'increasing_situation_remark' => $v->increasing_situation.$v->increasing_situation_remark, // 有值就拼
                 'cost_detail' => $v->cost_detail,
                 'acreage' => $v->constru_acreage,
                 'min_acreage' => $v->min_acreage,
@@ -96,7 +96,7 @@ class MigrateData extends Command
                 'station_number' => $v->station_number,
                 'rent_free' => $v->rent_free * 30,
                 'support_facilities' => $v->support_facilities,
-                'source' => $v->source, // 对应不一致
+                'source' => $v->source, // 默认为空
                 'actuality' => 1,
                 'shortest_lease' => $v->shortest_lease, // 对应不一致
                 'remarks' => $v->remarks,
@@ -107,9 +107,10 @@ class MigrateData extends Command
                 'pic_person' => $v->guardian, // 待处理
                 'key_person' => $v->guardian, // 待处理
                 'have_key' => 1, // 待处理
-                'status' => 1,
-                'top' => 2,
+                'status' => 1,  // 除了有效 ，其他全部无效-其他
+                'top' => 2, // 默认不置顶
                 'track_time' => date('Y-m-d H:i:s', $v->start_track_time)
+                // 几室几厅、房源描述、入住时间、付佣拼上方式、实勘、看房方式、 房源状态  到新系统备注
             ]);
             if (!$res) $data[] = $v->id;
         }

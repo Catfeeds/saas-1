@@ -119,22 +119,21 @@ class HousesController extends APIBaseController
         if ($request->entry_person) {
             $userGuid = $request->entry_person;
             $guardian_person = Access::adoptPermissionGetUser('set_entry_person');
+            if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
+            // 判断权限范围
+            if (!in_array($userGuid, $guardian_person['message'])) return $this->sendError('暂无权限');
         } elseif ($request->guardian_person) {
-            $userGuid = $request->guardian_person;
-            $guardian_person = Access::adoptPermissionGetUser('set_guardian_person');
+            $guardian_person = Access::adoptGuardianPersonGetHouse('set_guardian_person');
+            if (!in_array($request->house_guid, $guardian_person)) return $this->sendError('暂无修改维护人权限');
         } elseif ($request->pic_person) {
-            $userGuid = $request->pic_person;
-            $guardian_person = Access::adoptPermissionGetUser('set_pic_person');
+            $guardian_person = Access::adoptGuardianPersonGetHouse('set_pic_person');
+            if (!in_array($request->house_guid, $guardian_person)) return $this->sendError('暂无修改图片人权限');
         } elseif ($request->key_person) {
-            $userGuid = $request->key_person;
-            $guardian_person = Access::adoptPermissionGetUser('set_key_person');
+            $guardian_person = Access::adoptGuardianPersonGetHouse('set_key_person');
+            if (!in_array($request->house_guid, $guardian_person)) return $this->sendError('暂无修改钥匙人权限');
         }
-        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
 
-        // 判断权限范围
-        if (!in_array($userGuid, $guardian_person['message'])) return $this->sendError('暂无权限');
-
-        $res = $repository->changePersonnel($request, $guardian_person['message']);
+        $res = $repository->changePersonnel($request);
         if (!$res['status']) return $this->sendError($res['message']);
         return $this->sendResponse(true, $res['message']);
     }

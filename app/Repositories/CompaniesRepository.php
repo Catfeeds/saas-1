@@ -30,7 +30,7 @@ class CompaniesRepository extends Model
 
     }
     // 添加公司信息
-    public function addCompany($request)
+    public function addCompany($request,$service)
     {
         \DB::beginTransaction();
         try {
@@ -51,6 +51,12 @@ class CompaniesRepository extends Model
                 'level' => 1,
             ]);
             if (empty($role)) throw new \Exception('添加角色失败');
+
+            $request->offsetSet('role_guid', $role->guid);
+
+            $res = $service->defaultPermissions($request);
+
+            if (empty($res)) throw new \Exception('岗位级别修改失败');
 
             $user = User::create([
                 'guid' => Common::getUuid(),

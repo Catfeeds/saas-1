@@ -122,7 +122,7 @@ class QuartersService
     }
 
     // 默认权限
-    public static function defaultPermissions(
+    public function defaultPermissions(
         $request
     )
     {

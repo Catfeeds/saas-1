@@ -3,14 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Handler\Common;
-use App\Models\Building;
-use App\Models\BuildingBlock;
 use App\Models\Company;
-use App\Models\House;
-use App\Models\MediaBuilding;
-use App\Models\MediaBuildingBlock;
-use App\Models\OfficeBuildingHouse;
-use App\Models\User;
+use App\Models\CompanyFramework;
+use App\Models\MediaUser;
 use Illuminate\Console\Command;
 
 class MigrateFramework extends Command
@@ -46,29 +41,74 @@ class MigrateFramework extends Command
      */
     public function handle()
     {
+        //  添加组织架构
         \DB::beginTransaction();
         try {
-            // 添加公司
-            $company = Company::create([
-                'guid' => Common::getUuid(),
-                'name' => '楚楼网',
-                'city_guid' => '134dba069ad211e8b2e4144fd7c018f6',
-                'area_guid' => '13cc70129ad211e8b005144fd7c018f6',
-                'address' => '光谷智慧园',
-                'company_tel' => '400-580-888'
-            ]);
-            if (!$company) \Log::info('公司添加失败');
+            // 查询公司guid
+            $company_guid = Company::where('name', '楚楼网')->value('guid');
 
-            $user = User::create([
+            // 添加武昌片区
+            $area1 = CompanyFramework::create([
                 'guid' => Common::getUuid(),
-                'company_guid' => $company->guid,
-                'name' => ''
+                'name' => '武昌',
+                'company_guid' => $company_guid,
+                'level' => 1
             ]);
 
+            // 添加汉口片区
+            $area2 = CompanyFramework::create([
+                'guid' => Common::getUuid(),
+                'name' => '汉口',
+                'company_guid' => $company_guid,
+                'level' => 1
+            ]);
+            if (!$area2 || !$area1) \Log::info('片区添加失败');
 
+            // 添加门店
+            $store1 = CompanyFramework::create([
+                'guid' => Common::getUuid(),
+                'name' => '智慧园店-楚楼总部',
+                'company_guid' => $company_guid,
+                'parent_guid' => $area1->guid,
+                'level' => 2
+            ]);
 
+            $store2 = CompanyFramework::create([
+                'guid' => Common::getUuid(),
+                'name' => '光谷店',
+                'company_guid' => $company_guid,
+                'parent_guid' => $area1->guid,
+                'level' => 2
+            ]);
+
+            $store3 = CompanyFramework::create([
+                'guid' => Common::getUuid(),
+                'name' => '汉街店',
+                'company_guid' => $company_guid,
+                'parent_guid' => $area1->guid,
+                'level' => 2
+            ]);
+
+            $store4 = CompanyFramework::create([
+                'guid' => Common::getUuid(),
+                'name' => '汉口泛海国际店',
+                'company_guid' => $company_guid,
+                'parent_guid' => $area2->guid,
+                'level' => 2
+            ]);
+
+            if (!$store1 || !$store2 || !$store3 || !$store4) \Log::info('门店添加失败');
+            // 迁移人员
+            $user = MediaUser::with('storefront')->where('ascription_store', '!=', 6)->where('remark','!=', '已离职')->get();
+
+            foreach ($user as $v) {
+                dd($v->storefront->name);
+            }
+            \DB::commit();
+            return true;
         } catch (\Exception $exception) {
-
+            \DB::rollback();
+            return false;
         }
 
 

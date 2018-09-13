@@ -179,6 +179,7 @@ class SharesService
         $share = $house->shareRecord->sortByDesc('created_at')->first();
         $data['share_info'] = $house->shareRecord; // 信息
         $data['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
+        $data['share'] = $house->share;
         return $data;
     }
 

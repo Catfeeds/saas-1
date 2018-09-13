@@ -13,4 +13,12 @@ class MediaUser extends Model
     protected $dates = ['deleted_at'];
 
     protected $guarded = [];
+    
+    // 关联门店
+    public function storefront()
+    {
+        return $this->belongsTo(Storefront::class,'ascription_store', 'id');
+    }
+    
+    
 }

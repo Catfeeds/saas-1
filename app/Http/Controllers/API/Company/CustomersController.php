@@ -135,17 +135,19 @@ class CustomersController extends APIBaseController
     )
     {
         // 判断是否有对应权限
-        if ($request->entry_person) {
-            $userGuid = $request->entry_person;
-            $guardian_person = Access::adoptPermissionGetUser('set_customer_entry_person');
-        } elseif ($request->guardian_person) {
-            $userGuid = $request->guardian_person;
-            $guardian_person = Access::adoptPermissionGetUser('set_customer_guardian_person');
-        }
-        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
+        if (empty($request->broker)) {
+            if ($request->entry_person) {
+                $userGuid = $request->entry_person;
+                $guardian_person = Access::adoptPermissionGetUser('set_customer_entry_person');
+            } elseif ($request->guardian_person) {
+                $userGuid = $request->guardian_person;
+                $guardian_person = Access::adoptPermissionGetUser('set_customer_guardian_person');
+            }
+            if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
 
-        // 判断权限范围
-        if (!in_array($userGuid, $guardian_person['message'])) return $this->sendError('暂无权限');
+            // 判断权限范围
+            if (!in_array($userGuid, $guardian_person['message'])) return $this->sendError('暂无权限');
+        }
 
         $res = $service->transfer($request);
         if (!$res) return $this->sendError('设置失败');

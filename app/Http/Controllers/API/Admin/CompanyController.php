@@ -24,11 +24,10 @@ class CompanyController extends APIBaseController
     public function store
     (
         CompaniesRequest $request,
-        CompaniesRepository $repository,
-        QuartersService $service
+        CompaniesRepository $repository
     )
     {
-        $res = $repository->addCompany($request,$service);
+        $res = $repository->addCompany($request);
         if ($res) return $this->sendResponse($res,'添加公司成功');
         return $this->sendError('添加公司失败');
     }

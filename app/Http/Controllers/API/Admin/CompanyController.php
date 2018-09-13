@@ -5,6 +5,7 @@ use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\CompaniesRequest;
 use App\Models\Company;
 use App\Repositories\CompaniesRepository;
+use App\Services\QuartersService;
 
 class CompanyController extends APIBaseController
 {
@@ -23,10 +24,11 @@ class CompanyController extends APIBaseController
     public function store
     (
         CompaniesRequest $request,
-        CompaniesRepository $repository
+        CompaniesRepository $repository,
+        QuartersService $service
     )
     {
-        $res = $repository->addCompany($request);
+        $res = $repository->addCompany($request,$service);
         if ($res) return $this->sendResponse($res,'添加公司成功');
         return $this->sendError('添加公司失败');
     }

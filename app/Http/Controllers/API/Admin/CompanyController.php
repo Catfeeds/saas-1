@@ -56,7 +56,7 @@ class CompanyController extends APIBaseController
         return $this->sendError('修改公司失败');
     }
 
-    // 获取城市区域
+    // 获取城市区域下拉数据
     public function getArea()
     {
         $res = curl(config('hosts.building').'/api/get_all_select?number=2','GET');

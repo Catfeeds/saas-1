@@ -4,6 +4,7 @@ namespace App\Http\Requests\Company;
 
 use App\Models\Company;
 use App\Models\User;
+use function GuzzleHttp\default_ca_bundle;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -34,6 +35,10 @@ class CompaniesRequest extends FormRequest
                     'tel.not_in' => '用户电话不能重复',
                     'company_tel' => '公司电话不能重复'
                 ];
+            default;
+                return [
+
+                ];
         }
     }
     /**
@@ -43,6 +48,7 @@ class CompaniesRequest extends FormRequest
      */
     public function rules()
     {
+
         switch ($this->route()->getActionMethod()) {
             case 'store':
                 return [
@@ -68,7 +74,7 @@ class CompaniesRequest extends FormRequest
                 ];
             case 'update':
                 return [
-                    'name' => 'required|max:128|unique:companies',
+                    'name' => 'required|max:128|unique:companies'.$this->route('company')->guid,
                     'address' => 'nullable|max:256',
                     'city_guid' => 'required|max:32',
                     'area_guid' => 'required|max:32',
@@ -88,10 +94,10 @@ class CompaniesRequest extends FormRequest
                     ],
                     'username' => 'required|max:64',
                 ];
-            default:
-                {
-                    return [];
-                }
+            default;
+                return [
+
+                ];
         }
     }
 }

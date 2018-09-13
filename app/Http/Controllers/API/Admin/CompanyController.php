@@ -12,10 +12,11 @@ class CompanyController extends APIBaseController
     // 公司列表
     public function index
     (
+        CompaniesRequest $request,
         CompaniesRepository $repository
     )
     {
-        $res = $repository->getList();
+        $res = $repository->getList($request);
         return $this->sendResponse($res,'公司列表获取成功');
     }
     // 添加公司
@@ -28,6 +29,18 @@ class CompanyController extends APIBaseController
         $res = $repository->addCompany($request);
         if ($res) return $this->sendResponse($res,'添加公司成功');
         return $this->sendError('添加公司失败');
+    }
+
+    // 修改之前原始数据
+    public function edit
+    (
+        Company $company
+    )
+    {
+        $company->username = $company->user->name;
+        $company->tel = $company->user->tel;
+        $company->remarks = $company->user->remarks;
+        return $this->sendResponse($company,'修改之前原始数据获取成功');
     }
 
     // 编辑公司

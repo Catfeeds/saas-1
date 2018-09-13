@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 class CompaniesRepository extends Model
 {
     // 公司列表
-    public function getList()
+    public function getList($request)
     {
-        return Company::paginate(10);
+        return Company::paginate($request->per_page??10);
     }
     // 添加公司信息
     public function addCompany($request)

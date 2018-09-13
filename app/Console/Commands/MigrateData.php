@@ -48,7 +48,7 @@ class MigrateData extends Command
     {
         $data = [];
         //查询全部的房子
-        $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building','user')->get();
+        $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building','user')->where('guardian','!=',6)->get();
         foreach ($house as $v) {
             // 房源对应的楼盘名称
             $building_name = $v->buildingBlock->building->name;
@@ -71,8 +71,7 @@ class MigrateData extends Command
                 'unit_unit' => $unit_unit
             ])->value('guid');
             // 查询新表的人员对应的guid
-//            $user = User::where('tel', $v->user->tel)->value('guid');
-            $user = '5cbdefd0b5a811e881ae08002772f793';
+            $user = User::where('tel', $v->user->tel)->value('guid');
             $pic_person = '';
             if ($v->house_type_img || $v->indoor_img) {
                 $pic_person = $user;

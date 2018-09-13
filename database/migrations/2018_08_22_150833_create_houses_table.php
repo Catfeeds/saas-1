@@ -51,7 +51,7 @@ class CreateHousesTable extends Migration
             // 更多信息
             $table->tinyInteger('source')->nullable()->comment('来源渠道: 1: 上门 2: 电话 3: 洗盘 4: 网络 5: 陌拜 6: 转介绍 7: 老客户');
             $table->tinyInteger('actuality')->nullable()->comment('现状 1: 空置 2: 自用 3: 在租');
-            $table->tinyInteger('shortest_lease')->nullable()->comment('短租期: 1: 1-2年 2: 2-3年 3: 3-4年 4: 5年以上');
+            $table->tinyInteger('shortest_lease')->nullable()->comment('最短租期: 1: 1-2年 2: 2-3年 3: 3-4年 4: 5年以上');
             $table->text('remarks')->nullable()->comment('备注');
 
             // 图片

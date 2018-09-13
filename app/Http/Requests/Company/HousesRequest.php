@@ -48,7 +48,7 @@ class HousesRequest extends FormRequest
                 return [
                     'owner_info' => 'required|array',
                     'floor' => 'required|integer',
-                    'house_number' => 'required|numeric',
+                    'house_number' => 'required',
                     'building_block_guid' => 'required',
                     'grade' => 'required|integer|between:1,3',
                     'public_private' => 'required|integer|between:1,2',
@@ -78,7 +78,7 @@ class HousesRequest extends FormRequest
                 return [
                     'owner_info' => 'required|array',
                     'floor' => 'required|integer',
-                    'house_number' => 'required|numeric',
+                    'house_number' => 'required',
                     'building_block_guid' => 'required',
                     'grade' => 'required|integer|between:1,3',
                     'public_private' => 'required|integer|between:1,2',

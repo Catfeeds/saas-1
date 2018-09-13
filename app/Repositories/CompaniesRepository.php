@@ -4,7 +4,9 @@ namespace App\Repositories;
 
 use App\Handler\Common;
 use App\Models\Company;
+use App\Models\Role;
 use App\Models\User;
+use App\Services\QuartersService;
 use Illuminate\Database\Eloquent\Model;
 
 class CompaniesRepository extends Model
@@ -15,10 +17,17 @@ class CompaniesRepository extends Model
         $data = [];
         $res = Company::with('user', 'city:guid,name')->paginate($request->per_page??10);
         foreach ($res as $key => $v) {
+            $data[$key]['guid'] = $v->guid;
+            $data[$key]['status'] = $v->status;
             $data[$key]['company_name'] = $v->name;
-    }
-    dd($data);
-        return $res;
+            $data[$key]['city'] = $v->city['name'];
+            $data[$key]['address'] = $v->address;
+            $user = $v->user->where('created_at',$v->created_at)->toArray();
+            $data[$key]['name'] = $user[0]['name'];
+            $data[$key]['tel'] = $user[0]['tel'];
+        }
+
+        return $res->setCollection(collect($data));
 
     }
     // 添加公司信息
@@ -36,15 +45,32 @@ class CompaniesRepository extends Model
             ]);
             if (empty($company)) throw new \Exception('公司添加失败');
 
+            $role = Role::create([
+                'guid' => Common::getUuid(),
+                'company_guid' => $company->guid,
+                'name' => '管理员',
+                'level' => 1,
+            ]);
+            if (empty($role)) throw new \Exception('添加角色失败');
+
+            // 设置等级
+            $request->offsetSet('role_guid', $role->guid);
+            $request->offsetSet('level', 1);
+
+            // 添加默认权限
+            $quartersService = new QuartersService();
+            $res = $quartersService->defaultPermissions($request);
+            if (empty($res)) throw new \Exception('岗位级别修改失败');
+
             $user = User::create([
                 'guid' => Common::getUuid(),
+                'role_guid' => $role->guid,
                 'tel' => $request->tel,
                 'name' => $request->username,
                 'remarks' => $request->remarks,
                 'password' => bcrypt($request->tel),
                 'company_guid' => $company->guid,
             ]);
-
             if (empty($user)) throw new \Exception('用户信息同步失败');
 
             \DB::commit();
@@ -82,6 +108,18 @@ class CompaniesRepository extends Model
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;
+        }
+    }
+
+    // 启用状态
+    public function enabledState($request)
+    {
+        // 启用
+        if ($request->status == 1) {
+            return Company::where('guid',$request->guid)->update(['status' => $request->status]);
+        } elseif ($request->status == 2) {
+            // 禁用
+            return Company::where('guid',$request->guid)->update(['status' => $request->status]);
         }
     }
 }

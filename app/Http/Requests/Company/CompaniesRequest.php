@@ -71,6 +71,7 @@ class CompaniesRequest extends FormRequest
                         )
                     ],
                     'username' => 'required|max:64',
+                    'remarks' => 'required|max:32',
                 ];
             case 'update':
                 return [
@@ -92,7 +93,12 @@ class CompaniesRequest extends FormRequest
                             User::all()->pluck('tel')->toArray()
                         )
                     ],
+                    'remarks' => 'required|max:32',
                     'username' => 'required|max:64',
+                ];
+            case 'enabledState':
+                return [
+                    'status' => 'integer|between:1,2'
                 ];
             default;
                 return [

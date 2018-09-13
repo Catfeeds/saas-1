@@ -38,6 +38,12 @@ class Common
         return \Illuminate\Support\Facades\Auth::guard('api')->user();
     }
 
+    // 登录用户
+    public static function admin()
+    {
+        return \Illuminate\Support\Facades\Auth::guard('admin')->user();
+    }
+
     // 获取七牛token
     public static function getToken($accessKey = null, $secretKey = null, $bucket = null)
     {

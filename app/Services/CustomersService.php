@@ -12,11 +12,34 @@ use App\Models\Visit;
 class CustomersService
 {
     // 客源列表
-    public function getList($request, $guardian_person)
+    public function getList($request)
     {
-        return Customer::where([
-            'company_guid' => Common::user()->company_guid
-        ])->whereIn('guardian_person', $guardian_person)->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
+        // 公客范围
+        $public = Access::adoptPermissionGetUser('public_customer_show');
+
+        if (empty($public['status'])) {
+            $publicWhere = [];
+        } else {
+            $publicWhere = $public['message'];
+        }
+
+        $publicCustomer = Customer::where('guest','1')->whereIn('guardian_person', $publicWhere)->pluck('guid')->toArray();
+
+        // 私客范围
+        $private = Access::adoptPermissionGetUser('private_customer_show');
+
+        if (empty($private['status'])) {
+            $privateWhere = [];
+        } else {
+            $privateWhere = $private['message'];
+        }
+
+        $privateCustomer = Customer::where('guest','2')->whereIn('guardian_person', $privateWhere)->pluck('guid')->toArray();
+
+        // 所有客源guid
+        $customerGuid  = array_merge($publicCustomer, $privateCustomer);
+
+        return Customer::whereIn('guid', $customerGuid)->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
     }
 
     // 添加客源
@@ -331,7 +354,7 @@ class CustomersService
         }
     }
 
-    //获取客源动态
+    // 获取客源动态
     public function getDynamic($request)
     {
         // 判断有无查看带看权限
@@ -355,6 +378,13 @@ class CustomersService
         foreach ($res as $v) {
             // 如果是带看  查询房子的相关信息
             if ($v->type == 2) {
+                // 查询带看的房源
+                $house_guid = Visit::where([
+                    'cover_rel_guid' => $v->customer_guid,
+                    'model_type' => 'App\Models\Customer',
+                    'created_at' => $v->created_at->format('Y-m-d H:i:s')
+                ])->value('rel_guid');
+
                 if (empty($house_guid)) {
                     $v['house'] = '';
                 } else {

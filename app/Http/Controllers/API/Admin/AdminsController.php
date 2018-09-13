@@ -11,7 +11,7 @@ class AdminsController extends APIBaseController
     // 登录人信息
     public function show()
     {
-        $user = Auth::guard('admin')->user();
+        $user = Common::admin();
         if (empty($user)) return $this->sendError('登录账号异常');
         $res = $user->toArray();
         return $this->sendResponse($res,'用户信息获取成功');

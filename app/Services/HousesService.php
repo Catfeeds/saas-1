@@ -245,14 +245,14 @@ class HousesService
         }
 
         // 图片人
-        $picturePerson = Access::adoptPermissionGetUser('set_pic_person');
-        if (!in_array($house->pic_person, $picturePerson['message'])) {
+        $picturePerson = Access::adoptGuardianPersonGetHouse('set_pic_person');
+        if (!in_array($house->guid, $picturePerson)) {
             $permission['set_pic_person'] = false; // 是否允许修改图片人
         }
 
         // 钥匙人
-        $keyPerson = Access::adoptPermissionGetUser('set_key_person');
-        if (!in_array($house->key_person, $keyPerson['message'])) {
+        $keyPerson = Access::adoptGuardianPersonGetHouse('set_key_person');
+        if (!in_array($house->guid, $keyPerson)) {
             $permission['set_key_person'] = false; // 是否允许修改钥匙人
         }
 

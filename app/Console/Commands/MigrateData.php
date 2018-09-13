@@ -71,7 +71,8 @@ class MigrateData extends Command
                 'unit_unit' => $unit_unit
             ])->value('guid');
             // 查询新表的人员对应的guid
-            $user = User::where('tel', $v->user->tel)->value('guid');
+//            $user = User::where('tel', $v->user->tel)->value('guid');
+            $user = '5cbdefd0b5a811e881ae08002772f793';
             $pic_person = '';
             if ($v->house_type_img || $v->indoor_img) {
                 $pic_person = $user;
@@ -79,6 +80,8 @@ class MigrateData extends Command
             // 插入新房源表
             //备注
             $remarks = '';
+            //6室1厅付佣:50%,看房时间电话预约状态:委托
+
             // 几室几厅
             if ($v->HouseType) {
                 $remarks .= $v->HouseType;
@@ -89,11 +92,11 @@ class MigrateData extends Command
             }
             // 入住时间
             if ($v->check_in_time) {
-                $remarks .=',入住时间'. $v->check_in_time;
+                $remarks .=',入住时间:'. $v->check_in_time;
             }
             // 付佣
             if ($v->pay_commission) {
-                $remarks .='付佣:'.$v->pay_commission.'%';
+                $remarks .=',付佣:'.$v->pay_commission.'%';
             }
             // 实勘
             if ($v->prospecting == 1) {
@@ -101,15 +104,30 @@ class MigrateData extends Command
             }
             // 看房时间
             if ($v->see_house_time) {
-                $remarks .=',看房时间'.$v->see_house_time_cn;
+                $remarks .=',看房时间:'.$v->see_house_time_cn;
             }
             // 房源状态
             if ($v->house_proxy_type == 1) {
-                $remarks .='状态:独家';
+                $remarks .=',状态:独家';
             } else {
-                $remarks .='状态:委托';
+                $remarks .=',状态:委托';
             }
             $remarks = trim($remarks, ',');
+            // 递增情况
+            $increasing = '';
+            if ($v->increasing_situation) {
+                $increasing .= $v->increasing_situation. '%';
+            }
+            if ($v->increasing_situation_remark) {
+                $increasing .=','.$v->increasing_situation_remark;
+            }
+            $increasing = trim($increasing, ',');
+
+            // 免租期
+            $rent_free = null;
+            if ($v->rent_free && $v->rent_free != 12) {
+                $rent_free = $v->rent_free * 30;
+            }
             $res = House::create([
                 'guid' => Common::getUuid(),
                 'company_guid' => 'a3d2f99cb70111e8b97808002772f793',
@@ -124,10 +142,10 @@ class MigrateData extends Command
                 'price' => $v->unit_price,
                 'price_unit' => 2,
                 'payment_type' => $v->payment_type,
-                'increasing_situation_remark' => $v->increasing_situation.'%'. $v->increasing_situation_remark ? ','.$v->increasing_situation_remark:'',
+                'increasing_situation_remark' => $increasing,
                 'cost_detail' => $v->cost_detail,
                 'acreage' => $v->constru_acreage,
-                'min_acreage' => $v->min_acreage,
+                'mini_acreage' => $v->min_acreage,
                 'split' => $v->split,
                 'register_company' => $v->register_company,
                 'type' => $v->office_building_type,
@@ -135,7 +153,7 @@ class MigrateData extends Command
                 'renovation' => $v->renovation,
                 'open_bill' => $v->open_bill,
                 'station_number' => $v->station_number,
-                'rent_free' => $v->rent_free == 12 ? '' : $v->rent_free*30,
+                'rent_free' => $rent_free,
                 'support_facilities' => $v->support_facilities,
                 'shortest_lease' => $v->shortest_lease,
                 'house_type_img' => $v->house_type_img,

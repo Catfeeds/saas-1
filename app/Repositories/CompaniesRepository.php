@@ -12,7 +12,14 @@ class CompaniesRepository extends Model
     // 公司列表
     public function getList($request)
     {
-        return Company::paginate($request->per_page??10);
+        $data = [];
+        $res = Company::with('user', 'city:guid,name')->paginate($request->per_page??10);
+        foreach ($res as $key => $v) {
+            $data[$key]['company_name'] = $v->name;
+    }
+    dd($data);
+        return $res;
+
     }
     // 添加公司信息
     public function addCompany($request)
@@ -37,6 +44,7 @@ class CompaniesRepository extends Model
                 'password' => bcrypt($request->tel),
                 'company_guid' => $company->guid,
             ]);
+
             if (empty($user)) throw new \Exception('用户信息同步失败');
 
             \DB::commit();

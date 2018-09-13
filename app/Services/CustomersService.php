@@ -331,7 +331,7 @@ class CustomersService
         }
     }
 
-    //获取客源动态
+    // 获取客源动态
     public function getDynamic($request)
     {
         // 判断有无查看带看权限
@@ -355,6 +355,13 @@ class CustomersService
         foreach ($res as $v) {
             // 如果是带看  查询房子的相关信息
             if ($v->type == 2) {
+                // 查询带看的房源
+                $house_guid = Visit::where([
+                    'cover_rel_guid' => $v->customer_guid,
+                    'model_type' => 'App\Models\Customer',
+                    'created_at' => $v->created_at->format('Y-m-d H:i:s')
+                ])->value('rel_guid');
+
                 if (empty($house_guid)) {
                     $v['house'] = '';
                 } else {

@@ -12,11 +12,34 @@ use App\Models\Visit;
 class CustomersService
 {
     // 客源列表
-    public function getList($request, $guardian_person)
+    public function getList($request)
     {
-        return Customer::where([
-            'company_guid' => Common::user()->company_guid
-        ])->whereIn('guardian_person', $guardian_person)->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
+        // 公客范围
+        $public = Access::adoptPermissionGetUser('public_customer_show');
+
+        if (empty($public['status'])) {
+            $publicWhere = [];
+        } else {
+            $publicWhere = $public['message'];
+        }
+
+        $publicCustomer = Customer::where('guest','1')->whereIn('guardian_person', $publicWhere)->pluck('guid')->toArray();
+
+        // 私客范围
+        $private = Access::adoptPermissionGetUser('private_customer_show');
+
+        if (empty($private['status'])) {
+            $privateWhere = [];
+        } else {
+            $privateWhere = $private['message'];
+        }
+
+        $privateCustomer = Customer::where('guest','2')->whereIn('guardian_person', $privateWhere)->pluck('guid')->toArray();
+
+        // 所有客源guid
+        $customerGuid  = array_unique(array_merge($publicCustomer, $privateCustomer));
+
+        return Customer::where('guid', $customerGuid)->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
     }
 
     // 添加客源

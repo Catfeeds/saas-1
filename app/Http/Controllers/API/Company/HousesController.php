@@ -97,8 +97,6 @@ class HousesController extends APIBaseController
         if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有下拉数据成功');
     }
-    
-
 
     // 所有的楼座下拉数据
     public function buildingBlocksSelect()

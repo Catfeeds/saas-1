@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Handler\Common;
 use App\Models\Company;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -43,8 +44,17 @@ class CompaniesRepository extends Model
             ]);
             if (empty($company)) throw new \Exception('公司添加失败');
 
+            $role = Role::create([
+                'guid' => Common::getUuid(),
+                'company_guid' => $company->guid,
+                'name' => '管理员',
+                'level' => 1,
+            ]);
+            if (empty($role)) throw new \Exception('添加角色失败');
+
             $user = User::create([
                 'guid' => Common::getUuid(),
+                'role_guid' => $role->guid,
                 'tel' => $request->tel,
                 'name' => $request->username,
                 'remarks' => $request->remarks,
@@ -95,9 +105,11 @@ class CompaniesRepository extends Model
     // 启用状态
     public function enabledState($request)
     {
+        // 启用
         if ($request->status == 1) {
             return Company::where('guid',$request->guid)->update(['status' => $request->status]);
-        } elseif ($request->guid == 2) {
+        } elseif ($request->status == 2) {
+            // 禁用
             return Company::where('guid',$request->guid)->update(['status' => $request->status]);
         }
     }

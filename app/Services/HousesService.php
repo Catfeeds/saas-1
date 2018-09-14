@@ -791,7 +791,7 @@ class HousesService
 
             if (!$record) throw new \Exception('房源共享记录添加失败');
             \DB::commit();
-            return true;
+            return $record;
         } catch (\Exception $exception) {
             \DB::rollback();
             \Log::error('房源下架失败'.$exception->getMessage());

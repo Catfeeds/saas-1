@@ -121,10 +121,12 @@ class CompaniesRepository extends Model
         try {
             $company = Company::where('guid',$request->guid)->update(['status' => 1]);
             if (empty($company)) throw new \Exception('账户启用失败');
-            $companies = Company::where('guid',$request->guid)->first();
 
-            $user = User::where('tel',$companies->contacts_tel)->update(['status' => 3]);
+            $user = User::where('company_guid',$request->guid)->update(['status' => 1]);
             if (empty($user)) throw new \Exception('用户冻结失败');
+
+            \DB::commit();
+            return true;
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;
@@ -139,10 +141,12 @@ class CompaniesRepository extends Model
         try {
             $company = Company::where('guid',$request->guid)->update(['status' => 2]);
             if (empty($company)) throw new \Exception('账户启用失败');
-            $companies = Company::where('guid',$request->guid)->first();
 
-            $user = User::where('tel',$companies->contacts_tel)->update(['status' => 1]);
+            $user = User::where('company_guid',$request->guid)->update(['status' => 3]);
             if (empty($user)) throw new \Exception('用户冻结失败');
+
+            \DB::commit();
+            return true;
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;

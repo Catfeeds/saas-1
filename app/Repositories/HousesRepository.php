@@ -18,6 +18,17 @@ class HousesRepository extends Model
         return $data->setCollection(collect($houses));
     }
 
+    // 平台房源列表
+    public function platformHouseList($request,$service)
+    {
+        $data = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->where('release_source','平台')->orderBy('created_at','desc')->paginate($request->per_page??10);
+        $houses = [];
+        foreach ($data as $key => $v) {
+            $houses[$key] = $service->getData($v);
+        }
+       return $data->setCollection(collect($houses));
+    }
+
     // 添加房源
     public function addHouse($request)
     {
@@ -94,7 +105,7 @@ class HousesRepository extends Model
             'shortest_lease' => $request->shortest_lease,//最短租期
             'remarks' => $request->remarks,//备注
             'share' => 1,
-            'release_source' => $request->release_source,
+            'release_source' => '平台',
             'indoor_img' => $request->indoor_img,
             'outdoor_img' => $request->outdoor_img,
             'house_type_img' => $request->house_type_img,

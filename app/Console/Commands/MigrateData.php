@@ -9,6 +9,7 @@ use App\Models\Company;
 use App\Models\House;
 use App\Models\MediaBuilding;
 use App\Models\MediaBuildingBlock;
+use App\Models\MediaUser;
 use App\Models\OfficeBuildingHouse;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -47,8 +48,9 @@ class MigrateData extends Command
     public function handle()
     {
         $data = [];
-        //查询全部的房子
-        $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building','user')->where('guardian','!=',6)->get();
+        //查询公司的全部房子
+        $guardian = MediaUser::where('ascription_store',6)->pluck('id')->toArray();
+        $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building','user')->whereNotIn('guardian', $guardian)->get();
         foreach ($house as $v) {
             // 房源对应的楼盘名称
             $building_name = $v->buildingBlock->building->name;

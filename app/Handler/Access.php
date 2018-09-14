@@ -70,7 +70,7 @@ class Access{
 
             $guids = array_merge($storefrontGuid, $groupGuid, $areaGuid);
 
-            $res =  User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
+            $res =  User::whereIn('rel_guid', $guids)->with(['role', 'CompanyFrameworkSeeder'])->pluck('guid')->toArray();
         } elseif ($actionScope == 3) {
             // 门店
             $storefrontGuid = CompanyFramework::where('guid', Common::user()->companyFramework->guid)->pluck('guid')->toArray();
@@ -80,12 +80,12 @@ class Access{
 
             $guids = array_merge($storefrontGuid, $groupGuid);
 
-            $res = User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
+            $res = User::whereIn('rel_guid', $guids)->with(['role', 'CompanyFrameworkSeeder'])->pluck('guid')->toArray();
         } elseif ($actionScope == 4) {
             // 组
             $groupGuid = CompanyFramework::where('guid', Common::user()->companyFramework->guid)->pluck('guid')->toArray();
 
-            $res = User::whereIn('rel_guid', $groupGuid)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
+            $res = User::whereIn('rel_guid', $groupGuid)->with(['role', 'CompanyFrameworkSeeder'])->pluck('guid')->toArray();
         } elseif ($actionScope == 5) {
             // 个人
             $res = array($guid);

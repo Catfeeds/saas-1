@@ -8,7 +8,6 @@ use App\Repositories\CompaniesRepository;
 
 class CompanyController extends APIBaseController
 {
-
     // 公司列表
     public function index
     (
@@ -48,7 +47,7 @@ class CompanyController extends APIBaseController
         Company $company
     )
     {
-        $res = $repository->updateCompany($request,$company);
+        $res = $repository->updateCompany($request, $company);
         if ($res) return $this->sendResponse($res,'修改公司成功');
         return $this->sendError('修改公司失败');
     }

@@ -26,14 +26,12 @@ class CompaniesRequest extends FormRequest
             case 'store':
                 return [
                     'name.unique' => '公司名称不能重复添加',
-                    'tel.not_in' => '用户电话不能重复',
-                    'company_tel' => '公司电话不能重复'
+                    'contacts_tel.not_in' => '联系电话不能重复',
                 ];
             case 'update':
                 return [
                     'name.not_in' => '公司名称不能重复添加',
-                    'tel.not_in' => '用户电话不能重复',
-                    'company_tel' => '公司电话不能重复'
+                    'contacts_tel.not_in' => '用户电话不能重复',
                 ];
             default;
                 return [
@@ -48,7 +46,6 @@ class CompaniesRequest extends FormRequest
      */
     public function rules()
     {
-
         switch ($this->route()->getActionMethod()) {
             case 'store':
                 return [
@@ -56,45 +53,35 @@ class CompaniesRequest extends FormRequest
                     'address' => 'required|max:256',
                     'city_guid' => 'required|max:32',
                     'area_guid' => 'required|max:32',
-                    'company_tel' => [
-                        'required',
-                        'max:16',
-                        Rule::notIn(
-                            Company::all()->pluck('company_tel')->toArray()
-                        )
-                    ],
-                    'tel' => [
+                    'company_tel' => 'required|max:16',
+                    'contacts_tel' => [
                         'required',
                         'max:16',
                         Rule::notIn(
                             User::all()->pluck('tel')->toArray()
                         )
                     ],
-                    'username' => 'required|max:64',
-                    'remarks' => 'required|max:32',
+                    'contacts' => 'required|max:64',
+                    'job_remarks' => 'required|max:32',
                 ];
             case 'update':
                 return [
-                    'name' => 'required|max:128|unique:companies'.$this->route('company')->guid,
+                    'name' => [
+                        'required',
+                        'max:128',
+                        Rule::unique('companies')->ignore($this->route('company')->guid,'guid')
+                    ],
                     'address' => 'nullable|max:256',
                     'city_guid' => 'required|max:32',
                     'area_guid' => 'required|max:32',
-                    'company_tel' => [
+                    'company_tel' => 'required|max:16',
+                    'contacts_tel' => [
                         'required',
                         'max:16',
-                        Rule::notIn(
-                            Company::all()->pluck('company_tel')->toArray()
-                        )
+                        Rule::unique('companies')->ignore($this->route('company')->guid,'guid')
                     ],
-                    'tel' => [
-                        'required',
-                        'max:16',
-                        Rule::notIn(
-                            User::all()->pluck('tel')->toArray()
-                        )
-                    ],
-                    'remarks' => 'required|max:32',
-                    'username' => 'required|max:64',
+                    'job_remarks' => 'required|max:32',
+                    'contacts' => 'required|max:64',
                 ];
             default;
                 return [

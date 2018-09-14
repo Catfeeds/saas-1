@@ -124,7 +124,6 @@ class CompaniesRepository extends Model
 
             $user = User::where('company_guid',$request->guid)->update(['start_up' => 1]);
             if (empty($user)) throw new \Exception('用户冻结失败');
-
             \DB::commit();
             return true;
         } catch (\Exception $exception) {
@@ -140,6 +139,7 @@ class CompaniesRepository extends Model
         try {
             $company = Company::where('guid',$request->guid)->update(['status' => 2]);
             if (empty($company)) throw new \Exception('账户启用失败');
+
 
             $user = User::where('company_guid',$request->guid)->update(['start_up' => 2]);
             if (empty($user)) throw new \Exception('用户冻结失败');

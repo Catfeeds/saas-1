@@ -9,10 +9,12 @@
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
 
     // 七牛token
-    Route::get('/get_qi_niu_token', 'HousesController@token');
+    Route::get('/get_qi_niu_token', 'PlatformsController@token');
     // 登录
     Route::post('logins', 'LoginsController@Logins');
 
+    //退出登录
+    Route::get('logout', 'LoginsController@logout');
 
     Route::group(['middleware' => 'apiAuth:admin'], function () {
 
@@ -32,10 +34,13 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
         Route::get('disables','CompanyController@disable');
 
         // 所有的楼座下拉数据
-        Route::get('building_blocks_all', 'HousesController@buildingBlocksSelect');
+        Route::get('building_blocks_all', 'PlatformsController@buildingBlocksSelect');
 
         // 平台房源管理
-        Route::resource('houses','HousesController');
+        Route::resource('platforms','PlatformsController');
+
+        // 全部共享房源数据
+        Route::resource('shares', 'SharesController');
 
     });
 

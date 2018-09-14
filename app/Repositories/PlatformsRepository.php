@@ -12,7 +12,6 @@ class PlatformsRepository extends Model
     // 平台新增房源
     public function addHouse($request)
     {
-
         \DB::beginTransaction();
         try {
             $house = House::create([

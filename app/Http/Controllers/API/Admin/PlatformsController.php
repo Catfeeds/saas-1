@@ -9,7 +9,6 @@ use App\Http\Requests\Admin\PlatformsRequest;
 use App\Models\House;
 use App\Repositories\PlatformsRepository;
 use App\Services\PlatformsService;
-use Illuminate\Http\Request;
 
 class PlatformsController extends APIBaseController
 {

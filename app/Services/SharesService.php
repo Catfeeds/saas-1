@@ -96,7 +96,7 @@ class SharesService
             if ($type) {
                 $data['belong'] = '其他公司';
             } else {
-                $data = $house->company_guid == Common::user()->company_guid ? '本公司' : '其他公司';
+                $data['belong'] = $house->company_guid == Common::user()->company_guid ? '本公司' : '其他公司';
             }
             $contact['name'] = optional($house->guardianPerson)->name;
             $contact['tel'] = optional($house->guardianPerson)->tel;
@@ -111,7 +111,6 @@ class SharesService
         $data['contact'] = $contact;
         $data['company_name'] = $house->company ? $house->company->name : '平台';
         $data['share'] = $house->share;
-
         return $data;
     }
 

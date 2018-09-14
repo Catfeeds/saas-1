@@ -70,7 +70,7 @@ class CompaniesRepository extends Model
                 'tel' => $request->contacts_tel,
                 'name' => $request->contacts,
                 'remarks' => $request->job_remarks,
-                'password' => bcrypt($request->tel),
+                'password' => bcrypt($request->contacts_tel),
                 'company_guid' => $company->guid,
             ]);
             if (empty($user)) throw new \Exception('用户信息同步失败');

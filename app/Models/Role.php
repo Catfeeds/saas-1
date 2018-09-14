@@ -12,10 +12,10 @@ class Role extends BaseModel
         return $this->hasMany('App\Models\RoleHasPermission','role_guid','guid');
     }
 
-    //角色关联权限表
+    // 角色关联权限表
     public function permission()
     {
-        return $this->hasManyThrough(Permission::class, RoleHasPermission::class, 'role_guid', 'guid', 'guid','permission_guid');
+        return $this->hasManyThrough(Permission::class, RoleHasPermission::class, 'role_guid', 'guid', 'guid','permission_guid')->where('status',1);
     }
 
     public function getLevelCnAttribute()

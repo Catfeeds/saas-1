@@ -320,6 +320,18 @@ return [
             'operation_number' => null,
             'follow_up' => null,
         ],
+        [
+            'name_en' => 'user_manage',// 人员管理
+            'action_scope' => null,
+            'operation_number' => null,
+            'follow_up' => null,
+        ],
+        [
+            'name_en' => 'post_manage',// 岗位管理
+            'action_scope' => null,
+            'operation_number' => null,
+            'follow_up' => null,
+        ],
     ],
 
     'area' => [
@@ -640,6 +652,20 @@ return [
             'action_scope' => 2,
             'operation_number' => null,
             'follow_up' => null,
+        ],
+        [
+            'name_en' => 'user_manage',// 人员管理
+            'action_scope' => null,
+            'operation_number' => null,
+            'follow_up' => null,
+            'status' => 2
+        ],
+        [
+            'name_en' => 'post_manage',// 岗位管理
+            'action_scope' => null,
+            'operation_number' => null,
+            'follow_up' => null,
+            'status' => 2
         ],
     ],
 
@@ -962,6 +988,20 @@ return [
             'operation_number' => null,
             'follow_up' => null,
         ],
+        [
+            'name_en' => 'user_manage',// 人员管理
+            'action_scope' => null,
+            'operation_number' => null,
+            'follow_up' => null,
+            'status' => 2
+        ],
+        [
+            'name_en' => 'post_manage',// 岗位管理
+            'action_scope' => null,
+            'operation_number' => null,
+            'follow_up' => null,
+            'status' => 2
+        ],
     ],
 
     'grouping' => [
@@ -1283,6 +1323,20 @@ return [
             'operation_number' => null,
             'follow_up' => null,
         ],
+        [
+            'name_en' => 'user_manage',// 人员管理
+            'action_scope' => null,
+            'operation_number' => null,
+            'follow_up' => null,
+            'status' => 2
+        ],
+        [
+            'name_en' => 'post_manage',// 岗位管理
+            'action_scope' => null,
+            'operation_number' => null,
+            'follow_up' => null,
+            'status' => 2
+        ],
     ],
 
     'personal' => [
@@ -1603,6 +1657,20 @@ return [
             'action_scope' => 5,
             'operation_number' => null,
             'follow_up' => null,
+        ],
+        [
+            'name_en' => 'user_manage',// 人员管理
+            'action_scope' => null,
+            'operation_number' => null,
+            'follow_up' => null,
+            'status' => 2
+        ],
+        [
+            'name_en' => 'post_manage',// 岗位管理
+            'action_scope' => null,
+            'operation_number' => null,
+            'follow_up' => null,
+            'status' => 2
         ],
     ]
 ];

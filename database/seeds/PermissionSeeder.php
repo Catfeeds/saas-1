@@ -382,7 +382,21 @@ class PermissionSeeder extends Seeder
         Permission::create([
             'guid' => Common::getUuid(),
             'name' => '客源-编辑客源',
-            'name_en' =>  'edit_customer'
+            'name_en' => 'edit_customer'
+        ]);
+
+        // 人员管理
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '人员管理',
+            'name_en' => 'user_manage'
+        ]);
+
+        // 岗位管理
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '岗位管理',
+            'name_en' => 'post_manage'
         ]);
     }
 }

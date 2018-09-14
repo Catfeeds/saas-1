@@ -29,7 +29,7 @@ class CustomersService
         } else {
             $privateWhere = $private['message'];
         }
-        
+
         return Customer::where('guest','1')
             ->whereIn('guardian_person', $publicWhere)
             ->orWhere('guest','2')
@@ -173,7 +173,7 @@ class CustomersService
         $data['entry_person'] = $res->entryPerson;  // 录入人信息
         $data['guardian_person'] = $res->guardianPerson; // 维护人
         $data['created_at'] = $res->created_at->format('Y-m-d H:i:s');
-
+        $data['invalid_reason'] = $res->invalid_reason;
 
         if ($permission['visit_permission']) {
             $item = CustomerOperationRecord::where('customer_guid', $guid)
@@ -284,7 +284,13 @@ class CustomersService
         try {
             $suc = Customer::where('guid', $request->guid)->update(['guest' => $request->guest]);
             if (!$suc) throw new \Exception('房源类型更改失败');
-            $res = Common::customerOperationRecords(Common::user()->guid, $request->guid, 4, $request->remarks);
+
+            if ($request->guest == 2) {
+                $remarks = '公客转为私客';
+            } else {
+                $remarks = '私客转为公客';
+            }
+            $res = Common::customerOperationRecords(Common::user()->guid, $request->guid, 4, $remarks);
             if (!$res) throw new \Exception('客源操作记录添加失败');
             \DB::commit();
             return true;

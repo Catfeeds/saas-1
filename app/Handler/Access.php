@@ -24,7 +24,11 @@ class Access{
         $role_guid = $user->role->guid;
         $permission_guid = Permission::where('name_en', $name)->value('guid');
         if (empty($permission_guid)) return [];
-        return RoleHasPermission::where(['permission_guid' => $permission_guid, 'role_guid' => $role_guid])->first();
+        return RoleHasPermission::where([
+            'permission_guid' => $permission_guid,
+            'role_guid' => $role_guid,
+            'status' => 1
+        ])->first();
     }
 
     // 获取登录人的所有权限

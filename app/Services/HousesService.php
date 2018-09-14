@@ -739,23 +739,27 @@ class HousesService
     public function shareHouse($request)
     {
         $user = Common::user();
-
         \DB::beginTransaction();
         try {
-            // 如果是共享房源
+
+            if ($request->type) {
+                $release_source = '平台';
+                $remarks = '平台 发布共享';
+            } else {
+                $release_source = $user->company_guid;
+                $remarks = $user->name. '-'. optional($user->role)->name.' 发布共享';
+            }
+
           $res = House::where('guid', $request->guid)->update([
-              'release_source' => $user->company_guid,
+              'release_source' => $release_source,
               'share' => 1
           ]);
-
           if (!$res) throw new \Exception('房源共享失败');
-
           $record = HouseShareRecord::create([
               'guid' => Common::getUuid(),
               'house_guid' => $request->guid,
-              'remarks' => $user->name. '-'. optional($user->role)->name.' 发布共享'
+              'remarks' => $remarks
           ]);
-
           if (!$record) throw new \Exception('房源共享记录添加失败');
 
           \DB::commit();
@@ -774,19 +778,27 @@ class HousesService
         $user = Common::user();
 
         \DB::beginTransaction();
-
         try {
+
+            if ($request->type) {
+                $lower_frame = 1;
+                $remarks = '平台 下架';
+            } else {
+                $lower_frame = 2;
+                $remarks = $user->name. '-'. optional($user->role)->name.' 下架';
+            }
+
             $res = House::where('guid', $request->guid)->update([
                 'release_source' => null,
                 'share' => 2,
-                'lower_frame' => 2
+                'lower_frame' => $lower_frame
             ]);
             if (!$res) throw new \Exception('房源下架失败');
 
             $record = HouseShareRecord::create([
                 'guid' => Common::getUuid(),
                 'house_guid' => $request->guid,
-                'remarks' => $user->name. '-'. optional($user->role)->name.' 下架'
+                'remarks' => $remarks
             ]);
 
             if (!$record) throw new \Exception('房源共享记录添加失败');

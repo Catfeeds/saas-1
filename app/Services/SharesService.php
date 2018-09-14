@@ -10,9 +10,20 @@ class SharesService
     // 共享房源列表
     public function getList($request)
     {
-        $res = House::with('buildingBlock', 'buildingBlock.building')->where('share', 1)->orderBy('created_at', 'desc')->paginate($request->per_page??20);
+        if ($request->share) {
+            $share = $request->share;
+        } else {
+            $share = 1;
+        }
+        $res = House::with('buildingBlock', 'buildingBlock.building')->where('share', $share)->orderBy('created_at', 'desc')->paginate($request->per_page??20);
         $houses = [];
         foreach ($res as $key => $v) {
+
+            if ($request->type) {
+                $belong = $v->release_source == '平台'? '平台' : '其他公司';
+            } else {
+                $belong = $v->release_source == '平台' ? '平台' : $v->company_guid == Common::user()->company_guid ? '本公司' : '其他公司';
+            }
             $houses[$key]['guid'] = $v->guid;
             $houses[$key]['img'] = $v->indoor_img_cn; //图片
             $houses[$key]['name'] = $v->buildingBlock->building->name;  //名称
@@ -25,7 +36,7 @@ class SharesService
             $houses[$key]['type'] = $v->type_cn; //类型
             $houses[$key]['floor'] = $v->floor. '层'; //楼层
             $houses[$key]['total_floor'] = $v->buildingBlock->total_floor?'共' . $v->buildingBlock->total_floor. '层':'-';
-            $houses[$key]['belong'] = $v->release_source == '平台' ? '平台' : $v->company_guid == Common::user()->company_guid ? '本公司' : '其他公司';
+            $houses[$key]['belong'] = $belong;
             $share = $v->shareRecord->sortByDesc('created_at')->first();
             if ($v->share == 1) {
                 $houses[$key]['share'] = explode(' ',optional($share)->remarks)[0];
@@ -38,9 +49,9 @@ class SharesService
     }
 
     // 共享房源详情
-    public function getInfo($guid)
+    public function getInfo($guid, $type = null)
     {
-        $house = House::where('guid', $guid)->with(['buildingBlock', 'buildingBlock.building', 'shareRecord', 'guardianPerson'])->first();
+        $house = House::where('guid', $guid)->with(['buildingBlock', 'buildingBlock.building', 'shareRecord', 'guardianPerson', 'company'])->first();
         $data = [];
         $data['img'] = $house->indoor_img_cn??[]; // 图片
         $data['indoor_img'] = $house->indoor_img??[]; // 室内图未处理
@@ -86,14 +97,18 @@ class SharesService
             $contact['name'] = '平台';
             $contact['tel'] = '4000-580-888';
         } else {
-            $data['belong'] = $house->company_guid == Common::user()->company_guid ? '本公司' : '其他公司';
+            if ($type) {
+                $data['belong'] =  '其他公司';
+            } else {
+                $data['belong'] = $house->company_guid == Common::user()->company_guid ? '本公司' : '其他公司';
+            }
             $contact['name'] = optional($house->guardianPerson)->name;
             $contact['tel'] = optional($house->guardianPerson)->tel;
         }
         $share = $house->shareRecord->sortByDesc('created_at')->first();
         $data['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
-
         $data['contact'] = $contact;
+        $data['company_name'] = $house->company->name;
 
         return $data;
     }

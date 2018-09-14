@@ -6,8 +6,6 @@ use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Admin\LoginsRequest;
 use App\Services\LoginsService;
-use DemeterChain\C;
-use Illuminate\Support\Facades\Auth;
 
 class LoginsController extends APIBaseController
 {
@@ -20,11 +18,6 @@ class LoginsController extends APIBaseController
         $res = $service->adminLogin($request);
         if (empty($res['status'])) return $this->sendError($res['message']);
         return $this->sendResponse($res, '获取token成功！');
-    }
-
-    public function test()
-    {
-        dd(Auth::guard('admin')->user());
     }
 
     //退出登录

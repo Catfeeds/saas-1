@@ -102,7 +102,7 @@ class SharesService
             $contact['tel'] = optional($house->guardianPerson)->tel;
         } else {
             $data['belong'] = '平台';
-            $contact['name'] = '平台';
+            $contact['name'] = '平台客服';
             $contact['tel'] = '4000-580-888';
         }
         $share = $house->shareRecord->sortByDesc('created_at')->first();

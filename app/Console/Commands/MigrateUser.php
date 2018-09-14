@@ -57,6 +57,8 @@ class MigrateUser extends Command
                 $role = Role::where('company_guid', $company_guid);
                 if ($v->level == 1) {
                     $role_guid = $role->where('name', '!=', '管理员')->where('level', 1)->value('guid');
+                } elseif ($v->level == 6) {
+                    $role_guid = $role->where('level', 5)->value('guid');
                 } else {
                     $role_guid = $role->where('level', $v->level)->value('guid');
                 }
@@ -70,7 +72,7 @@ class MigrateUser extends Command
                     'tel' => $v->tel,
                     'password' => $v->password,
                     'role_guid' => $role_guid, //根据等级关联对应guid
-                    'status' => $v->remark == '已离职'? 2:1
+                    'status' => $v->remark ? 2 : 1
                 ]);
                 if (!$user) \Log::info($user->id.'添加失败');
             }

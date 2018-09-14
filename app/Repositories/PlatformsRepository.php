@@ -13,7 +13,7 @@ class PlatformsRepository extends Model
     {
         return House::create([
             'guid' => Common::getUuid(),
-            'house_type' => $request->house_type,
+            'house_type' => $request->type,
             'house_identifier' => 'WH-'.time().rand(1,1000),
             'owner_info' => $request->owner_info,//业主电话
             'floor' => $request->floor,//所在楼层

@@ -9,7 +9,12 @@ class PlatformsService
     // 平台房源列表
     public function getList($request)
     {
-        $res = House::with('buildingBlock', 'buildingBlock.building')->where(['release_source' => '平台'])
+        if ($request->share) {
+            $share = $request->share;
+        } else {
+            $share = 1;
+        }
+        $res = House::with('buildingBlock', 'buildingBlock.building')->where(['release_source' => '平台','share' => $share])
             ->orderBy('created_at', 'desc')
             ->paginate($request->per_page??20);
         $houses = [];
@@ -27,6 +32,13 @@ class PlatformsService
             $houses[$key]['floor'] = $v->floor. '层'; //楼层
             $houses[$key]['total_floor'] = $v->buildingBlock->total_floor?'共' . $v->buildingBlock->total_floor. '层':'-';
             $houses[$key]['belong'] = $v->release_source;
+            $share = $v->shareRecord->sortByDesc('created_at')->first();
+            if ($v->share == 1) {
+                $houses[$key]['share'] = explode(' ',optional($share)->remarks)[0];
+            } elseif ($v->share == 2) {
+                $houses[$key]['share'] = $v->lower_cn;
+            }
+            $houses[$key]['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
         }
         return $res->setCollection(collect($houses));
     }

@@ -28,7 +28,11 @@ class CompanyFrameworkSeeder extends Seeder
             'city_guid' => '134dba069ad211e8b2e4144fd7c018f6',
             'area_guid' => '13cc70129ad211e8b005144fd7c018f6',
             'address' => '金融港光谷智慧园',
-            'company_tel' => '400-580-888'
+            'company_tel' => '400-580-888',
+            'contacts' => '黄智鑫',
+            'contacts_tel' => '17707234721',
+            'job_remarks' => 'COO',
+            'status' => 1
         ]);
 
         // 添加管理员角色

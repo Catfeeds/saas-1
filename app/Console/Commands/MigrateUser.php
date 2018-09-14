@@ -72,7 +72,7 @@ class MigrateUser extends Command
                     'tel' => $v->tel,
                     'password' => $v->password,
                     'role_guid' => $role_guid, //根据等级关联对应guid
-                    'status' => $v->remark ? 2 : 1
+                    'status' => $v->remark ? 2 : 1,
                 ]);
                 if (!$user) \Log::info($user->id.'添加失败');
             }

@@ -47,6 +47,7 @@ class MigrateData extends Command
      */
     public function handle()
     {
+        $company_guid = Company::where('name', '楚楼网')->value('guid');
         $data = [];
         //查询公司的全部房子
         $guardian = MediaUser::where('ascription_store',6)->pluck('id')->toArray();
@@ -131,7 +132,7 @@ class MigrateData extends Command
             }
             $res = House::create([
                 'guid' => Common::getUuid(),
-                'company_guid' => 'a3d2f99cb70111e8b97808002772f793',
+                'company_guid' => $company_guid,
                 'house_identifier' => 'WH-'.time().rand(1,1000),
                 'house_type' => 1,
                 'owner_info' => $v->owner_info,

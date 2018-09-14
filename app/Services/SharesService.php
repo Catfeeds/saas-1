@@ -40,7 +40,7 @@ class SharesService
     // 共享房源详情
     public function getInfo($guid)
     {
-        $house = House::where('guid', $guid)->with(['buildingBlock', 'buildingBlock.building', 'shareRecord', 'guardianPerson'])->first();
+        $house = House::where('guid', $guid)->with(['buildingBlock', 'buildingBlock.building', 'shareRecord', 'guardianPerson', 'company'])->first();
         $data = [];
         $data['img'] = $house->indoor_img_cn??[]; // 图片
         $data['indoor_img'] = $house->indoor_img??[]; // 室内图未处理
@@ -92,8 +92,8 @@ class SharesService
         }
         $share = $house->shareRecord->sortByDesc('created_at')->first();
         $data['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
-
         $data['contact'] = $contact;
+        $data['company_name'] = $house->company->name;
 
         return $data;
     }

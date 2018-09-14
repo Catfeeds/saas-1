@@ -25,8 +25,11 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
         // 获取城市下的区域
         Route::get('get_area','CompanyController@getArea');
 
-        // 修改状态
-        Route::get('update_status','CompanyController@enabledState');
+        // 启用
+        Route::get('enables','CompanyController@enable');
+
+        // 禁用
+        Route::get('disables','CompanyController@disable');
 
         // 所有的楼座下拉数据
         Route::get('building_blocks_all', 'HousesController@buildingBlocksSelect');

@@ -47,7 +47,7 @@ class LoginsController extends APIBaseController
         $user = User::where(['tel' => $request->tel])->first();
         if (empty($user)) return $this->sendError('用户不存在');
         //判断用户是否有效
-        if ($user->status !== 1) return $this->sendError('无效账户');
+        if ($user->status !== 1 || $user->start_up == 2) return $this->sendError('无效账户');
 //        //查询用户是否绑定微信
 //        if (empty($user->openid)) {
 //            //如果未绑定,生成用户电话产生的密文

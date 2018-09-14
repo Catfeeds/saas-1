@@ -22,8 +22,8 @@ class CompaniesRepository extends Model
             $data[$key]['company_name'] = $v->name;
             $data[$key]['city'] = $v->city['name'];
             $data[$key]['address'] = $v->address;
-            $data[$key]['name'] = $v->contacts;
-            $data[$key]['tel'] = $v->contacts_tel;
+            $data[$key]['contacts'] = $v->contacts;
+            $data[$key]['contacts_tel'] = $v->contacts_tel;
         }
 
         return $res->setCollection(collect($data));
@@ -41,9 +41,9 @@ class CompaniesRepository extends Model
                 'area_guid' => $request->area_guid,
                 'address' => $request->address,
                 'company_tel' => $request->company_tel,
-                'contacts' => $request->username,
-                'contacts_tel' => $request->tel,
-                'job_remarks' => $request->remarks
+                'contacts' => $request->contacts,
+                'contacts_tel' => $request->contacts_tel,
+                'job_remarks' => $request->job_remarks
             ]);
             if (empty($company)) throw new \Exception('公司添加失败');
 
@@ -67,9 +67,9 @@ class CompaniesRepository extends Model
             $user = User::create([
                 'guid' => Common::getUuid(),
                 'role_guid' => $role->guid,
-                'tel' => $request->tel,
-                'name' => $request->username,
-                'remarks' => $request->remarks,
+                'tel' => $request->contacts_tel,
+                'name' => $request->contacts,
+                'remarks' => $request->job_remarks,
                 'password' => bcrypt($request->tel),
                 'company_guid' => $company->guid,
             ]);
@@ -93,16 +93,16 @@ class CompaniesRepository extends Model
             $company->area_guid = $request->area_guid;
             $company->address = $request->address;
             $company->company_tel = $request->company_tel;
-            $company->contacts = $request->username;
-            $company->contacts_tel = $request->tel;
-            $company->job_remarks = $request->remarks;
+            $company->contacts = $request->contacts;
+            $company->contacts_tel = $request->contacts_tel;
+            $company->job_remarks = $request->job_remarks;
             if (!$company->save()) throw new \Exception('公司信息修改失败');
 
             $users = User::where('tel', $company->contacts_tel)->first();
             if (!empty($users)) {
-                $users->tel = $request->tel;
-                $users->name = $request->username;
-                $users->remarks = $request->remarks;
+                $users->tel = $request->contacts_tel;
+                $users->name = $request->contacts;
+                $users->remarks = $request->job_remarks;
                 $users->password = bcrypt($request->tel);
                 if (!$users->save()) throw new \Exception('用户信息修改失败');
             }
@@ -122,16 +122,14 @@ class CompaniesRepository extends Model
             $company = Company::where('guid',$request->guid)->update(['status' => 1]);
             if (empty($company)) throw new \Exception('账户启用失败');
 
-            $user = User::where('company_guid',$request->guid)->update(['status' => 1]);
-            if (empty($user)) throw new \Exception('用户状态修改失败');
-
+            $user = User::where('company_guid',$request->guid)->update(['start_up' => 1]);
+            if (empty($user)) throw new \Exception('用户冻结失败');
             \DB::commit();
             return true;
         } catch (\Exception $exception) {
             \DB::rollback();
             return false;
         }
-
     }
     
     // 禁用
@@ -142,8 +140,9 @@ class CompaniesRepository extends Model
             $company = Company::where('guid',$request->guid)->update(['status' => 2]);
             if (empty($company)) throw new \Exception('账户启用失败');
 
-            $user = User::where('company_guid',$request->guid)->update(['status' => 3]);
-            if (empty($user)) throw new \Exception('用户状态修改失败');
+
+            $user = User::where('company_guid',$request->guid)->update(['start_up' => 2]);
+            if (empty($user)) throw new \Exception('用户冻结失败');
 
             \DB::commit();
             return true;

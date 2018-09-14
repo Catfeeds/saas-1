@@ -5,8 +5,6 @@ namespace App\Models;
 
 class Company extends BaseModel
 {
-    protected $table = 'companies';
-
     // 城市
     public function city()
     {

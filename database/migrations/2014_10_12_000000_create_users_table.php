@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('pic',32)->nullable()->comment('用户图像');
             $table->tinyInteger('status')->default(1)->comment('状态 1: 在职 2: 离职 3: 冻结');
             $table->string('remarks',32)->nullable()->comment('职位备注');
+            $table->tinyInteger('start_up')->default(1)->comment('1: 启用 2: 禁用');
             $table->rememberToken();
             $table->timestamps();
         });

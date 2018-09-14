@@ -140,6 +140,9 @@ class UsersController extends APIBaseController
     {
         $user = Common::user();
         if (empty($user)) return $this->sendError('登录账户异常');
+
+        if ($user->status !== 1 || $user->start_up == 2) return $this->sendError('账户无效');
+
         $res = $user->toArray();
         $res['company_name'] = $user->company->name; // 公司名
         $res['company_guid'] = $user->company->guid; // 公司guid

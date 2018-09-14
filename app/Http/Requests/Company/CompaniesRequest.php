@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\User;
 use function GuzzleHttp\default_ca_bundle;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Routing\Route;
 use Illuminate\Validation\Rule;
 
 class CompaniesRequest extends FormRequest
@@ -95,6 +96,17 @@ class CompaniesRequest extends FormRequest
                     ],
                     'remarks' => 'required|max:32',
                     'username' => 'required|max:64',
+                ];
+            case 'enable':
+            case 'disable':
+                return [
+                  'guid' => [
+                      'required',
+                      'max:32',
+                      Rule::in(
+                          Company::all()->pluck('guid')->toArray()
+                      )
+                  ]
                 ];
             default;
                 return [

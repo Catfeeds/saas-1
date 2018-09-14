@@ -123,7 +123,7 @@ class CompaniesRepository extends Model
             if (empty($company)) throw new \Exception('账户启用失败');
 
             $user = User::where('company_guid',$request->guid)->update(['status' => 1]);
-            if (empty($user)) throw new \Exception('用户冻结失败');
+            if (empty($user)) throw new \Exception('用户状态修改失败');
 
             \DB::commit();
             return true;
@@ -143,7 +143,7 @@ class CompaniesRepository extends Model
             if (empty($company)) throw new \Exception('账户启用失败');
 
             $user = User::where('company_guid',$request->guid)->update(['status' => 3]);
-            if (empty($user)) throw new \Exception('用户冻结失败');
+            if (empty($user)) throw new \Exception('用户状态修改失败');
 
             \DB::commit();
             return true;

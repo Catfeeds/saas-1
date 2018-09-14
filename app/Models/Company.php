@@ -7,12 +7,6 @@ class Company extends BaseModel
 {
     protected $table = 'companies';
 
-    // 用户
-    public function user()
-    {
-        return $this->HasMany('App\Models\User','company_guid','guid');
-    }
-
     // 城市
     public function city()
     {

@@ -90,6 +90,9 @@ class SharesService
             $contact['name'] = optional($house->guardianPerson)->name;
             $contact['tel'] = optional($house->guardianPerson)->tel;
         }
+        $share = $house->shareRecord->sortByDesc('created_at')->first();
+        $data['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
+
         $data['contact'] = $contact;
 
         return $data;
@@ -171,18 +174,12 @@ class SharesService
         $data['station_number'] = empty($house->station_number)?'暂无':$house->station_number.'个';
         $data['rent_free'] = empty($house->rent_free)?'暂无':$house->rent_free.'天'; // 免租期
         $data['shortest_lease'] = $house->shortest_lease_cn??'暂无'; // 最短租期
-        $data['support_facilities'] = empty($house->support_facilities)?'暂无':implode(',',$house->support_facilities); // 配套设施
+        // 配套设施
+        $data['support_facilities'] =empty($house->support_facilities)?'暂无':implode(',',$house->support_facilities);
         $share = $house->shareRecord->sortByDesc('created_at')->first();
-        if ($house->share == 1) {
-            // 上架
-            $data['share'] = $house->share;  // 标识
-            $data['share_info'] = optional($share)->remarks; // 信息
-        } else {
-            // 下架
-            $data['share_info'] = $house->shareRecord;
-        }
+        $data['share_info'] = $house->shareRecord; // 信息
         $data['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
-
+        $data['share'] = $house->share;
         return $data;
     }
 

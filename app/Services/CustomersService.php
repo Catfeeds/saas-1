@@ -16,30 +16,28 @@ class CustomersService
     {
         // 公客范围
         $public = Access::adoptPermissionGetUser('public_customer_show');
-
         if (empty($public['status'])) {
             $publicWhere = [];
         } else {
             $publicWhere = $public['message'];
         }
 
-        $publicCustomer = Customer::where('guest','1')->whereIn('guardian_person', $publicWhere)->pluck('guid')->toArray();
-
         // 私客范围
         $private = Access::adoptPermissionGetUser('private_customer_show');
-
         if (empty($private['status'])) {
             $privateWhere = [];
         } else {
             $privateWhere = $private['message'];
         }
-
-        $privateCustomer = Customer::where('guest','2')->whereIn('guardian_person', $privateWhere)->pluck('guid')->toArray();
-
-        // 所有客源guid
-        $customerGuid  = array_merge($publicCustomer, $privateCustomer);
-
-        return Customer::whereIn('guid', $customerGuid)->with('guardianPerson:guid,name', 'entryPerson:guid,name')->withCount('visit')->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
+        
+        return Customer::where('guest','1')
+            ->whereIn('guardian_person', $publicWhere)
+            ->orWhere('guest','2')
+            ->whereIn('guardian_person', $privateWhere)
+            ->with('guardianPerson:guid,name', 'entryPerson:guid,name')
+            ->withCount('visit')
+            ->orderBy('created_at', 'desc')
+            ->paginate($request->per_page ?? 10);
     }
 
     // 添加客源

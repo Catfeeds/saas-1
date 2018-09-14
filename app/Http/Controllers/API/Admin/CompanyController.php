@@ -5,7 +5,6 @@ use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\CompaniesRequest;
 use App\Models\Company;
 use App\Repositories\CompaniesRepository;
-use App\Services\QuartersService;
 
 class CompanyController extends APIBaseController
 {
@@ -38,9 +37,6 @@ class CompanyController extends APIBaseController
         Company $company
     )
     {
-        $company->username = $company->user->name;
-        $company->tel = $company->user->tel;
-        $company->remarks = $company->user->remarks;
         return $this->sendResponse($company,'修改之前原始数据获取成功');
     }
 

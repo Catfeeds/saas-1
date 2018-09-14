@@ -161,9 +161,9 @@ class HousesRepository extends Model
     }
 
     // 变更人员
-    public function changePersonnel($request, $guardian_person)
+    public function changePersonnel($request)
     {
-        $house = House::where(['guid' => $request->house_guid])->whereIn('guardian_person', $guardian_person)->first();
+        $house = House::where(['guid' => $request->house_guid])->first();
         if (empty($house)) return ['status' => false, 'message' => '暂无权限'];
         if ($request->entry_person) {
              $house->entry_person = $request->entry_person;

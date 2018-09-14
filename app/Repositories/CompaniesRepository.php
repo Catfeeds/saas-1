@@ -6,6 +6,7 @@ use App\Handler\Common;
 use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\QuartersService;
 use Illuminate\Database\Eloquent\Model;
 
 class CompaniesRepository extends Model
@@ -30,7 +31,7 @@ class CompaniesRepository extends Model
 
     }
     // 添加公司信息
-    public function addCompany($request,$service)
+    public function addCompany($request)
     {
         \DB::beginTransaction();
         try {
@@ -52,10 +53,13 @@ class CompaniesRepository extends Model
             ]);
             if (empty($role)) throw new \Exception('添加角色失败');
 
+            // 设置等级
             $request->offsetSet('role_guid', $role->guid);
+            $request->offsetSet('level', 1);
 
-            $res = $service->defaultPermissions($request);
-
+            // 添加默认权限
+            $quartersService = new QuartersService();
+            $res = $quartersService->defaultPermissions($request);
             if (empty($res)) throw new \Exception('岗位级别修改失败');
 
             $user = User::create([
@@ -67,7 +71,6 @@ class CompaniesRepository extends Model
                 'password' => bcrypt($request->tel),
                 'company_guid' => $company->guid,
             ]);
-
             if (empty($user)) throw new \Exception('用户信息同步失败');
 
             \DB::commit();

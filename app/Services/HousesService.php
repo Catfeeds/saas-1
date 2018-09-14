@@ -245,14 +245,14 @@ class HousesService
         }
 
         // 图片人
-        $picturePerson = Access::adoptPermissionGetUser('set_pic_person');
-        if (!in_array($house->pic_person, $picturePerson['message'])) {
+        $picturePerson = Access::adoptGuardianPersonGetHouse('set_pic_person');
+        if (!in_array($house->guid, $picturePerson)) {
             $permission['set_pic_person'] = false; // 是否允许修改图片人
         }
 
         // 钥匙人
-        $keyPerson = Access::adoptPermissionGetUser('set_key_person');
-        if (!in_array($house->key_person, $keyPerson['message'])) {
+        $keyPerson = Access::adoptGuardianPersonGetHouse('set_key_person');
+        if (!in_array($house->guid, $keyPerson)) {
             $permission['set_key_person'] = false; // 是否允许修改钥匙人
         }
 
@@ -688,7 +688,7 @@ class HousesService
             if (empty($house)) throw new \Exception('房源编辑图片失败');
 
             $img = array_merge($request->house_type_img, $request->indoor_img, $request->outdoor_img);
-            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'', $img);
+            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'修改了图片', $img);
             if (empty($houseOperationRecords)) throw new \Exception('编辑图片添加操作记录失败');
 
             \DB::commit();

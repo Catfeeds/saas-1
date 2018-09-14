@@ -170,27 +170,39 @@ class House extends BaseModel
     {
         switch ($this->payment_type) {
             case 1:
-                return '押一付三';
+                return '押一付一';
                 break;
             case 2:
                 return '押一付二';
                 break;
             case 3:
-                return '押一付一';
+                return '押一付三';
                 break;
             case 4:
                 return '押二付一';
                 break;
             case 5:
-                return '押三付一';
+                return '押二付二';
                 break;
             case 6:
-                return '半年付';
+                return '押二付三';
                 break;
             case 7:
-                return '年付';
+                return '押三付一';
                 break;
             case 8:
+                return '押三付二';
+                break;
+            case 9:
+                return '押三付三';
+                break;
+            case 10:
+                return '半年付';
+                break;
+            case 11:
+                return '年付';
+                break;
+            case 12:
                 return '面谈';
                 break;
                 default;
@@ -304,14 +316,12 @@ class House extends BaseModel
     public function getShortestLeaseCnAttribute()
     {
         if ($this->shortest_lease == 1) {
-            return '1年';
+            return '1-2年';
         } elseif ($this->shortest_lease == 2) {
-            return '2年';
+            return '2-3年';
         } elseif ($this->shortest_lease == 3) {
-            return '3年';
+            return '3-4年';
         } elseif ($this->shortest_lease == 4) {
-            return '5年';
-        } elseif ($this->shortest_lease == 5) {
             return '5年以上';
         } else {
             return '暂无';

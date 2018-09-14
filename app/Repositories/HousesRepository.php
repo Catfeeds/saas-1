@@ -94,7 +94,7 @@ class HousesRepository extends Model
             'shortest_lease' => $request->shortest_lease,//最短租期
             'remarks' => $request->remarks,//备注
             'share' => 1,
-            'release_source' => $request->release_source,
+            'release_source' => '平台',
             'indoor_img' => $request->indoor_img,
             'outdoor_img' => $request->outdoor_img,
             'house_type_img' => $request->house_type_img,

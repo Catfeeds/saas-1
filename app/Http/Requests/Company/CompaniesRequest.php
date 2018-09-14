@@ -96,10 +96,6 @@ class CompaniesRequest extends FormRequest
                     'remarks' => 'required|max:32',
                     'username' => 'required|max:64',
                 ];
-            case '':
-                return [
-                    'status' => 'integer|between:1,2'
-                ];
             default;
                 return [
 

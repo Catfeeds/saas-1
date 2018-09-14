@@ -7,15 +7,23 @@ use App\Http\Controllers\API\APIBaseController;
 use App\Http\Controllers\Traits\QiNiu;
 use App\Http\Requests\Admin\HousesRequest;
 use App\Repositories\HousesRepository;
+use App\Services\HousesService;
 use Illuminate\Http\Request;
 
 class HousesController extends APIBaseController
 {
     use QiNiu;
-
-    public function index()
+    // 平台房源列表
+    public function index
+    (
+        HousesRequest $request,
+        HousesService $service,
+        HousesRepository $repository
+    )
     {
-
+        $res = $repository->platformHouseList($request,$service);
+        if (!$res) return $this->sendError('平台房源列表获取失败');
+        return $this->sendResponse($res,'平台房源列表获取成功');
     }
 
     public function create()

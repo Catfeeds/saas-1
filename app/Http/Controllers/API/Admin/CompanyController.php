@@ -65,15 +65,27 @@ class CompanyController extends APIBaseController
         return $this->sendResponse($res->data, '获取所有下拉数据成功');
     }
 
-    // 账户启用状态
-    public function enabledState
+    // 账户启用
+    public function enable
     (
         CompaniesRequest $request,
         CompaniesRepository $repository
     )
     {
-        $res = $repository->enabledState($request);
-        if (!$res) return $this->sendError('修改用户状态失败');
-        return $this->sendResponse($res,'修改账户状态成功');
+        $res = $repository->enable($request);
+        if (!$res) return $this->sendError('账户启用失败');
+        return $this->sendResponse($res,'账户启用成功');
+    }
+
+    // 账户禁用
+    public function disable
+    (
+        CompaniesRepository $repository,
+        CompaniesRequest $request
+    )
+    {
+        $res = $repository->disable($request);
+        if (!$res) return $this->sendError('账户禁用失败');
+        return $this->sendResponse($res,'账户禁用成功');
     }
 }

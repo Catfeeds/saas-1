@@ -111,15 +111,24 @@ class CompaniesRepository extends Model
         }
     }
 
-    // 启用状态
-    public function enabledState($request)
+    // 启用
+    public function enable($request)
     {
-        // 启用
-        if ($request->status == 1) {
-            return Company::where('guid',$request->guid)->update(['status' => $request->status]);
-        } elseif ($request->status == 2) {
-            // 禁用
-            return Company::where('guid',$request->guid)->update(['status' => $request->status]);
+        \DB::beginTransaction();
+        try {
+            $company = Company::where('guid',$request->guid)->update(['status' => 1]);
+            if (empty($company)) throw new \Exception('账户启用失败');
+
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            return false;
         }
+
+    }
+    
+    // 禁用
+    public function disable($request)
+    {
+        return Company::where('guid',$request->guid)->update(['status' => 2]);
     }
 }

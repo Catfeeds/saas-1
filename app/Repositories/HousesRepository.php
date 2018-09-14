@@ -18,6 +18,17 @@ class HousesRepository extends Model
         return $data->setCollection(collect($houses));
     }
 
+    // 平台房源列表
+    public function platformHouseList($request,$service)
+    {
+        $data = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->where('release_source','平台')->orderBy('created_at','desc')->paginate($request->per_page??10);
+        $houses = [];
+        foreach ($data as $key => $v) {
+            $houses[$key] = $service->getData($v);
+        }
+       return $data->setCollection(collect($houses));
+    }
+
     // 添加房源
     public function addHouse($request)
     {

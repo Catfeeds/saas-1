@@ -39,6 +39,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
         // 平台房源管理
         Route::resource('platforms','PlatformsController');
 
+        // 全部共享房源数据
+        Route::resource('shares', 'SharesController');
+
     });
 
 

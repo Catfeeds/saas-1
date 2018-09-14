@@ -53,9 +53,4 @@ class SharesController extends APIBaseController
         return $this->sendResponse($res, '公司共享房源详情获取成功');
     }
 
-
-
-
-
-
 }

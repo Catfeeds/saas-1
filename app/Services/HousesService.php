@@ -779,7 +779,6 @@ class HousesService
 
         \DB::beginTransaction();
         try {
-
             if ($request->type) {
                 $lower_frame = 1;
                 $remarks = '平台 下架';

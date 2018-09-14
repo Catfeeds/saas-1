@@ -18,11 +18,10 @@ class SharesService
         $res = House::with('buildingBlock', 'buildingBlock.building')->where('share', $share)->orderBy('created_at', 'desc')->paginate($request->per_page??20);
         $houses = [];
         foreach ($res as $key => $v) {
-
             if ($request->type) {
-                $belong = $v->release_source == '平台'? '平台' : '其他公司';
+                $belong = $v->company_guid ? '其他公司' : '平台';
             } else {
-                $belong = $v->release_source == '平台' ? '平台' : $v->company_guid == Common::user()->company_guid ? '本公司' : '其他公司';
+                $belong = $v->company_guid ? $v->company_guid == Common::user()->company_guid ? '本公司' : '其他公司' : '平台';
             }
             $houses[$key]['guid'] = $v->guid;
             $houses[$key]['img'] = $v->indoor_img_cn; //图片
@@ -39,7 +38,7 @@ class SharesService
             $houses[$key]['belong'] = $belong;
             $share = $v->shareRecord->sortByDesc('created_at')->first();
             if ($v->share == 1) {
-                $houses[$key]['share'] = explode(' ',optional($share)->remarks)[0];
+                $houses[$key]['share'] = optional($share)->remarks;
             } elseif ($v->share == 2) {
                 $houses[$key]['share'] = $v->lower_cn;
             }
@@ -92,23 +91,26 @@ class SharesService
         $data['actuality'] = $house->actuality_cn;
         //联系方式
         $contact = [];
-        if ($house->release_source == '平台') {
-            $data['belong'] = '平台';
-            $contact['name'] = '平台';
-            $contact['tel'] = '4000-580-888';
-        } else {
+        //  所属公司
+        if ($house->company_guid) {
             if ($type) {
-                $data['belong'] =  '其他公司';
+                $data['belong'] = '其他公司';
             } else {
-                $data['belong'] = $house->company_guid == Common::user()->company_guid ? '本公司' : '其他公司';
+                $data = $house->company_guid == Common::user()->company_guid ? '本公司' : '其他公司';
             }
             $contact['name'] = optional($house->guardianPerson)->name;
             $contact['tel'] = optional($house->guardianPerson)->tel;
+        } else {
+            $data['belong'] = '平台';
+            $contact['name'] = '平台';
+            $contact['tel'] = '4000-580-888';
         }
         $share = $house->shareRecord->sortByDesc('created_at')->first();
+        $data['share_info'] = $house->shareRecord;
         $data['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
         $data['contact'] = $contact;
-        $data['company_name'] = $house->company->name;
+        $data['company_name'] = $house->company ? $house->company->name : '平台';
+        $data['share'] = $house->share;
 
         return $data;
     }
@@ -134,7 +136,7 @@ class SharesService
             $houses[$key]['total_floor'] = $v->buildingBlock->total_floor?'共' . $v->buildingBlock->total_floor. '层':'-';
             $share = $v->shareRecord->sortByDesc('created_at')->first();
             if ($v->share == 1) {
-                $houses[$key]['share'] = explode(' ',optional($share)->remarks)[0];
+                $houses[$key]['share'] = optional($share)->remarks;
            } elseif ($v->share == 2) {
                 $houses[$key]['share'] = $v->lower_cn;
             }

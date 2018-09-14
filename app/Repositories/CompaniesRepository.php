@@ -15,21 +15,20 @@ class CompaniesRepository extends Model
     public function getList($request)
     {
         $data = [];
-        $res = Company::with('user', 'city:guid,name')->paginate($request->per_page??10);
+        $res = Company::with('city:guid,name')->paginate($request->per_page??10);
         foreach ($res as $key => $v) {
             $data[$key]['guid'] = $v->guid;
             $data[$key]['status'] = $v->status;
             $data[$key]['company_name'] = $v->name;
             $data[$key]['city'] = $v->city['name'];
             $data[$key]['address'] = $v->address;
-            $user = $v->user->where('created_at',$v->created_at)->toArray();
-            $data[$key]['name'] = $user[0]['name'];
-            $data[$key]['tel'] = $user[0]['tel'];
+            $data[$key]['name'] = $v->contacts;
+            $data[$key]['tel'] = $v->contacts_tel;
         }
 
         return $res->setCollection(collect($data));
-
     }
+    
     // 添加公司信息
     public function addCompany($request)
     {
@@ -41,7 +40,10 @@ class CompaniesRepository extends Model
                 'city_guid' => $request->city_guid,
                 'area_guid' => $request->area_guid,
                 'address' => $request->address,
-                'company_tel' => $request->company_tel
+                'company_tel' => $request->company_tel,
+                'contacts' => $request->username,
+                'contacts_tel' => $request->tel,
+                'job_remarks' => $request->remarks
             ]);
             if (empty($company)) throw new \Exception('公司添加失败');
 
@@ -91,16 +93,17 @@ class CompaniesRepository extends Model
             $company->area_guid = $request->area_guid;
             $company->address = $request->address;
             $company->company_tel = $request->company_tel;
-
+            $company->contacts = $request->username;
+            $company->contacts_tel = $request->tel;
+            $company->job_remarks = $request->remarks;
             if (!$company->save()) throw new \Exception('公司信息修改失败');
 
-            $users = User::where('company_guid',$company->guid)->first();
+            $users = User::where('tel', $company->contacts_tel)->first();
             if (!empty($users)) {
                 $users->tel = $request->tel;
                 $users->name = $request->username;
                 $users->remarks = $request->remarks;
                 $users->password = bcrypt($request->tel);
-
                 if (!$users->save()) throw new \Exception('用户信息修改失败');
             }
             \DB::commit();

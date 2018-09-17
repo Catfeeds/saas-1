@@ -30,14 +30,75 @@ class CustomersService
             $privateWhere = $private['message'];
         }
 
-        return Customer::where('guest','1')
+        $customer = Customer::where('guest','1')
             ->whereIn('guardian_person', $publicWhere)
             ->orWhere('guest','2')
             ->whereIn('guardian_person', $privateWhere)
             ->with('guardianPerson:guid,name', 'entryPerson:guid,name')
             ->withCount('visit')
-            ->orderBy('created_at', 'desc')
-            ->paginate($request->per_page ?? 10);
+            ->orderBy('created_at', 'desc');
+
+        // 搜索查询
+        if ($request->status) {
+            if ($request->status == 2) {
+                $customer = $customer->whereIn('status',[3,4,5,6,7]);
+            } else {
+                $customer = $customer->where('status',$request->status);
+            }
+        }
+
+        // 区域
+        if ($request->region) {
+            $area = Area::where('guid',$request->region)->first();
+            // 区域下所有楼座
+            $buildingBlockGuid = array();
+            foreach ($area as $v) {
+                    $buildingBlockGuid[] = $v->guid;
+            }
+            $customer = $customer->whereIn('intention', $buildingBlockGuid);
+        }
+
+        // 租金
+        if ($request->price) {
+            $customer = $customer->whereBetween('price_interval_cn',$request->price);
+        }
+
+        // 面积
+        if ($request->area) {
+            $customer = $customer->whereBetween('acreage_interval_cn',$request->area);
+        }
+
+        // 客别
+        if ($request->guest) {
+            if ($request->guest == 1) {
+                $customer = $customer->where('guest',$request->guest);
+            } elseif ($request->guest == 2) {
+                $customer = $customer->where('guest',$request->guest);
+            } else {
+                $customer = $customer->whereIn('guest',[1,2]);
+            }
+        }
+
+        // 装修
+        if ($request->renovation) {
+            if ($request->renovation == 1) {
+                $customer = $customer->where('renovation',$request->renovation);
+            } elseif ($request->renovation == 2) {
+                $customer = $customer->where('renovation',$request->renovation);
+            } elseif ($request->renovation == 3) {
+                $customer = $customer->where('renovation',$request->renovation);
+            } elseif ($request->renovation == 4) {
+                $customer = $customer->where('renovation',$request->renovation);
+            } elseif ($request->renovation == 5) {
+                $customer = $customer->where('renovation',$request->renovation);
+            } else {
+                $customer = $customer->whereIn('renovation',[1,2,3,4,5]);
+            }
+        }
+
+        $data = $customer->paginate($request->per_page ?? 10);
+
+        return $data->setCollection(collect($data));
     }
 
     // 添加客源

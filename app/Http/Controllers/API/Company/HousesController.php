@@ -109,12 +109,11 @@ class HousesController extends APIBaseController
     }
 
     // 获取公司所在的区域
-    public function conpanyArea()
+    public function companyArea()
     {
         // 获取登录人公司所在的区域
-        $areaGuid = Company::find(Common::user()->company_guid)->area_guid;
-        $res = curl(config('hosts.building').'/api/get_company_area?area_guid='.$areaGuid,'GET');
-//        dd($res);
+        $cityGuid = Company::find(Common::user()->company_guid)->city_guid;
+        $res = curl(config('hosts.building').'/api/get_company_area?city_guid='.$cityGuid,'GET');
         if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取公司所在区域数据成功');
     }

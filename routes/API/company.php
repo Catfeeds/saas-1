@@ -212,5 +212,5 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 获取所有楼盘
     Route::get('all_building','CustomersController@allBuilding');
     // 获取公司所在区域
-    Route::get('conpany_area','HousesController@conpanyArea');
+    Route::get('company_area','HousesController@companyArea');
 });

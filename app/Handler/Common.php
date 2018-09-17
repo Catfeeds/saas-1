@@ -149,7 +149,7 @@ class Common
         $title = [];
         $title['building_name'] = $house->buildingBlock->building->name;
         $title['acreage'] = $house->acreage_cn;
-        $title['price'] = $house->price . $house->price_unit_cn;
+        $title['price'] = $house->price . '元/平/月';
         $title['img'] = $house->indoor_img_cn;
         $title['house_guid'] = $guid;
         return $title;

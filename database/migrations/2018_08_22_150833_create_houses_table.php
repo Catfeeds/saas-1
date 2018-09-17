@@ -37,7 +37,7 @@ class CreateHousesTable extends Migration
             $table->string('acreage',32)->nullable()->comment('面积(平)');
             $table->tinyInteger('split')->nullable()->comment('可拆分 1: 可拆分 2: 不可拆分');
             $table->string('mini_acreage',32)->nullable()->comment('最小面积(平)');
-            $table->float('floor_height',10,2)->nullable()->comment('层高(米)');
+            $table->float('floor_height',10)->nullable()->comment('层高(米)');
             $table->tinyInteger('register_company')->nullable()->comment('注册公司 1: 可以 2: 不可以');
             $table->tinyInteger('type')->nullable()->comment('写字楼类型 1: 纯写字楼 2: 商住楼 3: 商业综合体楼 4: 酒店写字楼 5: 其他');
             $table->tinyInteger('orientation')->nullable()->comment('朝向: 1: 东 2: 西 3: 南 4: 北 5: 东南 6: 东北 7: 西南 8: 西北 9: 东西 10: 南北');

@@ -36,6 +36,7 @@ class CustomersService
             ->whereIn('guardian_person', $privateWhere)
             ->with('guardianPerson:guid,name', 'entryPerson:guid,name')
             ->withCount('visit')
+            ->orderBy('visit_count','desc')
             ->orderBy('created_at', 'desc')
             ->paginate($request->per_page ?? 10);
     }

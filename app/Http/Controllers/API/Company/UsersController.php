@@ -63,8 +63,8 @@ class UsersController extends APIBaseController
     )
     {
         // 验证该用户是否还有资源
-        $validate = $this->getUserHouseCustomer($user->guid);
-        if (empty($validate)) return $this->sendError('请转移该用户手上的资源在进行离职操作');
+//        $validate = $this->getUserHouseCustomer($user->guid);
+//        if ($validate) return $this->sendError('请转移该用户手上的资源在进行离职操作');
         $res = $service->del($user);
         return $this->sendResponse($res,'删除用户成功');
     }
@@ -88,8 +88,8 @@ class UsersController extends APIBaseController
     )
     {
         // 验证该用户是否还有资源
-        $validate = $this->getUserHouseCustomer($request);
-        if (empty($validate)) return $this->sendError('请转移该用户手上的资源在进行离职操作');
+//        $validate = $this->getUserHouseCustomer($request);
+//        if ($validate) return $this->sendError('请转移该用户手上的资源在进行离职操作');
         $res = $service->resignation($request);
         return $this->sendResponse($res, '离职成功');
     }

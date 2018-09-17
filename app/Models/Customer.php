@@ -25,7 +25,7 @@ class Customer extends BaseModel
         'house_type_cn',
         'intention_cn',
         'block_cn',
-        'building_cn'
+        'building_cn',
     ];
 
     // 录入人

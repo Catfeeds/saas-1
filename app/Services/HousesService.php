@@ -308,6 +308,7 @@ class HousesService
         $data['top'] = $house->top == 1 ? true : false; // 置顶
         $data['img'] = $house->indoor_img_cn; // 图片
         $data['indoor_img'] = $house->indoor_img; // 室内图未处理
+        $data['house_identifier'] = $house->house_identifier; // 房源编号
         $data['house_type_img'] = $house->house_type_img; // 户型图未处理
         $data['outdoor_img'] = $house->outdoor_img; // 室外图未处理
         $data['indoor_img_url'] = $house->indoor_img_url; // 室内图

@@ -59,8 +59,8 @@ class Access{
             // 全公司
             $res =  User::where([
                 'company_guid' => Common::user()->company_guid,
-                'status' => 1
-            ])->pluck('guid')->toArray();
+            ])->whereIn('status',[1,3])
+                ->pluck('guid')->toArray();
         } elseif ($actionScope == 2) {
             // 区域所有guid
             $areaGuid = CompanyFramework::where('guid', empty(Common::user()->companyFramework)?null:Common::user()->companyFramework->guid)->pluck('guid')->toArray();
@@ -72,7 +72,7 @@ class Access{
 
             $guids = array_merge($storefrontGuid, $groupGuid, $areaGuid);
 
-            $res =  User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
+            $res =  User::whereIn('rel_guid', $guids)->whereIn('status',[1,3])->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 3) {
             // 门店
             $storefrontGuid = CompanyFramework::where('guid', empty(Common::user()->companyFramework)?null:Common::user()->companyFramework->guid)->pluck('guid')->toArray();
@@ -82,12 +82,12 @@ class Access{
 
             $guids = array_merge($storefrontGuid, $groupGuid);
 
-            $res = User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
+            $res = User::whereIn('rel_guid', $guids)->whereIn('status',[1,3])->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 4) {
             // 组
             $groupGuid = CompanyFramework::where('guid', empty(Common::user()->companyFramework)?null:Common::user()->companyFramework->guid)->pluck('guid')->toArray();
 
-            $res = User::whereIn('rel_guid', $groupGuid)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
+            $res = User::whereIn('rel_guid', $groupGuid)->whereIn('status',[1,3])->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 5) {
             // 个人
             $res = array(Common::user()->guid);

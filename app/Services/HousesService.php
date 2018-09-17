@@ -63,7 +63,7 @@ class HousesService
             'house_img' => $house->indoor_img_cn,
             'buildingName' => $house->buildingBlock->building->name,
             'acreage' => $house->acreage_cn,
-            'price' => $house->price.$house->price_unit_cn,
+            'price' => $house->price . '元/㎡/月',
             'entry_person' => User::find($house->entry_person)->name,
             'created_at' => $house->created_at->format('Y-m-d H:i')
         ];
@@ -94,7 +94,7 @@ class HousesService
         $houses['public_private'] = $res->public_private_cn; //公私盘
         $houses['grade'] = $res->grade_cn; //级别
         $houses['key'] = $res->have_key == 1 ? true : false; //是否有钥匙
-        $houses['price_unit'] = $res->price . $res->price_unit_cn; //价格单位
+        $houses['price_unit'] = $res->price . '元/㎡/月'; //价格单位
         $houses['payment_type'] = $res->payment_type_cn; //付款方式
         $houses['acreage'] = $res->acreage_cn; //面积
         $houses['renovation'] = $res->renovation_cn;  //装修程度
@@ -252,7 +252,7 @@ class HousesService
 
         // 钥匙人
         $keyPerson = Access::adoptGuardianPersonGetHouse('set_key_person');
-        if (!in_array($house->guid, $keyPerson)) {
+        if (!in_array($house->guid, $keyPerson) && $house->have_key != 1) {
             $permission['set_key_person'] = false; // 是否允许修改钥匙人
         }
 
@@ -324,7 +324,7 @@ class HousesService
         }
         $data['public_private'] = $house->public_private_cn; // 公私盘
         $data['grade'] = $house->grade_cn; // 级别
-        $data['price_unit'] = $house->price . $house->price_unit_cn; //价格单位
+        $data['price_unit'] = $house->price . '元/㎡/月'; //价格单位
         $data['payment_type'] = $house->payment_type_cn; //付款方式
         $data['acreage'] = $house->acreage_cn; //面积
         // 楼层

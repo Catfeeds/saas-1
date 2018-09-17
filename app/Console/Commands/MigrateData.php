@@ -142,7 +142,6 @@ class MigrateData extends Command
                 'grade' => 1,
                 'public_private' => 1,
                 'price' => $v->unit_price,
-                'price_unit' => 2,
                 'payment_type' => $v->payment_type,
                 'increasing_situation_remark' => $increasing,
                 'cost_detail' => $v->cost_detail,

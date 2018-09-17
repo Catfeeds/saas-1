@@ -16,7 +16,6 @@ class House extends BaseModel
     ];
 
     protected $appends = [
-        'price_unit_cn',
         'acreage_cn',
         'public_private_cn',
         'grade_cn',
@@ -103,20 +102,6 @@ class House extends BaseModel
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_guid', 'guid');
-    }
-
-    // 价格单位   price_unit_cn
-    public function getPriceUnitCnAttribute()
-    {
-        if ($this->price_unit == 1) {
-            return '元/月';
-        } elseif ($this->price_unit == 2) {
-            return '元/平/月';
-        } elseif ($this->price_unit == 3) {
-            return '元/平/天';
-        } else {
-            return '暂无报价';
-        }
     }
 
     // 面积   acreage_cn

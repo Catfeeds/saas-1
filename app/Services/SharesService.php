@@ -27,7 +27,7 @@ class SharesService
             $houses[$key]['img'] = $v->indoor_img_cn; //图片
             $houses[$key]['name'] = $v->buildingBlock->building->name;  //名称
             $houses[$key]['grade'] = $v->grade_cn; //级别
-            $houses[$key]['price_unit'] = $v->price . $v->price_unit_cn; //价格单位
+            $houses[$key]['price_unit'] = $v->price . '元/㎡/月'; //价格单位
             $houses[$key]['payment_type'] = $v->payment_type_cn; //付款方式
             $houses[$key]['acreage'] = $v->acreage_cn; //面积
             $houses[$key]['renovation'] = $v->renovation_cn;  //装修程度
@@ -61,7 +61,7 @@ class SharesService
         $data['outdoor_img_url'] = $house->outdoor_img_url??[]; // 室外图
         $data['buildingName'] = $house->buildingBlock->building->name??'暂无'; // 楼盘名
         $data['grade'] = $house->grade_cn??'暂无'; // 级别
-        $data['price_unit'] = $house->price . $house->price_unit_cn; //价格单位
+        $data['price_unit'] = $house->price . '元/㎡/月'; //价格单位
         $data['payment_type'] = $house->payment_type_cn??'暂无'; //付款方式
         $data['acreage'] = $house->acreage_cn??'暂无'; //面积
         // 楼层
@@ -126,7 +126,7 @@ class SharesService
             $houses[$key]['img'] = $v->indoor_img_cn; //图片
             $houses[$key]['name'] = $v->buildingBlock->building->name;  //名称
             $houses[$key]['grade'] = $v->grade_cn; //级别
-            $houses[$key]['price_unit'] = $v->price . $v->price_unit_cn; //价格单位
+            $houses[$key]['price_unit'] = $v->price . '元/㎡/月'; //价格单位
             $houses[$key]['payment_type'] = $v->payment_type_cn; //付款方式
             $houses[$key]['acreage'] = $v->acreage_cn; //面积
             $houses[$key]['renovation'] = $v->renovation_cn;  //装修程度
@@ -165,7 +165,7 @@ class SharesService
             $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit.' '.$house->house_number;
         }
         $data['grade'] = $house->grade_cn??'暂无'; // 级别
-        $data['price_unit'] = $house->price . $house->price_unit_cn; //价格单位
+        $data['price_unit'] = $house->price . '元/㎡/月'; //价格单位
         $data['payment_type'] = $house->payment_type_cn??'暂无'; //付款方式
         $data['acreage'] = $house->acreage_cn??'暂无'; //面积
         // 楼层

@@ -73,8 +73,6 @@ class addHouse extends Command
 
                 'price' => '100',//租金
 
-                'price_unit' => 1,//租金单位
-
                 'payment_type' => 1,//付款方式
 
                 'increasing_situation_remark' => null,//递增情况
@@ -124,8 +122,6 @@ class addHouse extends Command
                 'grade' => 1,//房源等级
 
                 'price' => '100',//租金
-
-                'price_unit' => 1,//租金单位
 
                 'payment_type' => 1,//付款方式
 

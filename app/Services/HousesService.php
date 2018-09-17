@@ -252,7 +252,7 @@ class HousesService
 
         // 钥匙人
         $keyPerson = Access::adoptGuardianPersonGetHouse('set_key_person');
-        if (!in_array($house->guid, $keyPerson)) {
+        if (!in_array($house->guid, $keyPerson) && $house->have_key != 1) {
             $permission['set_key_person'] = false; // 是否允许修改钥匙人
         }
 

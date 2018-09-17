@@ -10,9 +10,6 @@ class HousesRepository extends Model
     //房源列表
     public function houseList($request, $service, $guardian_person)
     {
-        dd($request->all());
-
-
         $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy('created_at','desc');
 
         // 状态
@@ -37,11 +34,68 @@ class HousesRepository extends Model
             $house = $house->whereBetween('price', $price);
         }
 
+        // 付款方式
+        if ($request->paymode) {
+            $house = $house->where('payment_type', $request->paymode);
+        }
 
+        // 最短租期
+        if ($request->shortestLease) {
+            $house = $house->where('shortest_lease', $request->shortestLease);
+        }
 
+        // 等级
+        if ($request->grade) {
+            $house = $house->where('grade', $request->grade);
+        }
 
+        // 标签
+        if ($request->label) {
+            // 有图
+            if ($request->label == 1) {
+                $house = $house->where('house_type_img', '!=',null)->where('indoor_img', '!=',null)->where('outdoor_img','!=',null);
+            }
 
-        $data = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy('created_at','desc')->paginate($request->per_page??10);
+            // 有钥匙
+            if ($request->label == 2) {
+                $house = $house->where('have_key',1);
+            }
+
+            // 可注册公司
+            if ($request->label == 3) {
+                $house = $house->where('register_company',1);
+            }
+
+            // 可开发票
+            if ($request->label == 4) {
+                $house = $house->where('open_bill',1);
+            }
+        }
+
+        // 楼层
+        if ($request->floor) {
+            $floor = explode('-', $request->floor);
+            $house = $house->whereBetween('floor', $floor);
+        }
+
+        // 朝向
+        if ($request->orientation) {
+            $house = $house->where('orientation', $request->orientation);
+        }
+
+        // 装修
+        if ($request->renovation) {
+            $house = $house->where('renovation', $request->renovation);
+        }
+
+        // 配套(json查询)
+        if ($request->supportFacilities) {
+            $name = "[\"$request->supportFacilities\"]";
+            $house = $house->whereRaw("JSON_CONTAINS(support_facilities,'".$name."')");
+        }
+
+        $data = $house->paginate($request->per_page??10);
+
         $houses = [];
         foreach ($data as $key => $v) {
             $houses[$key] = $service->getData($v);
@@ -159,6 +213,7 @@ class HousesRepository extends Model
              $house->pic_person = $request->pic_person;
         } elseif($request->key_person) {
              $house->key_person = $request->key_person;
+             $house->have_key = 1;
         }
         if (!$house->save()) return ['status' => false, 'message' => '人员变更失败'];
         return ['status' => true, 'message' => '人员变更成功'];

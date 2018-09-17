@@ -118,7 +118,87 @@ class SharesService
     // 公司共享房源列表
     public function getCompanyList($request)
     {
-        $res = House::with('buildingBlock', 'buildingBlock.building')->where(['company_guid' => Common::user()->company_guid, 'share' => $request->share])->orderBy('created_at', 'desc')->paginate($request->per_page??20);
+        $res = House::with('buildingBlock', 'buildingBlock.building')->where(['company_guid' => Common::user()->company_guid, 'share' => $request->share]);
+
+        // 面积
+        if ($request->area) {
+            $area = explode('-',$request->area);
+            $res = $res->whereBetween('acreage', $area);
+        }
+
+        // 价格
+        if ($request->price) {
+            $price = explode('-', $request->price);
+            $res = $res->whereBetween('price', $price);
+        }
+
+        // 付款方式
+        if ($request->paymode) {
+            $res = $res->where('payment_type', $request->paymode);
+        }
+
+        // 最短租期
+        if ($request->shortestLease) {
+            $res = $res->where('shortest_lease', $request->shortestLease);
+        }
+
+        // 等级
+        if ($request->grade) {
+            $res = $res->where('grade', $request->grade);
+        }
+
+        // 标签
+        if ($request->label) {
+            // 有图
+            if ($request->label == 1) {
+                $res = $res->where('house_type_img', '!=',null)->where('indoor_img', '!=',null)->where('outdoor_img','!=',null);
+            }
+
+            // 有钥匙
+            if ($request->label == 2) {
+                $res = $res->where('have_key',1);
+            }
+
+            // 可注册公司
+            if ($request->label == 3) {
+                $res = $res->where('register_company',1);
+            }
+
+            // 可开发票
+            if ($request->label == 4) {
+                $res = $res->where('open_bill',1);
+            }
+        }
+
+        // 楼层
+        if ($request->floor) {
+            $floor = explode('-', $request->floor);
+            $res = $res->whereBetween('floor', $floor);
+        }
+
+        // 朝向
+        if ($request->orientation) {
+            $res = $res->where('orientation', $request->orientation);
+        }
+
+        // 装修
+        if ($request->renovation) {
+            $res = $res->where('renovation', $request->renovation);
+        }
+
+        // 类型
+        if ($request->type) {
+            $res = $res->where('type', $request->type);
+        }
+
+        // 配套(json查询)
+        if ($request->supportFacilities) {
+            $name = "[\"$request->supportFacilities\"]";
+            $res = $res->whereRaw("JSON_CONTAINS(support_facilities,'".$name."')");
+        }
+
+        $res = $res->paginate($request->per_page??10);
+
         $houses = [];
         foreach ($res as $key => $v) {
             $houses[$key]['guid'] = $v->guid;

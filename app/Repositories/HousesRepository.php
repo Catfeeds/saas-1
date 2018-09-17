@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use App\Handler\Access;
 use App\Handler\Common;
 use App\Models\House;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,12 @@ class HousesRepository extends Model
         // 盘别
         if ($request->disk) {
             $house = $house->where('public_private', $request->disk);
+        }
+
+        // 范围
+        if ($request->range) {
+            $guardian_person = Access::getUser($request->range);
+            $house = $house->whereIn('guardian_person', $guardian_person);
         }
 
         // 面积
@@ -270,7 +277,7 @@ class HousesRepository extends Model
         \DB::beginTransaction();
         try {
             $res = House::where('guid',$request->guid)->update(['relevant_proves_img' => json_encode($request->relevant_proves_img)]);
-            $suc = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'上传证件图片', $request->relevant_proves_img);
+            $suc = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'编辑了相关证件图片', $request->relevant_proves_img);
             if (!$suc) throw new \Exception('房源操作记录添加失败');
             \DB::commit();
             return $res;

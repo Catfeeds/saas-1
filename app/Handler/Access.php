@@ -55,8 +55,6 @@ class Access{
         $actionScope
     )
     {
-        $guid = Common::user()->guid;
-
         if ($actionScope == 1) {
             // 全公司
             $res =  User::where([
@@ -65,7 +63,7 @@ class Access{
             ])->pluck('guid')->toArray();
         } elseif ($actionScope == 2) {
             // 区域所有guid
-            $areaGuid = CompanyFramework::where('guid', Common::user()->companyFramework->guid)->pluck('guid')->toArray();
+            $areaGuid = CompanyFramework::where('guid', empty(Common::user()->companyFramework)?null:Common::user()->companyFramework->guid)->pluck('guid')->toArray();
 
             // 门店所有guid
             $storefrontGuid = CompanyFramework::whereIn('parent_guid' ,$areaGuid)->pluck('guid')->toArray();
@@ -77,7 +75,7 @@ class Access{
             $res =  User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 3) {
             // 门店
-            $storefrontGuid = CompanyFramework::where('guid', Common::user()->companyFramework->guid)->pluck('guid')->toArray();
+            $storefrontGuid = CompanyFramework::where('guid', empty(Common::user()->companyFramework)?null:Common::user()->companyFramework->guid)->pluck('guid')->toArray();
 
             // 组所有guid
             $groupGuid = CompanyFramework::whereIn('parent_guid', $storefrontGuid)->pluck('guid')->toArray();
@@ -87,15 +85,13 @@ class Access{
             $res = User::whereIn('rel_guid', $guids)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 4) {
             // 组
-            $groupGuid = CompanyFramework::where('guid', Common::user()->companyFramework->guid)->pluck('guid')->toArray();
+            $groupGuid = CompanyFramework::where('guid', empty(Common::user()->companyFramework)?null:Common::user()->companyFramework->guid)->pluck('guid')->toArray();
 
             $res = User::whereIn('rel_guid', $groupGuid)->with(['role', 'companyFramework'])->pluck('guid')->toArray();
         } elseif ($actionScope == 5) {
             // 个人
-            $res = array($guid);
+            $res = array(Common::user()->guid);
         }
-
-        $res[] = $guid;
 
         if ($actionScope == 6) {
             $res = array();

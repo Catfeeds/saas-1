@@ -12,7 +12,7 @@ class HousesRepository extends Model
     //房源列表
     public function houseList($request, $service, $guardian_person)
     {
-        $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy('created_at','desc');
+        $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy($request->sortKey,$request->sortValue);
 
         // 状态
         if ($request->status) {

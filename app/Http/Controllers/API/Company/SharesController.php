@@ -52,5 +52,14 @@ class SharesController extends APIBaseController
         $res = $service->getCompanyInfo($request->guid);
         return $this->sendResponse($res, '公司共享房源详情获取成功');
     }
+    
+    
+    // 获取全部加盟商公司
+    public function getCompany(SharesService $service)
+    {
+        $res = $service->getCompany();
+        return $this->sendResponse($res, '公司获取成功');
+    }
+    
 
 }

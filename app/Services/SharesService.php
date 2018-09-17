@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Handler\Common;
+use App\Models\Company;
 use App\Models\House;
 
 class SharesService
@@ -277,6 +278,18 @@ class SharesService
         $data['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
         $data['share'] = $house->share;
         return $data;
+    }
+
+    // 获取全部公司
+    public function getCompany()
+    {
+        $company = Company::all();
+        return $company->map(function ($v) {
+            return [
+                'label' => $v->name,
+                'value' => $v->guid,
+            ];
+        });
     }
 
 

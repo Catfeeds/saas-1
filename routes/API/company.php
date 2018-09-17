@@ -206,11 +206,10 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('/building_blocks_all', 'HousesController@buildingBlocksSelect');
     // 获取所有下拉数据
     Route::get('get_all_select','HousesController@getAllSelect');
-
     // 获取所有商圈信息
     Route::get('all_block','CustomersController@allBlock');
     // 获取所有楼盘
     Route::get('all_building','CustomersController@allBuilding');
     // 获取公司所在区域
-    Route::get('conpany_area','HousesController@conpanyArea');
+    Route::get('company_area','HousesController@companyArea');
 });

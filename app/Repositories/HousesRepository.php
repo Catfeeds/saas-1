@@ -15,7 +15,11 @@ class HousesRepository extends Model
 
         // 状态
         if ($request->status) {
-            $house = $house->where('status', $request->status);
+            if ($request->status == 2) {
+                $house = $house->whereIn('status',[3,4,5,6,7]);
+            } else {
+                $house = $house->where('status', $request->status);
+            }
         }
 
         // 盘别

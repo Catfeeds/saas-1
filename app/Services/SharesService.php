@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Handler\Common;
+use App\Models\Area;
 use App\Models\Company;
 use App\Models\House;
 
@@ -119,7 +120,20 @@ class SharesService
     // 公司共享房源列表
     public function getCompanyList($request)
     {
-        $res = House::with('buildingBlock', 'buildingBlock.building')->where(['company_guid' => Common::user()->company_guid, 'share' => $request->share]);
+        $res = House::with('buildingBlock', 'buildingBlock.building')->where(['company_guid' => Common::user()->company_guid, 'share' => $request->share])->orderBy($request->sortKey,$request->sortValue);
+
+        // 区域
+        if ($request->region) {
+            $area = Area::where('guid',$request->region)->with('building.buildingBlock')->first();
+            // 区域下所有楼座
+            $buildingBlockGuid = array();
+            foreach ($area->building as $v) {
+                foreach ($v->buildingBlock as $val) {
+                    $buildingBlockGuid[] = $val->guid;
+                }
+            }
+            $res = $res->whereIn('building_block_guid', $buildingBlockGuid);
+        }
 
         // 面积
         if ($request->area) {

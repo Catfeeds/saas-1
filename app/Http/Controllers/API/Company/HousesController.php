@@ -109,7 +109,7 @@ class HousesController extends APIBaseController
     }
 
     // 获取公司所在的区域
-    public function companyArea()
+    public function copanyArea()
     {
         // 获取登录人公司所在的区域
         $areaGuid = Company::find(Common::user()->company_guid)->area_guid;

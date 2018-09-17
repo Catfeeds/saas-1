@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Handler\Access;
 use App\Handler\Common;
 use App\Models\Area;
+use App\Models\Building;
 use App\Models\House;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +14,25 @@ class HousesRepository extends Model
     public function houseList($request, $service, $guardian_person)
     {
         $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy($request->sortKey,$request->sortValue);
+
+        // 搜索查询
+        if ($request->type && $request->condition) {
+            if ($request->type == 1) {
+                $house = $house->where('guardian_person', Common::user()->guid)
+                    ->whereRaw("JSON_CONTAINS(owner_info->'$[*].tel', '\"$request->condition\"', '$')");
+            } elseif ($request->type == 2) {
+                $house = $house->where('house_identifier', 'like', '%' . $request->condition . '%');
+            } elseif ($request->type == 3) {
+                $building = Building::with('buildingBlock')->where('name','like', '%' . $request->condition . '%')->get();
+                $buildingBlockGuid = array();
+                foreach ($building as $v) {
+                    foreach ($v->buildingBlock as $val) {
+                        $buildingBlockGuid[] = $val->guid;
+                    }
+                }
+                $house = $house->whereIn('building_block_guid', $buildingBlockGuid);
+            }
+        }
 
         // 状态
         if ($request->status) {
@@ -111,6 +131,11 @@ class HousesRepository extends Model
         // 装修
         if ($request->renovation) {
             $house = $house->where('renovation', $request->renovation);
+        }
+
+        // 类型
+        if ($request->builType) {
+            $house = $house->where('type', $request->builType);
         }
 
         // 配套(json查询)

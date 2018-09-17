@@ -25,7 +25,6 @@ class PlatformsRepository extends Model
                 'grade' => $request->grade,//房源等级
                 'public_private' => 2,//盘别
                 'price' => $request->price,//租金
-                'price_unit' => $request->price_unit,//租金单位
                 'payment_type' => $request->payment_type,//付款方式
                 'increasing_situation_remark' => $request->increasing_situation_remark,//递增情况
                 'cost_detail' => Common::arrayToObject($request->cost_detail),//费用明细
@@ -80,7 +79,6 @@ class PlatformsRepository extends Model
         $house->building_block_guid = $request->building_block_guid;
         $house->grade = $request->grade;
         $house->price = $request->price;
-        $house->price_unit = $request->price_unit;
         $house->payment_type = $request->payment_type;
         $house->increasing_situation_remark = $request->increasing_situation_remark;
         $house->cost_detail = Common::arrayToObject($request->cost_detail);

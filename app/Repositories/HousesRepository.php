@@ -10,6 +10,36 @@ class HousesRepository extends Model
     //房源列表
     public function houseList($request, $service, $guardian_person)
     {
+//        dd($request->all());
+//
+//
+//        $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy('created_at','desc');
+//
+//        // 状态
+//        if ($request->status) {
+//            $house = $house->where('status', $request->status);
+//        }
+//
+//        // 盘别
+//        if ($request->disk) {
+//            $house = $house->where('public_private', $request->disk);
+//        }
+//
+//        // 面积
+//        if ($request->area) {
+//            $area = explode('-',$request->area);
+//            $house = $house->whereBetween('acreage', $area);
+//        }
+//
+//        // 价格
+//        if ($request->price) {
+//            $price = explode('-', $request->price);
+//            $house = $house->whereBetween('price', $price);
+//        }
+
+
+
+
         $data = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy('created_at','desc')->paginate($request->per_page??10);
         $houses = [];
         foreach ($data as $key => $v) {
@@ -33,7 +63,6 @@ class HousesRepository extends Model
             'grade' => $request->grade,//房源等级
             'public_private' => $request->public_private,//盘别
             'price' => $request->price,//租金
-            'price_unit' => $request->price_unit,//租金单位
             'payment_type' => $request->payment_type,//付款方式
             'increasing_situation_remark' => $request->increasing_situation_remark,//递增情况
             'cost_detail' => Common::arrayToObject($request->cost_detail),//费用明细
@@ -85,7 +114,6 @@ class HousesRepository extends Model
         // 有修改房源价格权限
         if ($permission['update_house_price']) {
             $house->price = $request->price;//租金
-            $house->price_unit = $request->price_unit;//租金单位
         }
         // 有修改其他信息权限
         if ($permission['update_house_other']) {

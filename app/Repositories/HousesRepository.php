@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Handler\Access;
 use App\Handler\Common;
+use App\Models\Area;
 use App\Models\House;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +12,7 @@ class HousesRepository extends Model
     //房源列表
     public function houseList($request, $service, $guardian_person)
     {
-        $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy('created_at','desc');
+        $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy($request->sortKey,$request->sortValue);
 
         // 状态
         if ($request->status) {
@@ -25,6 +26,19 @@ class HousesRepository extends Model
         // 盘别
         if ($request->disk) {
             $house = $house->where('public_private', $request->disk);
+        }
+
+        // 区域
+        if ($request->region) {
+            $area = Area::where('guid',$request->region)->with('building.buildingBlock')->first();
+            // 区域下所有楼座
+            $buildingBlockGuid = array();
+            foreach ($area->building as $v) {
+                foreach ($v->buildingBlock as $val) {
+                    $buildingBlockGuid[] = $val->guid;
+                }
+            }
+            $house = $house->whereIn('building_block_guid', $buildingBlockGuid);
         }
 
         // 范围

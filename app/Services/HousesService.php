@@ -4,7 +4,10 @@ namespace App\Services;
 
 use App\Handler\Access;
 use App\Handler\Common;
+use App\Models\Area;
+use App\Models\Building;
 use App\Models\BuildingBlock;
+use App\Models\Company;
 use App\Models\House;
 use App\Models\HouseOperationRecord;
 use App\Models\HouseShareRecord;
@@ -824,5 +827,143 @@ class HousesService
             return false;
         }
     }
+
+    public function getHouse($house, $request)
+    {
+        // 搜索查询
+        if ($request->type && $request->condition) {
+            if ($request->type == 1) {
+                $house = $house->where('guardian_person', Common::user()->guid)
+                    ->whereRaw("JSON_CONTAINS(owner_info->'$[*].tel', '\"$request->condition\"', '$')");
+            } elseif ($request->type == 2) {
+                $house = $house->where('house_identifier', 'like', '%' . $request->condition . '%');
+            } elseif ($request->type == 3) {
+                $building = Building::with('buildingBlock')->where('name','like', '%' . $request->condition . '%')->get();
+                $buildingBlockGuid = array();
+                foreach ($building as $v) {
+                    foreach ($v->buildingBlock as $val) {
+                        $buildingBlockGuid[] = $val->guid;
+                    }
+                }
+                $house = $house->whereIn('building_block_guid', $buildingBlockGuid);
+            } elseif ($request->type == 4) {
+                $company_guid = Company::where('name', 'like', '%'.$request->condition.'%')->pluck('guid')->toArray();
+                $house = $house->whereIn('company_guid', $company_guid);
+            }
+        }
+
+        // 状态
+        if ($request->status) {
+            if ($request->status == 2) {
+                $house = $house->whereIn('status',[3,4,5,6,7]);
+            } else {
+                $house = $house->where('status', $request->status);
+            }
+        }
+
+        // 盘别
+        if ($request->disk) {
+            $house = $house->where('public_private', $request->disk);
+        }
+
+        // 区域
+        if ($request->region) {
+            $area = Area::where('guid',$request->region)->with('building.buildingBlock')->first();
+            // 区域下所有楼座
+            $buildingBlockGuid = array();
+            foreach ($area->building as $v) {
+                foreach ($v->buildingBlock as $val) {
+                    $buildingBlockGuid[] = $val->guid;
+                }
+            }
+            $house = $house->whereIn('building_block_guid', $buildingBlockGuid);
+        }
+
+        // 范围
+        if ($request->range) {
+            $guardian_person = Access::getUser($request->range);
+            $house = $house->whereIn('guardian_person', $guardian_person);
+        }
+
+        // 面积
+        if ($request->area) {
+            $area = explode('-',$request->area);
+            $house = $house->whereBetween('acreage', $area);
+        }
+
+        // 价格
+        if ($request->price) {
+            $price = explode('-', $request->price);
+            $house = $house->whereBetween('price', $price);
+        }
+
+        // 付款方式
+        if ($request->paymode) {
+            $house = $house->where('payment_type', $request->paymode);
+        }
+
+        // 最短租期
+        if ($request->shortestLease) {
+            $house = $house->where('shortest_lease', $request->shortestLease);
+        }
+
+        // 等级
+        if ($request->grade) {
+            $house = $house->where('grade', $request->grade);
+        }
+
+        // 标签
+        if ($request->label) {
+            // 有图
+            if ($request->label == 1) {
+                $house = $house->where('house_type_img', '!=',null)->where('indoor_img', '!=',null)->where('outdoor_img','!=',null);
+            }
+
+            // 有钥匙
+            if ($request->label == 2) {
+                $house = $house->where('have_key',1);
+            }
+
+            // 可注册公司
+            if ($request->label == 3) {
+                $house = $house->where('register_company',1);
+            }
+
+            // 可开发票
+            if ($request->label == 4) {
+                $house = $house->where('open_bill',1);
+            }
+        }
+
+        // 楼层
+        if ($request->floor) {
+            $floor = explode('-', $request->floor);
+            $house = $house->whereBetween('floor', $floor);
+        }
+
+        // 朝向
+        if ($request->orientation) {
+            $house = $house->where('orientation', $request->orientation);
+        }
+
+        // 装修
+        if ($request->renovation) {
+            $house = $house->where('renovation', $request->renovation);
+        }
+
+        // 类型
+        if ($request->builType) {
+            $house = $house->where('type', $request->builType);
+        }
+
+        // 配套(json查询)
+        if ($request->supportFacilities) {
+            $name = "[\"$request->supportFacilities\"]";
+            $house = $house->whereRaw("JSON_CONTAINS(support_facilities,'".$name."')");
+        }
+
+        return $house->paginate($request->per_page??10);
+    }
+    
 
 }

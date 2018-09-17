@@ -525,9 +525,24 @@ class HousesService
             } else {
                 $remarks = '将房源转为无效,原因是:'.$status;
             }
-            $houseStatus = House::where('guid', $request->guid)->update(['status' =>
-                $request->status]);
-            if (empty($houseStatus)) throw new \Exception('修改房源状态失败');
+
+            $house = House::find($request->guid);
+
+            $house->status = $request->status;
+            // 如果是上架状态
+            if ($house->share == 1) {
+                $house->share = 2;
+                $house->release_source = null;
+                $house->lower_frame = 2;
+                // 添加分享记录
+                $res = HouseShareRecord::create([
+                    'guid' => Common::getUuid(),
+                    'house_guid' => $house->guid,
+                    'remarks' => $status. ' 自动下架'
+                ]);
+                if (!$res) throw new \Exception('房源状态修改失败');
+            }
+            if (empty($house->save())) throw new \Exception('修改房源状态失败');
             $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,6, $remarks);
             if (empty($houseOperationRecords)) throw new \Exception('房源其他操作记录添加失败');
 
@@ -750,7 +765,7 @@ class HousesService
                 $remarks = $user->name. '-'. optional($user->role)->name.' 发布共享';
             }
 
-          $res = House::where('guid', $request->guid)->update([
+          $res = House::where(['guid' => $request->guid, 'status' => 1])->update([
               'release_source' => $release_source,
               'share' => 1
           ]);

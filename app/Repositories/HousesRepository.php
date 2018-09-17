@@ -10,9 +10,6 @@ class HousesRepository extends Model
     //房源列表
     public function houseList($request, $service, $guardian_person)
     {
-        dd($request->all());
-
-
         $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy('created_at','desc');
 
         // 状态

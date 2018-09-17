@@ -120,7 +120,7 @@ class SharesService
     // 公司共享房源列表
     public function getCompanyList($request)
     {
-        $res = House::with('buildingBlock', 'buildingBlock.building')->where(['company_guid' => Common::user()->company_guid, 'share' => $request->share])->orderBy($request->sortKey,$request->sortValue);
+        $res = House::with('buildingBlock', 'buildingBlock.building')->where(['company_guid' => Common::user()->company_guid, 'share' => $request->working])->orderBy($request->sortKey,$request->sortValue);
 
         // 区域
         if ($request->region) {

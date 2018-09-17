@@ -10,32 +10,33 @@ class HousesRepository extends Model
     //房源列表
     public function houseList($request, $service, $guardian_person)
     {
-//        dd($request->all());
-//
-//
-//        $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy('created_at','desc');
-//
-//        // 状态
-//        if ($request->status) {
-//            $house = $house->where('status', $request->status);
-//        }
-//
-//        // 盘别
-//        if ($request->disk) {
-//            $house = $house->where('public_private', $request->disk);
-//        }
-//
-//        // 面积
-//        if ($request->area) {
-//            $area = explode('-',$request->area);
-//            $house = $house->whereBetween('acreage', $area);
-//        }
-//
-//        // 价格
-//        if ($request->price) {
-//            $price = explode('-', $request->price);
-//            $house = $house->whereBetween('price', $price);
-//        }
+        dd($request->all());
+
+
+        $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->orderBy('top','asc')->orderBy('created_at','desc');
+
+        // 状态
+        if ($request->status) {
+            $house = $house->where('status', $request->status);
+        }
+
+        // 盘别
+        if ($request->disk) {
+            $house = $house->where('public_private', $request->disk);
+        }
+
+        // 面积
+        if ($request->area) {
+            $area = explode('-',$request->area);
+            $house = $house->whereBetween('acreage', $area);
+        }
+
+        // 价格
+        if ($request->price) {
+            $price = explode('-', $request->price);
+            $house = $house->whereBetween('price', $price);
+        }
+
 
 
 

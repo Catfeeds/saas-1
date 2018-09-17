@@ -3,19 +3,21 @@
 namespace App\Services;
 
 use App\Handler\Common;
+use App\Models\Company;
 use App\Models\House;
 
 class SharesService
 {
     // 共享房源列表
-    public function getList($request)
+    public function getList($housesService, $request)
     {
         if ($request->share) {
             $share = $request->share;
         } else {
             $share = 1;
         }
-        $res = House::with('buildingBlock', 'buildingBlock.building')->where('share', $share)->orderBy('created_at', 'desc')->paginate($request->per_page??20);
+        $res = House::with('buildingBlock', 'buildingBlock.building')->where('share', $share)->orderBy($request->sortKey,$request->sortValue, 'desc');
+        $res = $housesService->getHouse($res, $request);
         $houses = [];
         foreach ($res as $key => $v) {
             if ($request->type) {
@@ -116,9 +118,12 @@ class SharesService
 
 
     // 公司共享房源列表
-    public function getCompanyList($request)
+    public function getCompanyList($housesService, $request)
     {
-        $res = House::with('buildingBlock', 'buildingBlock.building')->where(['company_guid' => Common::user()->company_guid, 'share' => $request->share])->orderBy('created_at', 'desc')->paginate($request->per_page??20);
+        $res = House::with('buildingBlock', 'buildingBlock.building')->where(['company_guid' => Common::user()->company_guid, 'share' => $request->share])->orderBy($request->sortKey,$request->sortValue);
+
+        $res = $housesService->getHouse($res, $request);
+
         $houses = [];
         foreach ($res as $key => $v) {
             $houses[$key]['guid'] = $v->guid;
@@ -198,6 +203,20 @@ class SharesService
         $data['share'] = $house->share;
         return $data;
     }
+
+    // 获取全部公司
+    public function getCompany()
+    {
+        $company = Company::all();
+        return $company->map(function ($v) {
+            return [
+                'label' => $v->name,
+                'value' => $v->guid,
+            ];
+        });
+    }
+
+
 
 
 

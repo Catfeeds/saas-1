@@ -228,7 +228,6 @@ class CustomersService
         $data['guardian_person'] = $res->guardianPerson; // 维护人
         $data['created_at'] = $res->created_at->format('Y-m-d H:i:s');
         $data['invalid_reason'] = $res->invalid_reason;
-
         if ($permission['visit_permission']) {
             $item = CustomerOperationRecord::where('customer_guid', $guid)
                 ->whereIn('type', [1, 2])
@@ -244,9 +243,7 @@ class CustomersService
                 ->pluck('type', 'created_at')
                 ->toArray();
         }
-
         // 获取动态(跟进,带看) 最新4条数据
-
         $dynamic = [];
         foreach ($item as $k => $v) {
             if ($v == 1) {
@@ -450,12 +447,10 @@ class CustomersService
                 }
             }
 
-            if ($v->type = 1) {
-                $v->operation = false;
-                if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 60 * 30) {
-                    if ($v->user_guid == Common::user()->guid) {
-                        $v->operation = true;
-                    }
+            $v->operation = false;
+            if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 60 * 30) {
+                if ($v->user_guid == Common::user()->guid) {
+                    $v->operation = true;
                 }
             }
             $v->remarks = $v->remarks??'';

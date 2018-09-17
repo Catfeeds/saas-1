@@ -164,7 +164,7 @@ class MigrateData extends Command
                 'pic_person' => $pic_person,
                 'status' => $v->house_busine_state == 1 ? 1: 7,
                 'top' => 2, // 默认不置顶
-                'track_time' => date('Y-m-d H:i:s', $v->start_track_time),
+                'track_time' => $v->start_track_time? date('Y-m-d H:i:s', $v->start_track_time) : $v->created_at,
                 'remarks' => $remarks
             ]);
             if (!$res) $data[] = $v->id;

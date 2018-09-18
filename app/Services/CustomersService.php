@@ -21,6 +21,11 @@ class CustomersService
         } else {
             $publicWhere = $public['message'];
         }
+        // 公盘客源
+        $publicGuid = Customer::where('guest','1')
+            ->whereIn('guardian_person', $publicWhere)
+            ->pluck('guid')
+            ->toArray();
 
         // 私客范围
         $private = Access::adoptPermissionGetUser('private_customer_show');
@@ -29,16 +34,30 @@ class CustomersService
         } else {
             $privateWhere = $private['message'];
         }
-
-        $customer = Customer::where('guest','1')
-            ->whereIn('guardian_person', $publicWhere)
-            ->orWhere('guest','2')
+        // 私盘客源
+        $privateGuid = Customer::where('guest','2')
             ->whereIn('guardian_person', $privateWhere)
+            ->pluck('guid')
+            ->toArray();
+
+        // 查询所有客源
+        $customer = Customer::whereIn('guid',array_merge($publicGuid, $privateGuid))
             ->with('guardianPerson:guid,name', 'entryPerson:guid,name')
             ->withCount('visit')
             ->orderBy($request->sortKey,$request->sortValue);
 
         // 搜索查询
+        if ($request->type && $request->condition) {
+            if ($request->type == 1) {
+                $customer = $customer->where('guardian_person', Common::user()->guid)
+                    ->whereRaw("JSON_CONTAINS(customer_info->'$[*].name', '\"$request->condition\"', '$')");
+            } elseif ($request->type == 2) {
+                $customer = $customer->where('guardian_person', Common::user()->guid)
+                ->whereRaw("JSON_CONTAINS(customer_info->'$[*].tel', '\"$request->condition\"', '$')");
+            }
+        }
+
+        // 状态
         if ($request->status) {
             if ($request->status == 2) {
                 $customer = $customer->whereIn('status',[3,4,5,6,7]);
@@ -55,12 +74,14 @@ class CustomersService
 
         // 租金
         if ($request->price) {
-            $customer = $customer->whereBetween('price_interval_cn',$request->price);
+            $price = explode('-', $request->price);
+            $customer = $customer->whereBetween('max_price',$price);
         }
 
         // 面积
         if ($request->area) {
-            $customer = $customer->whereBetween('acreage_interval_cn',$request->area);
+            $maxAcreage = explode('-',$request->area);
+            $customer = $customer->whereBetween('max_acreage',$maxAcreage);
         }
 
         // 客别

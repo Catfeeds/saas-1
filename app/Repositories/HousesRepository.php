@@ -1,10 +1,7 @@
 <?php
 namespace App\Repositories;
 
-use App\Handler\Access;
 use App\Handler\Common;
-use App\Models\Area;
-use App\Models\Building;
 use App\Models\House;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,7 +36,7 @@ class HousesRepository extends Model
             'price' => $request->price,//租金
             'payment_type' => $request->payment_type,//付款方式
             'increasing_situation_remark' => $request->increasing_situation_remark,//递增情况
-            'cost_detail' => Common::arrayToObject($request->cost_detail),//费用明细
+            'cost_detail' => $request->cost_detail,//费用明细
             'acreage' => $request->acreage,//面积
             'split' => $request->split,//可拆分
             'mini_acreage' => $request->mini_acreage,//最小面积
@@ -51,7 +48,7 @@ class HousesRepository extends Model
             'open_bill' => $request->open_bill,//可开发票
             'station_number' => $request->station_number,//工位数量
             'rent_free' => $request->rent_free,//免租期
-            'support_facilities' => Common::arrayToObject($request->support_facilities),//配套
+            'support_facilities' => $request->support_facilities,//配套
             'source' => $request->source,//渠道来源
             'actuality' => $request->actuality,//现状
             'shortest_lease' => $request->shortest_lease,//最短租期
@@ -95,7 +92,7 @@ class HousesRepository extends Model
             $house->public_private = $request->public_private;
             $house->payment_type = $request->payment_type;
             $house->increasing_situation_remark = $request->increasing_situation_remark;
-            $house->cost_detail = Common::arrayToObject($request->cost_detail);
+            $house->cost_detail = $request->cost_detail;
             $house->acreage = $request->acreage;
             $house->split = $request->split;
             $house->mini_acreage = $request->mini_acreage;
@@ -107,7 +104,7 @@ class HousesRepository extends Model
             $house->open_bill = $request->open_bill;
             $house->station_number = $request->station_number;
             $house->rent_free = $request->rent_free;
-            $house->support_facilities = Common::arrayToObject($request->support_facilities);
+            $house->support_facilities = $request->support_facilities;
             $house->source = $request->source;
             $house->actuality = $request->actuality;
             $house->shortest_lease = $request->shortest_lease;

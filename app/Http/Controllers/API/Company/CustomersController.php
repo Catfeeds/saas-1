@@ -179,9 +179,8 @@ class CustomersController extends APIBaseController
     public function buildingBlocksSelect()
     {
         // 获取登录人公司所在的城市
-        $cityName = Company::find(Common::user()->company_guid)->city_name;
-        $res = curl(config('hosts.building').'/api/get_building_block?city_name='.$cityName,'GET');
-        if (empty($res->data)) return $this->sendError($res->message);
+        $cityGuid = Company::find(Common::user()->company_guid)->city_guid;
+        $res = curl(config('hosts.building').'/api/get_building_block?city_guid='.$cityGuid,'GET');
         return $this->sendResponse($res->data, '获取所有下拉数据成功');
     }
 }

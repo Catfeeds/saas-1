@@ -66,12 +66,14 @@ class CustomersService
 
         // 租金
         if ($request->price) {
-            $customer = $customer->whereBetween('price_interval_cn',$request->price);
+            $price = explode('-', $request->price);
+            $customer = $customer->whereBetween('price_interval_cn',$price);
         }
 
         // 面积
         if ($request->area) {
-            $customer = $customer->whereBetween('acreage_interval_cn',$request->area);
+            $area = explode('-',$request->area);
+            $customer = $customer->whereBetween('acreage_interval_cn',$area);
         }
 
         // 客别

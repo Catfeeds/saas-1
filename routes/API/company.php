@@ -169,14 +169,12 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 公司共享房源详情
     Route::get('company_show', 'SharesController@companyShow');
 
-    // 获取全部公司
-    Route::get('get_company', 'SharesController@getCompany');
-
     /*
     |--------------------------------------------------------------------------
     | 客源管理
     |--------------------------------------------------------------------------
     */
+
     Route::resource('customers', 'CustomersController');
 
     // 获取正常状态客源下拉数据

@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Services\LoginsService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends APIBaseController
 {
@@ -180,13 +181,21 @@ class UsersController extends APIBaseController
     // 修改密码
     public function updatePwd
     (
-        UsersRequest $request,
-        UserService $service
+        UsersRequest $request
     )
     {
-        $res = $service->updatePwd($request);
-        if (!$res['status']) return $this->sendError($res['message']);
-        return $this->sendResponse(true, $res['message']);
+//        $res = $service->updatePwd($request);
+//        if (!$res['status']) return $this->sendError($res['message']);
+//        return $this->sendResponse(true, $res['message']);
+        // 修改当前登录人密码
+        $user = Common::user();
+        // 判断新旧密码是否一致
+        if (!Hash::check($request->old, $user->password)) return $this->sendError('原始密码不正确');
+        $user->password = bcrypt($request->new);
+        if (!$user->save()) return $this->sendError('修改失败');
+        return $this->sendResponse(true,'修改成功');
+//        $res = $service->updatePwd($request);
+//        return $this->sendResponse($res, '修改成功');
     }
     
     // 获取公司下所有人员

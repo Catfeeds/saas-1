@@ -203,21 +203,4 @@ class SharesService
         $data['share'] = $house->share;
         return $data;
     }
-
-    // 获取全部公司
-    public function getCompany()
-    {
-        $company = Company::all();
-        return $company->map(function ($v) {
-            return [
-                'label' => $v->name,
-                'value' => $v->guid,
-            ];
-        });
-    }
-
-
-
-
-
 }

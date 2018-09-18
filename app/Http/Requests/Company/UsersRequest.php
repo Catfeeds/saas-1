@@ -119,7 +119,10 @@ class UsersRequest extends FormRequest
                         )
                     ]
                 ];
-            case 'freeze':
+            case 'updatePwd':
+                return [
+                    'new' => 'min:6'
+                ];
             case 'resignation':
                 return [
                     'guid' => [

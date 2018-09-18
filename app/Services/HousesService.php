@@ -320,12 +320,12 @@ class HousesService
         $data['relevant_proves_img'] = $house->relevant_proves_img_cn??array(); // 相关证件
         $data['buildingName'] = $house->buildingBlock->building->name; // 楼盘名
         $data['created_at'] = $house->created_at->format('Y-m-d H:i:s'); // 创建时间
-        // 门牌号
-        if (empty($house->buildingBlock->unit)) {
-            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number.' '.$house->house_number;
-        } else {
-            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit.' '.$house->house_number;
-        }
+//        // 门牌号
+//        if (empty($house->buildingBlock->unit)) {
+//            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number.' '.$house->house_number;
+//        } else {
+//            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit.' '.$house->house_number;
+//        }
         $data['public_private'] = $house->public_private_cn; // 公私盘
         $data['grade'] = $house->grade_cn; // 级别
         $data['price_unit'] = $house->price . '元/㎡·月'; //价格单位

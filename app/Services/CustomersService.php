@@ -473,7 +473,7 @@ class CustomersService
                     $v->operation = true;
                 }
             }
-            $v->remarks = $v->remarks??'';
+            $v->remarks = empty($v->remarks)?'':$v->remarks;
         }
         return ['status' => true, 'message' => $res];
     }

@@ -145,13 +145,13 @@ class Customer extends BaseModel
     public function getPriceIntervalCnAttribute()
     {
         if (empty($this->min_price) && (!empty($this->max_price))) {
-            return $this->max_price . '元/月以下';
+            return $this->max_price . '元/㎡·月以下';
         } elseif ((!empty($this->min_price)) && empty($this->max_price)) {
-            return $this->min_price . '元/月以上';
+            return $this->min_price . '元/㎡·月以上';
         } elseif (empty($this->min_price) && empty($this->max_price)) {
             return '暂无报价';
         }else {
-            return $this->min_price .'-'. $this->max_price . '元/月';
+            return $this->min_price .'-'. $this->max_price . '元/㎡·月';
         }
     }
 

@@ -1,10 +1,7 @@
 <?php
 namespace App\Repositories;
 
-use App\Handler\Access;
 use App\Handler\Common;
-use App\Models\Area;
-use App\Models\Building;
 use App\Models\House;
 use Illuminate\Database\Eloquent\Model;
 

@@ -121,9 +121,7 @@ class SharesService
     public function getCompanyList($housesService, $request)
     {
         $res = House::with('buildingBlock', 'buildingBlock.building')->where(['company_guid' => Common::user()->company_guid, 'share' => $request->share])->orderBy($request->sortKey,$request->sortValue);
-
         $res = $housesService->getHouse($res, $request);
-
         $houses = [];
         foreach ($res as $key => $v) {
             $houses[$key]['guid'] = $v->guid;

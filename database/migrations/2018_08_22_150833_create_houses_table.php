@@ -34,9 +34,9 @@ class CreateHousesTable extends Migration
             $table->tinyInteger('payment_type')->nullable()->comment('支付方式: 1: 押一付一 2: 押一付二 3: 押一付三 4: 押二付一 5: 押二付二 6: 押二付三 7: 押三付一 8: 押三付二 9: 押三付三 10: 半年付 11: 年付 12: 面谈');
             $table->string('increasing_situation_remark', 256)->nullable()->comment('递增情况');
             $table->json('cost_detail')->nullable()->comment('费用明细: 物业费；水费；电费；宽带费；取暖费；停车费');
-            $table->string('acreage',32)->nullable()->comment('面积(平)');
+            $table->float('acreage',10)->nullable()->comment('面积(平)');
             $table->tinyInteger('split')->nullable()->comment('可拆分 1: 可拆分 2: 不可拆分');
-            $table->string('mini_acreage',32)->nullable()->comment('最小面积(平)');
+            $table->float('mini_acreage',10)->nullable()->comment('最小面积(平)');
             $table->float('floor_height',10)->nullable()->comment('层高(米)');
             $table->tinyInteger('register_company')->nullable()->comment('注册公司 1: 可以 2: 不可以');
             $table->tinyInteger('type')->nullable()->comment('写字楼类型 1: 纯写字楼 2: 商住楼 3: 商业综合体楼 4: 酒店写字楼 5: 其他');

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Handler\Common;
-use App\Models\Company;
 use App\Models\House;
 
 class SharesService
@@ -16,8 +15,8 @@ class SharesService
         } else {
             $share = 1;
         }
-        $res = House::with('buildingBlock', 'buildingBlock.building','company')->where('share', $share)->orderBy($request->sortKey,$request->sortValue, 'desc');
-        $res = $housesService->getHouse($res, $request);
+        $res = House::with('buildingBlock', 'buildingBlock.building','company')->where('share', $share);
+        $res = $housesService->getHouse($res, $request)->orderBy($request->sortKey,$request->sortValue);
         $houses = [];
         foreach ($res as $key => $v) {
             if ($request->type) {
@@ -55,6 +54,7 @@ class SharesService
     {
         $house = House::where('guid', $guid)->with(['buildingBlock', 'buildingBlock.building', 'shareRecord', 'guardianPerson', 'company'])->first();
         $data = [];
+        $data['house_identifier'] = $house->house_identifier;
         $data['img'] = $house->indoor_img_cn??[]; // 图片
         $data['indoor_img'] = $house->indoor_img??[]; // 室内图未处理
         $data['house_type_img'] = $house->house_type_img??[]; // 户型图未处理
@@ -153,6 +153,7 @@ class SharesService
     {
         $house = House::where('guid', $guid)->with(['buildingBlock', 'buildingBlock.building', 'shareRecord'])->first();
         $data = [];
+        $data['house_identifier'] = $house->house_identifier;
         $data['img'] = $house->indoor_img_cn??[]; // 图片
         $data['indoor_img'] = $house->indoor_img??[]; // 室内图未处理
         $data['house_type_img'] = $house->house_type_img??[]; // 户型图未处理
@@ -161,12 +162,12 @@ class SharesService
         $data['house_type_img_url'] = $house->house_type_img_url??[]; // 户型图
         $data['outdoor_img_url'] = $house->outdoor_img_url??[]; // 室外图
         $data['buildingName'] = $house->buildingBlock->building->name??'暂无'; // 楼盘名
-        // 门牌号
-        if (empty($house->buildingBlock->unit)) {
-            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number.' '.$house->house_number;
-        } else {
-            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit.' '.$house->house_number;
-        }
+//        // 门牌号
+//        if (empty($house->buildingBlock->unit)) {
+//            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number.' '.$house->house_number;
+//        } else {
+//            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit.' '.$house->house_number;
+//        }
         $data['grade'] = $house->grade_cn??'暂无'; // 级别
         $data['price_unit'] = $house->price . '元/㎡·月'; //价格单位
         $data['payment_type'] = $house->payment_type_cn??'暂无'; //付款方式

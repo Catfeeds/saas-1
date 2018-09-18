@@ -834,8 +834,14 @@ class HousesService
         // 搜索查询
         if ($request->type && $request->condition) {
             if ($request->type == 1) {
-                $house = $house->where('guardian_person', Common::user()->guid)
-                    ->whereRaw("JSON_CONTAINS(owner_info->'$[*].tel', '\"$request->condition\"', '$')");
+                    // 获取下级用户
+                    $user = Access::getUser(Common::user()->role->level);
+
+                    $house = $house->where('public_private', 2)
+                        ->whereRaw("JSON_CONTAINS(owner_info->'$[*].tel', '\"$request->condition\"', '$')")
+                        ->orWhere('public_private', 1)
+                        ->whereIn('guardian_person', $user)
+                        ->whereRaw("JSON_CONTAINS(owner_info->'$[*].tel', '\"$request->condition\"', '$')");
             } elseif ($request->type == 2) {
                 $house = $house->where('house_identifier', 'like', '%' . $request->condition . '%');
             } elseif ($request->type == 3) {

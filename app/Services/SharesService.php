@@ -15,8 +15,8 @@ class SharesService
         } else {
             $share = 1;
         }
-        $res = House::with('buildingBlock', 'buildingBlock.building','company')->where('share', $share);
-        $res = $housesService->getHouse($res, $request)->orderBy($request->sortKey,$request->sortValue);
+        $res = House::with('buildingBlock', 'buildingBlock.building')->where('share', $share)->orderBy($request->sortKey,$request->sortValue);
+        $res = $housesService->getHouse($res, $request);
         $houses = [];
         foreach ($res as $key => $v) {
             if ($request->type) {
@@ -132,7 +132,7 @@ class SharesService
             $houses[$key]['price_unit'] = $v->price . '元/㎡·月'; //价格单位
             $houses[$key]['payment_type'] = $v->payment_type_cn; //付款方式
             $houses[$key]['acreage'] = $v->acreage_cn; //面积
-            $houses[$key]['renovation'] = $v->renovation_cn;  //装修程度
+            $houses[$key]['renovation'] = $v->renovation_cn;  //装修程度app/Services/SharesService.php
             $houses[$key]['orientation'] = $v->orientation_cn; //朝向
             $houses[$key]['type'] = $v->type_cn; //类型
             $houses[$key]['floor'] = $v->floor. '层'; //楼层

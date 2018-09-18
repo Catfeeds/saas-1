@@ -37,13 +37,13 @@ class SharesService
             $houses[$key]['floor'] = $v->floor. '层'; //楼层
             $houses[$key]['total_floor'] = $v->buildingBlock->total_floor?'共' . $v->buildingBlock->total_floor. '层':'-';
             $houses[$key]['belong'] = $belong;
+            $houses[$key]['share_time'] = $v->share_time;
             $share = $v->shareRecord->sortByDesc('created_at')->first();
             if ($v->share == 1) {
                 $houses[$key]['share'] = optional($share)->remarks;
             } elseif ($v->share == 2) {
                 $houses[$key]['share'] = $v->lower_cn;
             }
-            $houses[$key]['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
             $houses[$key]['company_name'] = $v->company ? $v->company->name : '平台';
         }
         return $res->setCollection(collect($houses));
@@ -136,6 +136,7 @@ class SharesService
             $houses[$key]['orientation'] = $v->orientation_cn; //朝向
             $houses[$key]['type'] = $v->type_cn; //类型
             $houses[$key]['floor'] = $v->floor. '层'; //楼层
+            $houses[$key]['share_time'] = $v->share_time;
             $houses[$key]['total_floor'] = $v->buildingBlock->total_floor?'共' . $v->buildingBlock->total_floor. '层':'-';
             $share = $v->shareRecord->sortByDesc('created_at')->first();
             if ($v->share == 1) {
@@ -143,7 +144,6 @@ class SharesService
            } elseif ($v->share == 2) {
                 $houses[$key]['share'] = $v->lower_cn;
             }
-            $houses[$key]['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
         }
         return $res->setCollection(collect($houses));
     }

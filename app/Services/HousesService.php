@@ -771,7 +771,8 @@ class HousesService
 
           $res = House::where(['guid' => $request->guid, 'status' => 1])->update([
               'release_source' => $release_source,
-              'share' => 1
+              'share' => 1,
+              'share_time' => date('Y-m-d H:i:s', time())
           ]);
           if (!$res) throw new \Exception('房源共享失败');
           $record = HouseShareRecord::create([
@@ -809,7 +810,8 @@ class HousesService
             $res = House::where('guid', $request->guid)->update([
                 'release_source' => null,
                 'share' => 2,
-                'lower_frame' => $lower_frame
+                'lower_frame' => $lower_frame,
+                'share_time' => date('Y-m-d H:i:s', time())
             ]);
             if (!$res) throw new \Exception('房源下架失败');
 

@@ -24,8 +24,8 @@ class CreateCustomersTable extends Migration
             $table->json('block')->nullable()->comment('商圈: json(商圈)');
             $table->json('building')->nullable()->comment('楼盘: json(楼盘)');
             $table->json('house_type')->nullable()->comment('户型: json');
-            $table->decimal('min_price',10)->nullable()->comment('最低价/元/月');
-            $table->decimal('max_price',10)->nullable()->comment('最高价格/元/月');
+            $table->decimal('min_price',10)->nullable()->comment('最低价/元/㎡.月');
+            $table->decimal('max_price',10)->nullable()->comment('最高价格/元/㎡.月');
             $table->decimal('min_acreage',10)->nullable()->comment('最低面积/㎡');
             $table->decimal('max_acreage',10)->nullable()->comment('最高面积/㎡');
             $table->tinyInteger('type')->nullable()->comment('类型(待定) 1: 纯写字楼 2: 商住楼 3: 商业综合体 4: 酒店写字楼 5: 其它');

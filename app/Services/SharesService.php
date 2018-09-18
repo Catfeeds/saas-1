@@ -45,6 +45,7 @@ class SharesService
                 $houses[$key]['share'] = $v->lower_cn;
             }
             $houses[$key]['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
+            $houses[$key]['company_name'] = $v->company ? $v->company->name : '平台';
         }
         return $res->setCollection(collect($houses));
     }

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Handler\Common;
-use App\Models\Company;
 use App\Models\House;
 
 class SharesService
@@ -38,13 +37,13 @@ class SharesService
             $houses[$key]['floor'] = $v->floor. '层'; //楼层
             $houses[$key]['total_floor'] = $v->buildingBlock->total_floor?'共' . $v->buildingBlock->total_floor. '层':'-';
             $houses[$key]['belong'] = $belong;
+            $houses[$key]['share_time'] = $v->share_time;
             $share = $v->shareRecord->sortByDesc('created_at')->first();
             if ($v->share == 1) {
                 $houses[$key]['share'] = optional($share)->remarks;
             } elseif ($v->share == 2) {
                 $houses[$key]['share'] = $v->lower_cn;
             }
-            $houses[$key]['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
             $houses[$key]['company_name'] = $v->company ? $v->company->name : '平台';
         }
         return $res->setCollection(collect($houses));
@@ -55,6 +54,7 @@ class SharesService
     {
         $house = House::where('guid', $guid)->with(['buildingBlock', 'buildingBlock.building', 'shareRecord', 'guardianPerson', 'company'])->first();
         $data = [];
+        $data['house_identifier'] = $house->house_identifier;
         $data['img'] = $house->indoor_img_cn??[]; // 图片
         $data['indoor_img'] = $house->indoor_img??[]; // 室内图未处理
         $data['house_type_img'] = $house->house_type_img??[]; // 户型图未处理
@@ -132,10 +132,11 @@ class SharesService
             $houses[$key]['price_unit'] = $v->price . '元/㎡·月'; //价格单位
             $houses[$key]['payment_type'] = $v->payment_type_cn; //付款方式
             $houses[$key]['acreage'] = $v->acreage_cn; //面积
-            $houses[$key]['renovation'] = $v->renovation_cn;  //装修程度
+            $houses[$key]['renovation'] = $v->renovation_cn;  //装修程度app/Services/SharesService.php
             $houses[$key]['orientation'] = $v->orientation_cn; //朝向
             $houses[$key]['type'] = $v->type_cn; //类型
             $houses[$key]['floor'] = $v->floor. '层'; //楼层
+            $houses[$key]['share_time'] = $v->share_time;
             $houses[$key]['total_floor'] = $v->buildingBlock->total_floor?'共' . $v->buildingBlock->total_floor. '层':'-';
             $share = $v->shareRecord->sortByDesc('created_at')->first();
             if ($v->share == 1) {
@@ -143,7 +144,6 @@ class SharesService
            } elseif ($v->share == 2) {
                 $houses[$key]['share'] = $v->lower_cn;
             }
-            $houses[$key]['share_time'] = optional($share)->created_at->format('Y-m-d H:i:s');
         }
         return $res->setCollection(collect($houses));
     }
@@ -153,6 +153,7 @@ class SharesService
     {
         $house = House::where('guid', $guid)->with(['buildingBlock', 'buildingBlock.building', 'shareRecord'])->first();
         $data = [];
+        $data['house_identifier'] = $house->house_identifier;
         $data['img'] = $house->indoor_img_cn??[]; // 图片
         $data['indoor_img'] = $house->indoor_img??[]; // 室内图未处理
         $data['house_type_img'] = $house->house_type_img??[]; // 户型图未处理
@@ -161,12 +162,12 @@ class SharesService
         $data['house_type_img_url'] = $house->house_type_img_url??[]; // 户型图
         $data['outdoor_img_url'] = $house->outdoor_img_url??[]; // 室外图
         $data['buildingName'] = $house->buildingBlock->building->name??'暂无'; // 楼盘名
-        // 门牌号
-        if (empty($house->buildingBlock->unit)) {
-            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number.' '.$house->house_number;
-        } else {
-            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit.' '.$house->house_number;
-        }
+//        // 门牌号
+//        if (empty($house->buildingBlock->unit)) {
+//            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->house_number.' '.$house->house_number;
+//        } else {
+//            $data['house_number'] = $house->buildingBlock->name.$house->buildingBlock->name_unit.' '.$house->buildingBlock->unit.$house->buildingBlock->unit_unit.' '.$house->house_number;
+//        }
         $data['grade'] = $house->grade_cn??'暂无'; // 级别
         $data['price_unit'] = $house->price . '元/㎡·月'; //价格单位
         $data['payment_type'] = $house->payment_type_cn??'暂无'; //付款方式

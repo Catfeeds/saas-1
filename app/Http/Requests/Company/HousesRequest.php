@@ -56,7 +56,7 @@ class HousesRequest extends FormRequest
                     'payment_type' => 'required|integer|between:1,8',
                     'increasing_situation_remark' => 'nullable|max:256',
                     'cost_detail' => 'nullable|array',
-                    'acreage' => 'required|max:9999999',
+                    'acreage' => 'required|max:9999999|numeric',
                     'split' => 'nullable|integer|between:1,2',
                     'mini_acreage' => 'nullable|numeric|max:9999999',
                     'floor_height' => 'nullable|numeric|max:9999999',

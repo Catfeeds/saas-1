@@ -888,8 +888,8 @@ class HousesService
 
         // 面积
         if ($request->area) {
-            $area = explode('-',$request->area);
-            $house = $house->whereBetween('acreage', $area);
+            $acreage = explode('-', $request->area);
+            $house = $house->whereBetween('acreage', $acreage);
         }
 
         // 价格
@@ -962,7 +962,6 @@ class HousesService
             $name = "[\"$request->supportFacilities\"]";
             $house = $house->whereRaw("JSON_CONTAINS(support_facilities,'".$name."')");
         }
-
         return $house->paginate($request->per_page??10);
     }
     

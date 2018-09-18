@@ -446,7 +446,6 @@ class CustomersService
                     $v['house'] = Common::HouseTitle($house_guid);
                 }
             }
-
             $v->operation = false;
             if (time() - strtotime($v->created_at->format('Y-m-d H:i')) <= 60 * 30) {
                 if ($v->user_guid == Common::user()->guid) {

@@ -22,7 +22,7 @@ return [
     //短信验证码失效时间（redis存储 单位秒）// 2分钟
     'sms_life_time' => 60 * 2,
     // 房源默认图
-    'pc_building_house_default_img' => 'https://upload.chulouwang.com/pc/static/building_house_default.jpg',
+    'pc_building_house_default_img' => 'https://upload.chulouwang.com/sass/admin/building_house_default.jpg',
     // 用户默认图
     'user_default_img' => 'https://upload.chulouwang.com/agent/default-header.png'
 ];

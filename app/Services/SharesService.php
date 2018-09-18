@@ -16,7 +16,7 @@ class SharesService
         } else {
             $share = 1;
         }
-        $res = House::with('buildingBlock', 'buildingBlock.building','company')->where('share', $share)->orderBy($request->sortKey,$request->sortValue, 'desc');
+        $res = House::with('buildingBlock', 'buildingBlock.building')->where('share', $share)->orderBy($request->sortKey,$request->sortValue);
         $res = $housesService->getHouse($res, $request);
         $houses = [];
         foreach ($res as $key => $v) {

@@ -80,7 +80,9 @@ class CreateHousesTable extends Migration
             $table->tinyInteger('top')->default(2)->comment('是否置顶 1: 置顶 2: 不置顶');
             // 跟进时间
             $table->datetime('track_time')->nullable()->comment('跟进时间');
-
+            // 共享时间
+            $table->datetime('share_time')->nullable()->comment('共享时间');
+            
             $table->timestamps();
         });
         \DB::statement("alter table `houses` comment'房源表'");

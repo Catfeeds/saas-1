@@ -39,6 +39,17 @@ class CustomersService
             ->orderBy($request->sortKey,$request->sortValue);
 
         // 搜索查询
+        if ($request->type && $request->condition) {
+            if ($request->type == 1) {
+                $customer = $customer->where('guardian_person', Common::user()->guid)
+                    ->whereRaw("JSON_CONTAINS(customer_info->'$[*].name', '\"$request->condition\"', '$')");
+            } elseif ($request->type == 2) {
+                $customer = $customer->where('guardian_person', Common::user()->guid)
+                ->whereRaw("JSON_CONTAINS(customer_info->'$[*].tel', '\"$request->condition\"', '$')");
+            }
+        }
+
+        // 状态
         if ($request->status) {
             if ($request->status == 2) {
                 $customer = $customer->whereIn('status',[3,4,5,6,7]);

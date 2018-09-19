@@ -56,7 +56,6 @@ class CompanyController extends APIBaseController
     public function getArea()
     {
         $res = curl(config('hosts.building').'/api/get_all_select?number=2','GET');
-        if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有下拉数据成功');
     }
 

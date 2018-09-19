@@ -53,7 +53,7 @@ class HousesRequest extends FormRequest
                     'grade' => 'required|integer|between:1,3',
                     'public_private' => 'required|integer|between:1,2',
                     'price' => 'required|numeric|max:9999999',
-                    'payment_type' => 'required|integer|between:1,8',
+                    'payment_type' => 'required|integer|between:1,12',
                     'increasing_situation_remark' => 'nullable|max:256',
                     'cost_detail' => 'nullable|array',
                     'acreage' => 'required|max:9999999|numeric',
@@ -70,7 +70,7 @@ class HousesRequest extends FormRequest
                     'support_facilities' => 'nullable|array',
                     'source' => 'nullable|integer|between:1,7',
                     'status' => 'nullable|integer|between:1,3',
-                    'shortest_lease' => 'nullable|integer|between:1,5',
+                    'shortest_lease' => 'nullable|integer|between:1,4',
                     'remarks' => 'nullable|max:300',
                 ];
             case 'update':
@@ -82,7 +82,7 @@ class HousesRequest extends FormRequest
                     'grade' => 'required|integer|between:1,3',
                     'public_private' => 'required|integer|between:1,2',
                     'price' => 'required|numeric|max:9999999',
-                    'payment_type' => 'required|integer|between:1,8',
+                    'payment_type' => 'required|integer|between:1,12',
                     'increasing_situation_remark' => 'nullable|max:256',
                     'cost_detail' => 'nullable|array',
                     'acreage' => 'required|max:9999999',
@@ -99,7 +99,7 @@ class HousesRequest extends FormRequest
                     'support_facilities' => 'nullable|array',
                     'source' => 'nullable|integer|between:1,7',
                     'status' => 'nullable|integer|between:1,3',
-                    'shortest_lease' => 'nullable|integer|between:1,5',
+                    'shortest_lease' => 'nullable|integer|between:1,4',
                     'remarks' => 'nullable|max:300',
                 ];
             case 'updateImg':

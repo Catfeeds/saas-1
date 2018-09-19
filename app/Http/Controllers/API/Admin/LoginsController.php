@@ -6,6 +6,7 @@ use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Admin\LoginsRequest;
 use App\Services\LoginsService;
+use Laravel\Passport\Token;
 
 class LoginsController extends APIBaseController
 {
@@ -30,7 +31,6 @@ class LoginsController extends APIBaseController
 
         // 获取当前登陆用户的access_token的id
         $accessToken = $user->access_token;
-
         // 找到这条access_token并且将其删除
         $token = Token::find($accessToken);
         if (empty($token)) return $this->sendError('暂无有效令牌', 403);

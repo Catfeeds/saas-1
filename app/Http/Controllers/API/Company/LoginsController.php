@@ -98,10 +98,8 @@ class LoginsController extends APIBaseController
         if (empty($user)) {
             return $this->sendError('暂未登录', 403);
         }
-
         // 获取当前登陆用户的access_token的id
         $accessToken = $user->access_token;
-
         // 找到这条access_token并且将其删除
         $token = Token::find($accessToken);
         if (empty($token)) return $this->sendError('暂无有效令牌', 403);

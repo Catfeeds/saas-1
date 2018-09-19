@@ -16,10 +16,10 @@ class CustomersService
     {
         // 公客范围
         $public = Access::adoptPermissionGetUser('public_customer_show');
-        if (empty($public['status'])) {
+        if (empty($public)) {
             $publicWhere = [];
         } else {
-            $publicWhere = $public['message'];
+            $publicWhere = $public;
         }
         // 公盘客源
         $publicGuid = Customer::where('guest','1')
@@ -29,10 +29,10 @@ class CustomersService
 
         // 私客范围
         $private = Access::adoptPermissionGetUser('private_customer_show');
-        if (empty($private['status'])) {
+        if (empty($private)) {
             $privateWhere = [];
         } else {
-            $privateWhere = $private['message'];
+            $privateWhere = $private;
         }
         // 私盘客源
         $privateGuid = Customer::where('guest','2')
@@ -49,11 +49,9 @@ class CustomersService
         // 搜索查询
         if ($request->type && $request->condition) {
             if ($request->type == 1) {
-                $customer = $customer->where('guardian_person', Common::user()->guid)
-                    ->whereRaw("JSON_CONTAINS(customer_info->'$[*].name', '\"$request->condition\"', '$')");
+                $customer = $customer->whereRaw("JSON_CONTAINS(customer_info->'$[*].name', '\"$request->condition\"', '$')");
             } elseif ($request->type == 2) {
-                $customer = $customer->where('guardian_person', Common::user()->guid)
-                ->whereRaw("JSON_CONTAINS(customer_info->'$[*].tel', '\"$request->condition\"', '$')");
+                $customer = $customer->whereRaw("JSON_CONTAINS(customer_info->'$[*].tel', '\"$request->condition\"', '$')");
             }
         }
 
@@ -206,7 +204,7 @@ class CustomersService
 
         // 判断是否有修改录入人权限
         $entry_person = Access::adoptPermissionGetUser('set_customer_entry_person');
-        if (!in_array($res->entry_person, $entry_person['message'])) $permission['entry_person'] = false;
+        if (!in_array($res->entry_person, $entry_person)) $permission['entry_person'] = false;
 
         // 判断是否有修改维护人的权限
         $guardian_person = Access::adoptGuardianPersonGetCustomer('set_customer_guardian_person');

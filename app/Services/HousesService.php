@@ -185,7 +185,6 @@ class HousesService
         $permission['set_guardian_person'] = true; // 是否允许修改维护人
         $permission['set_pic_person'] = true; // 是否允许修改图片人
         $permission['set_key_person'] = true; // 是否允许修改钥匙人
-        $permission['set_key_person'] = true; // 是否允许修改钥匙人
         $permission['upload_document'] = true; // 是否允许上传证件
         $permission['del_documents'] = true; // 是否允许删除证件
         $permission['del_pic'] = true; // 是否允许删除图片
@@ -237,7 +236,7 @@ class HousesService
 
         // 录入人
         $enteringPerson = Access::adoptPermissionGetUser('set_entry_person');
-        if (!in_array($house->entry_person, $enteringPerson['message'])) {
+        if (!in_array($house->entry_person, $enteringPerson)) {
             $permission['set_entry_person'] = false; // 是否允许修改录入人
         }
 

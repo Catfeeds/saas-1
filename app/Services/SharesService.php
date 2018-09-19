@@ -19,10 +19,10 @@ class SharesService
         $res = $housesService->getHouse($res, $request);
         $houses = [];
         foreach ($res as $key => $v) {
-            if ($request->type) {
-                $belong = $v->company_guid ? '其他公司' : '平台';
+            if ($request->platform) {
+                $belong = $v->company_guid ? '' : '平台';
             } else {
-                $belong = $v->company_guid ? $v->company_guid == Common::user()->company_guid ? '本公司' : '其他公司' : '平台';
+                $belong = $v->company_guid ? $v->company_guid == Common::user()->company_guid ? '本公司' : '' : '平台';
             }
             $houses[$key]['guid'] = $v->guid;
             $houses[$key]['img'] = $v->indoor_img_cn; //图片

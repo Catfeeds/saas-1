@@ -14,11 +14,12 @@ class SharesController extends APIBaseController
     public function index
     (
         SharesRequest $request,
-        SharesService $service
+        SharesService $service,
+        HousesService $housesService
     )
     {
-        $request->type = 1;
-        $res = $service->getList($request);
+        $request->platform = 1;
+        $res = $service->getList($housesService, $request);
         return $this->sendResponse($res, '共享房源列表获取成功');
     }
 

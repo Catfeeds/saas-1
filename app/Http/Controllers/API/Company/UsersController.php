@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\Company;
 
-use App\Handler\Access;
 use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\UsersRequest;
@@ -11,7 +10,6 @@ use App\Models\House;
 use App\Models\User;
 use App\Services\LoginsService;
 use App\Services\UserService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UsersController extends APIBaseController

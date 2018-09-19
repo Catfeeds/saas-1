@@ -8,6 +8,7 @@ use App\Models\Area;
 use App\Models\Building;
 use App\Models\BuildingBlock;
 use App\Models\Company;
+use App\Models\CompanyFramework;
 use App\Models\House;
 use App\Models\HouseOperationRecord;
 use App\Models\HouseShareRecord;
@@ -889,7 +890,12 @@ class HousesService
 
         // 范围
         if ($request->range) {
-            $guardian_person = Access::getUser($request->range);
+
+            if ($request->range == 4) {
+                $guardian_person = Common::user()->guid;
+            } else {
+                $guardian_person = $this->getCompanyRange($request->range);
+            }
             $house = $house->whereIn('guardian_person', $guardian_person);
         }
 
@@ -970,6 +976,47 @@ class HousesService
             $house = $house->whereRaw("JSON_CONTAINS(support_facilities,'".$name."')");
         }
         return $house->paginate($request->per_page??10);
+    }
+
+    // 获取角色
+    public function getCompanyRange(
+        $range
+    )
+    {
+        // 所属
+        $companyFramework = Common::user()->companyFramework;
+        $data = [];
+
+        $count = true ; // 定义递归循环结束条件
+        if ($companyFramework->level > $range) {
+            // 逆向查询
+            $level = 0 ;
+            $pid = $companyFramework->parent_guid;
+            $pids[] = $pid;
+            while ($level != $range) {
+                $temp = CompanyFramework::where('guid', $pid)->first();
+                $level = $temp->level;
+                if (!empty($temp->parent_guid)) {
+                    $pid = $temp->parent_guid;
+                }
+            }
+            while ($count) {
+                $data[] = $pids;
+                $pids = CompanyFramework::whereIn('parent_guid', $pids)->pluck('guid')->toArray();
+                $count = count($pids);
+            }
+        } else {
+            // 顺查
+            $pid = $companyFramework->guid;
+            $pids[] = $pid;
+            while ($count) {
+                $data[] = $pid;
+                $pids = CompanyFramework::whereIn('parent_guid', $pids)->pluck('guid')->toArray();
+                $count = count($pids);
+            }
+        }
+
+        return User::whereIn('rel_guid', collect($data)->flatten()->toArray())->pluck('guid')->toArray();
     }
     
 

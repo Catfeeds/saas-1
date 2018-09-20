@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\Company;
 
-use App\Handler\Access;
 use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\UsersRequest;
@@ -11,7 +10,6 @@ use App\Models\House;
 use App\Models\User;
 use App\Services\LoginsService;
 use App\Services\UserService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UsersController extends APIBaseController
@@ -149,6 +147,7 @@ class UsersController extends APIBaseController
         $res['company_name'] = $user->company->name; // 公司名
         $res['company_guid'] = $user->company->guid; // 公司guid
         $res['role_name'] = $user->role->name;  // 角色名称
+        $res['role_level'] = $user->role->level; // 角色等级
         $res['storefront'] = empty($user->companyFramework)?$user->company->name:$user->companyFramework->name;
         //根据当前登录用户角色,获取所有权限
         $res['permission'] = $user->role->permission->pluck('name_en')->toArray()??[];

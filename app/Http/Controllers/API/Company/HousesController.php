@@ -26,8 +26,8 @@ class HousesController extends APIBaseController
     {
         // 通过权限获取区间用户
         $guardian_person = Access::adoptPermissionGetUser('house_list');
-        if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
-        $res = $repository->houseList($request, $service, $guardian_person['message']);
+        if (empty($guardian_person)) return $this->sendError('暂无权限');
+        $res = $repository->houseList($request, $service, $guardian_person);
         return $this->sendResponse($res,'房源列表获取成功');
     }
     
@@ -94,7 +94,6 @@ class HousesController extends APIBaseController
         // 获取登录人公司所在的城市
         $cityGuid = Company::find(Common::user()->company_guid)->city_guid;
         $res = curl(config('hosts.building').'/api/get_all_select?number='.$request->number.'&city_guid='.$cityGuid,'GET');
-        if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有下拉数据成功');
     }
 
@@ -104,7 +103,6 @@ class HousesController extends APIBaseController
         // 获取登录人公司所在的城市
         $cityGuid = Company::find(Common::user()->company_guid)->city_guid;
         $res = curl(config('hosts.building').'/api/building_blocks_all?city_guid='.$cityGuid,'GET');
-        if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取所有下拉数据成功');
     }
 
@@ -114,7 +112,6 @@ class HousesController extends APIBaseController
         // 获取登录人公司所在的区域
         $cityGuid = Company::find(Common::user()->company_guid)->city_guid;
         $res = curl(config('hosts.building').'/api/get_company_area?city_guid='.$cityGuid,'GET');
-        if (empty($res->data)) return $this->sendError($res->message);
         return $this->sendResponse($res->data, '获取公司所在区域数据成功');
     }
 
@@ -129,9 +126,9 @@ class HousesController extends APIBaseController
         if ($request->entry_person) {
             $userGuid = $request->entry_person;
             $guardian_person = Access::adoptPermissionGetUser('set_entry_person');
-            if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
+            if (empty($guardian_person)) return $this->sendError('暂无权限');
             // 判断权限范围
-            if (!in_array($userGuid, $guardian_person['message'])) return $this->sendError('暂无权限');
+            if (!in_array($userGuid, $guardian_person)) return $this->sendError('暂无权限');
         } elseif ($request->guardian_person) {
             $guardian_person = Access::adoptGuardianPersonGetHouse('set_guardian_person');
             if (!in_array($request->house_guid, $guardian_person)) return $this->sendError('暂无修改维护人权限');

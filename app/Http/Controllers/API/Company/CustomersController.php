@@ -126,10 +126,10 @@ class CustomersController extends APIBaseController
                 $userGuid = $request->guardian_person;
                 $guardian_person = Access::adoptPermissionGetUser('set_customer_guardian_person');
             }
-            if (empty($guardian_person['status'])) return $this->sendError($guardian_person['message']);
+            if (empty($guardian_person)) return $this->sendError('暂无权限');
 
             // 判断权限范围
-            if (!in_array($userGuid, $guardian_person['message'])) return $this->sendError('暂无权限');
+            if (!in_array($userGuid, $guardian_person)) return $this->sendError('暂无权限');
         }
 
         $res = $service->transfer($request);

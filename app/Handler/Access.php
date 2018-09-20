@@ -103,29 +103,26 @@ class Access{
     public static function adoptPermissionGetUser($permission)
     {
         $permission = self::permission($permission);
-        if (empty($permission)) return ['status' => false, 'message' => '暂无权限'];
+        if (empty($permission)) return [];
         // 判断作用域
         $guardian_person = self::getUser($permission->action_scope);
-        return ['status' => true, 'message' => $guardian_person];
+        return $guardian_person;
     }
 
     // 通过维护人获取所有房源信息
     public static function adoptGuardianPersonGetHouse($permission)
     {
         $guardianPerson = self::adoptPermissionGetUser($permission);
-
-        if (empty($guardianPerson['status'])) return [];
-
-        return House::whereIn('guardian_person', $guardianPerson['message'])->pluck('guid')->toArray();
+        if (empty($guardianPerson)) return [];
+        return House::whereIn('guardian_person', $guardianPerson)->pluck('guid')->toArray();
     }
-
 
     // 通过维护人获取所有客源
     public static function adoptGuardianPersonGetCustomer($permission)
     {
         $guardianPerson = self::adoptPermissionGetUser($permission);
-        if (empty($guardianPerson['status'])) return [];
-        return Customer::whereIn('guardian_person', $guardianPerson['message'])->pluck('guid')->toArray();
+        if (empty($guardianPerson)) return [];
+        return Customer::whereIn('guardian_person', $guardianPerson)->pluck('guid')->toArray();
     }
 
 

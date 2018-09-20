@@ -21,7 +21,7 @@ class CreateCompaniesTable extends Migration
             $table->string('address',256)->nullable()->comment('公司地址');
             $table->string('company_tel',16)->nullable()->comment('公司电话');
             $table->string('contacts',32)->nullable()->comment('联系人');
-            $table->string('1',11)->nullable()->comment('联系人电话');
+            $table->string('contacts_tel',11)->nullable()->comment('联系人电话');
             $table->string('job_remarks',128)->nullable()->comment('职务备注');
             $table->tinyInteger('status')->nullable()->comment('账户启用状态 1: 启用 2: 禁用');
             $table->timestamps();

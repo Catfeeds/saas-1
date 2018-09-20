@@ -166,4 +166,5 @@ class Access{
         return User::whereIn('rel_guid', collect($data)->flatten()->toArray())->pluck('guid')->toArray();
     }
 
+
 }

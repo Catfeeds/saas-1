@@ -859,6 +859,9 @@ class HousesService
             } elseif ($request->type == 4) {
                 $company_guid = Company::where('name', 'like', '%'.$request->condition.'%')->pluck('guid')->toArray();
                 $house = $house->whereIn('company_guid', $company_guid);
+            } elseif ($request->type == 5) {
+                $company_guid = Company::where('house_number', $request->condition)->pluck('guid')->toArray();
+                $house = $house->whereIn('company_guid', $company_guid);
             }
         }
 

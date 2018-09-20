@@ -8,12 +8,9 @@ use App\Models\Area;
 use App\Models\Building;
 use App\Models\BuildingBlock;
 use App\Models\Company;
-use App\Models\CompanyFramework;
 use App\Models\House;
 use App\Models\HouseOperationRecord;
 use App\Models\HouseShareRecord;
-use App\Models\Permission;
-use App\Models\RoleHasPermission;
 use App\Models\SeeHouseWay;
 use App\Models\User;
 

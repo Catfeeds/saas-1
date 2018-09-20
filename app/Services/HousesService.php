@@ -923,7 +923,7 @@ class HousesService
         if ($request->label) {
             // 有图
             if ($request->label == 1) {
-                $house = $house->orWhereNotNull('house_type_img')->orWhereNotNull('indoor_img')->orWhereNotNull('outdoor_img');
+                $house = $house->whereNotNull('house_type_img')->orWhereNotNull('indoor_img')->orWhereNotNull('outdoor_img');
             }
 
             // 有钥匙

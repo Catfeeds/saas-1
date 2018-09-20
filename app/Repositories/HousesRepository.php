@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class HousesRepository extends Model
 {
     //房源列表
-    public function houseList($request, $service, $guardian_person)
+    public function houseList($request, $service, $guardianPerson)
     {
         $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->where('company_guid', Common::user()->company_guid)->orderBy('top','asc')->orderBy($request->sortKey,$request->sortValue);
 
@@ -17,14 +17,14 @@ class HousesRepository extends Model
         if ($request->range) {
             if ($request->range == 4) {
                 $guardian_person[] = Common::user()->guid;
-            } elseif($request->range == 1 || $request->range == 2 || $request->range == 3) {
+            } elseif ($request->range == 1 || $request->range == 2 || $request->range == 3) {
                 $guardian_person = Access::getCompanyRange($request->range);
             } elseif ($request->range == 5) {
                 $guardian_person = Access::getUser(1);
             }
             $house = $house->whereIn('guardian_person', $guardian_person);
         } else {
-            $house = $house->whereIn('guardian_person', $guardian_person);
+            $house = $house->whereIn('guardian_person', $guardianPerson);
         }
 
         $data = $service->getHouse($house, $request);

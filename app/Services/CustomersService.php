@@ -48,11 +48,12 @@ class CustomersService
 
         // 范围
         if ($request->range) {
-
             if ($request->range == 4) {
                 $guardian_person[] = Common::user()->guid;
-            } else {
+            } elseif ($request->range == 1 || $request->range == 2 || $request->range == 3)  {
                 $guardian_person = Access::getCompanyRange($request->range);
+            } elseif ($request->range == 5) {
+                $guardian_person = Access::getUser(1);
             }
             $customer = $customer->whereIn('guardian_person', $guardian_person);
         }

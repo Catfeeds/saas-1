@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API\Company;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\FeedBacksReauest;
 use App\Repositories\FeedBacksRepository;
+use App\Services\DingTalkService;
+
 
 class FeedBacksController extends APIBaseController
 {
@@ -12,11 +14,12 @@ class FeedBacksController extends APIBaseController
     public function store
     (
         FeedBacksReauest $request,
-        FeedBacksRepository $repository
+        FeedBacksRepository $repository,
+        DingTalkService $service
     )
     {
-        $res = $repository->addFeedBack($request);
-        if (!$res) return $this->sendError('问题反馈添加失败');
-        return $this->sendResponse($res,'问题反馈添加成功');
+        $message = $repository->addFeedBack($request);
+        $data = $service->sendMessages($message);
+        return $this->sendResponse($data,'问题反馈添加成功');
     }
 }

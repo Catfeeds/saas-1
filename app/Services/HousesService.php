@@ -692,9 +692,9 @@ class HousesService
         \DB::beginTransaction();
         try {
             $data = [
-                'house_type_img' => json_encode($request->house_type_img),
-                'indoor_img' => json_encode($request->indoor_img),
-                'outdoor_img' => json_encode($request->outdoor_img),
+                'house_type_img' => empty($request->house_type_img)?null:json_encode($request->house_type_img),
+                'indoor_img' => empty($request->indoor_img)?null:json_encode($request->indoor_img),
+                'outdoor_img' => empty($request->outdoor_img)?null:json_encode($request->outdoor_img),
             ];
 
             // 如果图片跟图片人都为空则为图片人
@@ -923,7 +923,7 @@ class HousesService
         if ($request->label) {
             // 有图
             if ($request->label == 1) {
-                $house = $house->where('house_type_img', '!=',null)->where('indoor_img', '!=',null)->where('outdoor_img','!=',null);
+                $house = $house->orWhereNotNull('house_type_img')->orWhereNotNull('indoor_img')->orWhereNotNull('outdoor_img');
             }
 
             // 有钥匙

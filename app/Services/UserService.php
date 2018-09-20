@@ -177,5 +177,13 @@ class UserService
         return $res->get();
     }
 
+    // 更换头像
+    public function updatePic($user, $request)
+    {
+        $user->pic = $request->pic;
+        if (!$user->save()) return false;
+        return true;
+    }
+
 
 }

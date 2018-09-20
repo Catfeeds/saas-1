@@ -11,7 +11,22 @@ class HousesRepository extends Model
     public function houseList($request, $service, $guardian_person)
     {
         $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->where('company_guid', Common::user()->company_guid)->orderBy('top','asc')->orderBy($request->sortKey,$request->sortValue);
-        $data = $service->getHouse($house, $request, $guardian_person);
+
+        // 范围
+        if ($request->range) {
+            if ($request->range == 4) {
+                $guardian_person[] = Common::user()->guid;
+            } elseif($request->range == 1 || $request->range == 2 || $request->range == 3) {
+                $guardian_person = Access::getCompanyRange($request->range);
+            } elseif ($request->range == 5) {
+                $guardian_person = Access::getUser(1);
+            }
+            $house = $house->whereIn('guardian_person', $guardian_person);
+        } else {
+            $house = $house->whereIn('guardian_person', $guardian_person);
+        }
+
+        $data = $service->getHouse($house, $request);
         $houses = [];
         foreach ($data as $key => $v) {
             $houses[$key] = $service->getData($v);

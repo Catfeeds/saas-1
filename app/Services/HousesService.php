@@ -832,7 +832,10 @@ class HousesService
         }
     }
 
-    public function getHouse($house, $request, $guardianPerson)
+    public function getHouse(
+        $house,
+        $request
+    )
     {
         // 搜索查询
         if ($request->type && $request->condition) {
@@ -887,20 +890,6 @@ class HousesService
                 }
             }
             $house = $house->whereIn('building_block_guid', $buildingBlockGuid);
-        }
-
-        // 范围
-        if ($request->range) {
-            if ($request->range == 4) {
-                $guardian_person[] = Common::user()->guid;
-            } elseif($request->range == 1 || $request->range == 2 || $request->range == 3) {
-                $guardian_person = Access::getCompanyRange($request->range);
-            } elseif ($request->range == 5) {
-                $guardian_person = Access::getUser(1);
-            }
-            $house = $house->whereIn('guardian_person', $guardian_person);
-        } else {
-            $house = $house->whereIn('guardian_person', $guardianPerson);
         }
 
         // 面积

@@ -125,8 +125,8 @@ class Access{
         return Customer::whereIn('guardian_person', $guardianPerson)->pluck('guid')->toArray();
     }
 
-    // 获取角色
-    public function getCompanyRange(
+    // 递归获取用户
+    public static function getCompanyRange(
         $range
     )
     {
@@ -165,7 +165,5 @@ class Access{
 
         return User::whereIn('rel_guid', collect($data)->flatten()->toArray())->pluck('guid')->toArray();
     }
-
-
 
 }

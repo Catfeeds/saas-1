@@ -213,4 +213,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('all_building','CustomersController@allBuilding');
     // 获取公司所在区域
     Route::get('company_area','HousesController@companyArea');
+
+    // 问题反馈
+    Route::resource('feed_backs','FeedBacksController');
+
 });

@@ -981,9 +981,12 @@ class HousesService
         try {
             $res = $house->delete();
             if (!$res) throw new \Exception('房源删除失败');
+
             // 删除操作记录
-            $suc = HouseOperationRecord::where('house_guid', $house->guid)->delete();
-            if (!$suc) throw new \Exception('房源操作记录添加失败');
+            if (!$house->record->isEmpty()) {
+                $suc = HouseOperationRecord::where('house_guid', $house->guid)->delete();
+                if (!$suc) throw new \Exception('房源操作记录添加失败');
+            }
             \DB::commit();
             return true;
         } catch (\Exception $exception) {

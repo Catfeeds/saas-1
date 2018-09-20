@@ -182,7 +182,7 @@ class UserService
     {
         $user->pic = $request->pic;
         if (!$user->save()) return false;
-        return true;
+        return $user->pic_cn;
     }
 
 

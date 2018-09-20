@@ -245,6 +245,13 @@ class PermissionSeeder extends Seeder
             'name_en' => 'house_list'
         ]);
 
+        // 共享房源
+        Permission::create([
+            'guid' => Common::getUuid(),
+            'name' => '房源-共享房源',
+            'name_en' => 'house_share'
+        ]);
+
         // 客源
         Permission::create([
             'guid' => Common::getUuid(),

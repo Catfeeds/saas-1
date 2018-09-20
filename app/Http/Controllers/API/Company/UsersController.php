@@ -236,4 +236,18 @@ class UsersController extends APIBaseController
 
         return true;
     }
+
+    // 更换头像
+    public function updatePic
+    (
+        UserService $service,
+        UsersRequest $request
+    )
+    {
+        $user = Common::user();
+        $res = $service->updatePic($user, $request);
+        if (!$res) return $this->sendError('修改失败');
+        return $this->sendResponse($res, '修改成功');
+    }
+    
 }

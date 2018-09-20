@@ -8,12 +8,9 @@ use App\Models\Area;
 use App\Models\Building;
 use App\Models\BuildingBlock;
 use App\Models\Company;
-use App\Models\CompanyFramework;
 use App\Models\House;
 use App\Models\HouseOperationRecord;
 use App\Models\HouseShareRecord;
-use App\Models\Permission;
-use App\Models\RoleHasPermission;
 use App\Models\SeeHouseWay;
 use App\Models\User;
 
@@ -110,6 +107,7 @@ class HousesService
         $houses['track_user'] = !$res->track->isEmpty() ? $res->track->sortByDesc('created_at')->first()->user->name : optional($res->entryPerson)->name;
         $houses['guardian_person'] = $res->guardianPerson->name;    // 维护人
         $houses['track_time'] = $res->track_time; //跟进时间
+        $houses['share'] = $res->share == 1 ? true : false; //是否共享
         return $houses;
     }
 
@@ -192,6 +190,12 @@ class HousesService
         $permission['public_to_private'] = true; // 是否允许公盘转为私盘
         $permission['private_to_public'] = true; // 是否允许私盘转为公盘
         $permission['set_top'] = true; // 是否允许置顶
+        $permission['share'] = true; // 是否允许发布共享
+
+        $share = Access::adoptGuardianPersonGetHouse('house_share');
+        if (!in_array($house->guid, $share)) {
+            $permission['share'] = false; // 是否允许编辑图片
+        }
 
         // 上传图片
         $uploadImage = Access::adoptGuardianPersonGetHouse('upload_pic');
@@ -440,10 +444,7 @@ class HousesService
         $data['track'] = $track;
         $data['status'] = $house->status;
         $data['status_cn'] = $house->status_cn;
-
-        // 是否共享
-        $data['share'] = $house->share;
-
+        $data['share'] = $house->share; // 是否共享
 
         return $data;
     }
@@ -862,6 +863,8 @@ class HousesService
             } elseif ($request->type == 4) {
                 $company_guid = Company::where('name', 'like', '%'.$request->condition.'%')->pluck('guid')->toArray();
                 $house = $house->whereIn('company_guid', $company_guid);
+            } elseif ($request->type == 5) {
+                $house = $house->where('house_number', $request->condition);
             }
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Handler\Access;
 use App\Handler\Common;
 use App\Models\House;
 
@@ -19,10 +20,10 @@ class SharesService
         $res = $housesService->getHouse($res, $request);
         $houses = [];
         foreach ($res as $key => $v) {
-            if ($request->type) {
-                $belong = $v->company_guid ? '其他公司' : '平台';
+            if ($request->platform) {
+                $belong = $v->company_guid ? '' : '平台';
             } else {
-                $belong = $v->company_guid ? $v->company_guid == Common::user()->company_guid ? '本公司' : '其他公司' : '平台';
+                $belong = $v->company_guid ? $v->company_guid == Common::user()->company_guid ? '本公司' : '' : '平台';
             }
             $houses[$key]['guid'] = $v->guid;
             $houses[$key]['img'] = $v->indoor_img_cn; //图片
@@ -153,6 +154,14 @@ class SharesService
     {
         $house = House::where('guid', $guid)->with(['buildingBlock', 'buildingBlock.building', 'shareRecord'])->first();
         $data = [];
+
+        // 是否有下架权限
+        $data['permission'] = true;
+        $house_guid = Access::adoptGuardianPersonGetHouse('house_share');
+        if (!in_array($guid, $house_guid)) {
+            $data['permission'] = false;
+        }
+
         $data['house_identifier'] = $house->house_identifier;
         $data['img'] = $house->indoor_img_cn??[]; // 图片
         $data['indoor_img'] = $house->indoor_img??[]; // 室内图未处理

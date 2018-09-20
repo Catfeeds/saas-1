@@ -10,8 +10,6 @@ class Admin extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
-    protected $guard_name = 'web';
-
     // 如果使用的是非递增或者非数字的主键，则必须在模型上设置
     public $incrementing = false;
 
@@ -33,7 +31,7 @@ class Admin extends Authenticatable
     public function getAccessTokenAttribute()
     {
         $token = $this->token();
-        return $token->guid;
+        return $token->id;
     }
 
 }

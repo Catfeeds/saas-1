@@ -47,6 +47,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     //获取员工个人信息
     Route::get('get_user', 'UsersController@getUser');
 
+    Route::post('update_pic', 'UsersController@updatePic');
+
+
     /*
     |--------------------------------------------------------------------------
     | 岗位管理
@@ -151,8 +154,6 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     // 下架共享房源
     Route::post('un_share', 'HousesController@unShare');
-
-
 
     /*
     |--------------------------------------------------------------------------

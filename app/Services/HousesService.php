@@ -107,6 +107,7 @@ class HousesService
         $houses['track_user'] = !$res->track->isEmpty() ? $res->track->sortByDesc('created_at')->first()->user->name : optional($res->entryPerson)->name;
         $houses['guardian_person'] = $res->guardianPerson->name;    // 维护人
         $houses['track_time'] = $res->track_time; //跟进时间
+        $houses['share'] = $res->share == 1 ? true : false; //是否共享
         return $houses;
     }
 
@@ -443,10 +444,7 @@ class HousesService
         $data['track'] = $track;
         $data['status'] = $house->status;
         $data['status_cn'] = $house->status_cn;
-
-        // 是否共享
-        $data['share'] = $house->share;
-
+        $data['share'] = $house->share; // 是否共享
 
         return $data;
     }

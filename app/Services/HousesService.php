@@ -973,4 +973,24 @@ class HousesService
         }
         return $house->paginate($request->per_page??10);
     }
+
+    // 删除房源
+    public function delHouse($house)
+    {
+        \DB::beginTransaction();
+        try {
+            $res = $house->delete();
+            if (!$res) throw new \Exception('房源删除失败');
+            // 删除操作记录
+            $suc = HouseOperationRecord::where('house_guid', $house->guid)->delete();
+            if (!$suc) throw new \Exception('房源操作记录添加失败');
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            \Log::error('删除失败'.$exception->getMessage());
+            return false;
+        }
+    }
+    
 }

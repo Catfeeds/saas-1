@@ -46,6 +46,17 @@ class CustomersService
             ->withCount('visit')
             ->orderBy($request->sortKey,$request->sortValue);
 
+        // 范围
+        if ($request->range) {
+
+            if ($request->range == 4) {
+                $guardian_person = Common::user()->guid;
+            } else {
+                $guardian_person = Access::getCompanyRange($request->range);
+            }
+            $customer = $customer->whereIn('guardian_person', $guardian_person);
+        }
+
         // 搜索查询
         if ($request->type && $request->condition) {
             if ($request->type == 1) {

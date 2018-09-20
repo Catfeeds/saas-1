@@ -82,7 +82,7 @@ class QuartersService
             $role = Role::where('guid',$request->guid)->update(['level' => $request->level]);
             if (empty($role)) throw new \Exception('岗位级别修改失败');
 
-            $request->offsetSet('role_guid', $role->guid);
+            $request->offsetSet('role_guid', $request->guid);
             $defaultPermissions = $this->defaultPermissions($request);
             if (empty($defaultPermissions)) throw new \Exception('默认角色设置失败');
 
@@ -142,10 +142,12 @@ class QuartersService
 
         foreach ($permissions as $v) {
             $permissionGuid = Permission::where('name_en', $v['name_en'])->first()->guid;
+
             $res = RoleHasPermission::where([
                 'role_guid' => $request->role_guid,
                 'permission_guid' => $permissionGuid
             ])->first();
+
             if (empty($res)) {
                 $roleHasPermission = RoleHasPermission::create([
                     'guid' => Common::getUuid(),

@@ -84,6 +84,7 @@ class CreateHousesTable extends Migration
             $table->datetime('share_time')->nullable()->comment('共享时间');
 
             $table->timestamps();
+            $table->softDeletes();
         });
         \DB::statement("alter table `houses` comment'房源表'");
     }

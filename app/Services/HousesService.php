@@ -194,7 +194,7 @@ class HousesService
 
         $share = Access::adoptGuardianPersonGetHouse('house_share');
         if (!in_array($house->guid, $share)) {
-            $permission['share'] = false; // 是否允许编辑图片
+            $permission['share'] = false; // 是否允许共享房源
         }
 
         // 上传图片

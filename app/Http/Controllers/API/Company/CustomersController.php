@@ -122,14 +122,13 @@ class CustomersController extends APIBaseController
             if ($request->entry_person) {
                 $userGuid = $request->entry_person;
                 $guardian_person = Access::adoptPermissionGetUser('set_customer_entry_person');
+                // 判断权限范围
+                if (empty($guardian_person)) return $this->sendError('暂无权限');
+                if (!in_array($userGuid, $guardian_person)) return $this->sendError('暂无权限');
             } elseif ($request->guardian_person) {
-                $userGuid = $request->guardian_person;
-                $guardian_person = Access::adoptPermissionGetUser('set_customer_guardian_person');
+                $guardian_person = Access::adoptGuardianPersonGetCustomer('set_customer_guardian_person');
+                if (!in_array($request->guid, $guardian_person)) return $this->sendError('暂无权限');
             }
-            if (empty($guardian_person)) return $this->sendError('暂无权限');
-
-            // 判断权限范围
-            if (!in_array($userGuid, $guardian_person)) return $this->sendError('暂无权限');
         }
 
         $res = $service->transfer($request);

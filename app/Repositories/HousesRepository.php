@@ -10,8 +10,8 @@ class HousesRepository extends Model
     //房源列表
     public function houseList($request, $service, $guardian_person)
     {
-        $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->whereIn('guardian_person', $guardian_person)->where('company_guid', Common::user()->company_guid)->orderBy('top','asc')->orderBy($request->sortKey,$request->sortValue);
-        $data = $service->getHouse($house, $request);
+        $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->where('company_guid', Common::user()->company_guid)->orderBy('top','asc')->orderBy($request->sortKey,$request->sortValue);
+        $data = $service->getHouse($house, $request, $guardian_person);
         $houses = [];
         foreach ($data as $key => $v) {
             $houses[$key] = $service->getData($v);

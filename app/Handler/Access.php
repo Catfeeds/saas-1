@@ -137,16 +137,20 @@ class Access{
         $count = true ; // 定义递归循环结束条件
         if ($companyFramework->level > $range) {
             // 逆向查询
-            $level = 0 ;
+            $level = 0;
             $pid = $companyFramework->parent_guid;
-            $pids[] = $pid;
+            $pids = array();
             while ($level != $range) {
                 $temp = CompanyFramework::where('guid', $pid)->first();
                 $level = $temp->level;
                 if (!empty($temp->parent_guid)) {
                     $pid = $temp->parent_guid;
+                    $pids[] = $temp->guid;
+                } else {
+                    $pids[] = $temp->guid;
                 }
             }
+
             while ($count) {
                 $data[] = $pids;
                 $pids = CompanyFramework::whereIn('parent_guid', $pids)->pluck('guid')->toArray();
@@ -157,12 +161,11 @@ class Access{
             $pid = $companyFramework->guid;
             $pids[] = $pid;
             while ($count) {
-                $data[] = $pid;
+                $data[] = $pids;
                 $pids = CompanyFramework::whereIn('parent_guid', $pids)->pluck('guid')->toArray();
                 $count = count($pids);
             }
         }
-
         return User::whereIn('rel_guid', collect($data)->flatten()->toArray())->pluck('guid')->toArray();
     }
 

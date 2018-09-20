@@ -362,6 +362,10 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
+        // 判断权限
+        $house = Access::adoptGuardianPersonGetHouse('house_share');
+        if (!in_array($request->guid, $house)) return $this->sendError('无权限共享该房源');
+
         $res = $service->shareHouse($request);
         if (!$res) return $this->sendError('房源共享失败');
         return $this->sendResponse($res, '房源共享成功');
@@ -374,6 +378,10 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
+        // 判断权限
+        $house = Access::adoptGuardianPersonGetHouse('house_share');
+        if (!in_array($request->guid, $house)) return $this->sendError('无权限下架该房源');
+
         $res = $service->unShare($request);
         if (!$res) return $this->sendError('房源下架失败');
         return $this->sendResponse($res, '房源下架成功');

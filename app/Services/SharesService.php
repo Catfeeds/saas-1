@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Handler\Access;
 use App\Handler\Common;
 use App\Models\House;
 
@@ -153,6 +154,14 @@ class SharesService
     {
         $house = House::where('guid', $guid)->with(['buildingBlock', 'buildingBlock.building', 'shareRecord'])->first();
         $data = [];
+
+        // 是否有下架权限
+        $data['permission'] = true;
+        $house_guid = Access::adoptGuardianPersonGetHouse('house_share');
+        if (!in_array($guid, $house_guid)) {
+            $data['permission'] = false;
+        }
+
         $data['house_identifier'] = $house->house_identifier;
         $data['img'] = $house->indoor_img_cn??[]; // 图片
         $data['indoor_img'] = $house->indoor_img??[]; // 室内图未处理

@@ -192,6 +192,12 @@ class HousesService
         $permission['public_to_private'] = true; // 是否允许公盘转为私盘
         $permission['private_to_public'] = true; // 是否允许私盘转为公盘
         $permission['set_top'] = true; // 是否允许置顶
+        $permission['share'] = true; // 是否允许发布共享
+
+        $share = Access::adoptGuardianPersonGetHouse('house_share');
+        if (!in_array($house->guid, $share)) {
+            $permission['share'] = false; // 是否允许编辑图片
+        }
 
         // 上传图片
         $uploadImage = Access::adoptGuardianPersonGetHouse('upload_pic');
@@ -860,8 +866,7 @@ class HousesService
                 $company_guid = Company::where('name', 'like', '%'.$request->condition.'%')->pluck('guid')->toArray();
                 $house = $house->whereIn('company_guid', $company_guid);
             } elseif ($request->type == 5) {
-                $company_guid = Company::where('house_number', $request->condition)->pluck('guid')->toArray();
-                $house = $house->whereIn('company_guid', $company_guid);
+                $house = $house->where('house_number', $request->condition);
             }
         }
 

@@ -81,9 +81,21 @@ class HousesController extends APIBaseController
         return $this->sendResponse($res,'更新房源成功');
     }
 
-    public function destroy($id)
+    // 删除房源
+    public function destroy
+    (
+        House $house,
+        HousesService $service
+    )
     {
-        //
+        // 判断是否是自己的房子
+        $user = Common::user()->guid;
+        // 判断是否超过一小时
+        $time = time() - strtotime($house->created_at->format('Y-m-d H:i:s'));
+        if ($user != $house->guardian_person || $time > 60*60 ) return $this->sendError('无法删除该房源');
+        $res = $service->delHouse($house);
+        if (!$res) return $this->sendError('删除失败');
+        return $this->sendResponse(true, '删除成功');
     }
 
     // 获取所有下拉数据

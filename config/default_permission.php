@@ -1229,7 +1229,7 @@ return [
 
         [
             'name_en' => 'house_share',// 房源-共享房源
-            'action_scope' => null,
+            'action_scope' => 6,
             'operation_number' => null,
             'follow_up' => null,
             'status' => 2
@@ -1573,7 +1573,7 @@ return [
 
         [
             'name_en' => 'house_share',// 房源-共享房源
-            'action_scope' => null,
+            'action_scope' => 6,
             'operation_number' => null,
             'follow_up' => null,
             'status' => 2

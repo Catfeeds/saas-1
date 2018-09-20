@@ -893,7 +893,7 @@ class HousesService
         if ($request->range) {
 
             if ($request->range == 4) {
-                $guardian_person = Common::user()->guid;
+                $guardian_person[] = Common::user()->guid;
             } else {
                 $guardian_person = $this->getCompanyRange($request->range);
             }

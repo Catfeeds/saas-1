@@ -7,5 +7,5 @@
  */
 return [
     'building' => env('HOSTS_BUILDING', '192.168.0.142:8888'),
-    'webhook' => env('HOSTS_WEBHOOK','https://oapi.dingtalk.com/robot/send?access_token=ce514903077396e580a85b740e1a7ba01e0bacd7d8cf8e95301b36d86bb24925'),
+    'webhook' => env('HOSTS_WEBHOOK','https://oapi.dingtalk.com/robot/send?access_token=1e46bb5d6ab9430d41999766832c76280d659256e7893f73602cdbbaa07d294f'),
 ];

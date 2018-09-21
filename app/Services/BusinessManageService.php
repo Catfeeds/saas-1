@@ -197,12 +197,33 @@ class BusinessManageService
     }
 
     // 客源带看
-    public function getCustomerVisit
-    (
-
-    )
+    public function getCustomerVisit($request)
     {
+        $data = [];
+        $visit = Visit::with('visitCustomer','visitHouse.buildingBlock','visitHouse.buildingBlock.building','accompanyUser')->where('model_type','App\Models\Customer')->whereBetween('created_at',$request->time);
 
+        // 姓名
+        if ($request->name) {
+            $user_guid = $this->getUserGuid($request->name);
+            $visit = $visit->whereIn('visit_user',$user_guid);
+        }
+
+        // 范围
+//        if ($request->rang) {
+//
+//        }
+        $visit = $visit->paginate(5);
+        foreach ($visit as $k => $v) {
+            $data[$k]['guid'] = $v->guid;
+            $data[$k]['user'] = $v->user->name;
+            $data[$k]['house'] = $v->visitHouse->buildingBlock->building->name;
+            $data[$k]['house_identifier'] = $v->visitHouse->house_identifier;
+            $data[$k]['customer'] = $v->visitCustomer->customer_info[0]['name'];
+//            $data[$k]['customer'] = $v->visitCustomerHouse->name; 客源编号
+            $data[$k]['accompany'] = optional($v->accompanyUser)->name;
+            $data[$k]['remarks'] = $v->remarks;
+        }
+        return $visit->setCollection(collect($data));
     }
 
     // 提交钥匙

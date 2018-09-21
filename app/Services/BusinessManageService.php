@@ -70,8 +70,8 @@ class BusinessManageService
         $house = $house->paginate(5);
         foreach ($house as $k => $v) {
             $data[$k]['guid'] = $v->guid;
-            $data[$k]['user'] = $v->guardianPerson->name;
-            $data[$k]['name'] = $v->buildingBlock->building->name;
+            $data[$k]['guardianPerson'] = $v->guardianPerson->name;
+            $data[$k]['house_name'] = $v->buildingBlock->building->name;
             $data[$k]['house_identifier'] = $v->house_identifier;
             $data[$k]['img'] = $v->indoor_img_cn;
             $data[$k]['acreage'] = $v->acreage_cn;
@@ -86,7 +86,7 @@ class BusinessManageService
     {
         $data = [];
         // 同公司下的客源
-        $customer = Customer::where('company_guid', $this->user->company_guid);
+        $customer = Customer::with('guardianPerson')->where('company_guid', $this->user->company_guid);
 
         // 姓名
         if ($request->name) {
@@ -101,6 +101,7 @@ class BusinessManageService
         $customer = $customer->paginate(5);
         foreach ($customer as $k => $v) {
             $data[$k]['guid'] = $v->guid;
+            $data[$k]['guardianPerson'] = $v->guardianPerson->name;
             $data[$k]['name'] = $v->customer_info[0]['name'];
             $data[$k]['remarks'] = $v->remarks;
             $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
@@ -117,7 +118,7 @@ class BusinessManageService
         // 姓名
         if ($request->name) {
             $user_guid = $this->getUserGuid($request->name);
-            $track = $track->where('user_guid', $user_guid);
+            $track = $track->whereIn('user_guid', $user_guid);
         }
 
 //        // 范围
@@ -127,8 +128,9 @@ class BusinessManageService
         $track = $track->paginate(5);
         foreach ($track as $k => $v) {
             $data[$k]['guid'] = $v->guid;
-            $data[$k]['guid'] = $v->house->buildingBlock->building->name;
-            $data[$k]['guid'] = $v->house_identifier;
+            $data[$k]['user'] = $v->user->name;
+            $data[$k]['house_name'] = $v->house->buildingBlock->building->name;
+            $data[$k]['house_identifier'] = $v->house->house_identifier;
             $data[$k]['tracks_info'] = $v->tracks_info;
             $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
         }
@@ -144,7 +146,7 @@ class BusinessManageService
         // 姓名
         if ($request->name) {
             $user_guid = $this->getUserGuid($request->name);
-            $track = $track->where('user_guid', $user_guid);
+            $track = $track->whereIn('user_guid', $user_guid);
         }
 
 //        // 范围
@@ -155,7 +157,8 @@ class BusinessManageService
         $track = $track->paginate(5);
         foreach ($track as $k => $v) {
             $data[$k]['guid'] = $v->guid;
-            $data[$k]['name'] = $v->customer_info[0]['name'];
+            $data[$k]['user'] = $v->user->name;
+            $data[$k]['customer_name'] = $v->customer_info[0]['name'];
 //            $data[$k]['guid'] = $v->guid;  客源编号
             $data[$k]['tracks_info'] = $v->tracks_info;
             $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
@@ -166,13 +169,14 @@ class BusinessManageService
     // 房源带看
     public function getHouseVisit($request)
     {
+        //
         $data = [];
-        $visit = Visit::with('cover','cover.buildingBlock', 'cover.buildingBlock.building', 'visitCustomerHouse', 'accompanyUser')->where('model_type', 'App\Models\House')->whereBetween('created_at', $request->time);
+        $visit = Visit::with('coverHouse','coverHouse.buildingBlock', 'coverHouse.buildingBlock.building', 'visitCustomer', 'accompanyUser')->where('model_type', 'App\Models\House')->whereBetween('created_at', $request->time);
 
         // 姓名
         if ($request->name) {
             $user_guid = $this->getUserGuid($request->name);
-            $visit = $visit->where('visit_user', $user_guid);
+            $visit = $visit->whereIn('visit_user', $user_guid);
         }
 //        // 范围
 //        if ($request->rang) {
@@ -181,9 +185,10 @@ class BusinessManageService
         $visit = $visit->paginate(5);
         foreach ($visit as $k => $v) {
             $data[$k]['guid'] = $v->guid;
-            $data[$k]['house'] = $v->cover->buildingBlock->building->name;
-            $data[$k]['house_identifier'] = $v->cover->house_identifier;
-            $data[$k]['customer'] = $v->visitCustomerHouse->customer_info[0]['name'];
+            $data[$k]['user'] = $v->user->name;
+            $data[$k]['house'] = $v->coverHouse->buildingBlock->building->name;
+            $data[$k]['house_identifier'] = $v->coverHouse->house_identifier;
+            $data[$k]['customer'] = $v->visitCustomer->customer_info[0]['name'];
 //            $data[$k]['customer'] = $v->visitCustomerHouse->name; 客源编号
             $data[$k]['accompany'] = optional($v->accompanyUser)->name;
             $data[$k]['remarks'] = $v->remarks;

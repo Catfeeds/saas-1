@@ -13,7 +13,11 @@ class SeeHouseWay extends BaseModel
     {
         return $this->belongsTo(CompanyFramework::class,'storefront_guid', 'guid');
     }
-    
+    // 关联房源
+    public function house()
+    {
+        return $this->belongsTo(House::class,'house_guid','guid');
+    }
     // 看房方式中文 type_cn
     public function getTypeCnAttribute()
     {

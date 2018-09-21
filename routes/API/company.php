@@ -242,4 +242,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 房源带看
     Route::get('get_house_visit', 'BusinessManageController@getHouseVisit');
 
+    // 客源带看
+    Route::get('get_customer_track','BusinessManageController@getCustomerTrack');
+
 });

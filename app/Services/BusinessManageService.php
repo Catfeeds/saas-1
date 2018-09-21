@@ -6,6 +6,7 @@ use App\Handler\Access;
 use App\Handler\Common;
 use App\Models\Customer;
 use App\Models\House;
+use App\Models\SeeHouseWay;
 use App\Models\Track;
 use App\Models\User;
 use App\Models\Visit;
@@ -255,7 +256,8 @@ class BusinessManageService
     // 提交钥匙
     public function SeeHouseWay($request)
     {
-
+        $data = [];
+        $seeHouseWay = SeeHouseWay::with('house.buildingBlock','house.buildingBlock.building');
     }
 
     // 上传图片

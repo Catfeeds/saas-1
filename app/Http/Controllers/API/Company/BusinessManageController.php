@@ -74,5 +74,15 @@ class BusinessManageController extends APIBaseController
         return $customer->paginate(5);
     }
 
+    // 获取客源带看
+    public function getCustomerVisit($request, $company_guid)
+    {
+        // 同公司下的客源带看信息
+        $visit = Customer::with('visit')->where('company_guid',$company_guid);
 
+        // 姓名
+        if ($request->name) {
+            $user_guid =    
+        }
+    }
 }

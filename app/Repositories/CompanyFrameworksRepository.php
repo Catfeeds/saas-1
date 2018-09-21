@@ -149,7 +149,6 @@ class CompanyFrameworksRepository extends Model
     public function getLevelList()
     {
         $parent_guid = CompanyFramework::where('guid',Common::user()->rel_guid)->pluck('parent_guid')->first();
-        dd($parent_guid);
         $level = Common::user()->role->level;
         if (in_array($level,[1,2,3,4])) {
             if (empty(Common::user()->rel_guid)) {

@@ -13,12 +13,12 @@ class Track extends BaseModel
     // 关联房源
     public function house()
     {
-        return $this->belongsTo(House::class,'guid', 'rel_guid');
+        return $this->belongsTo(House::class,'rel_guid', 'guid');
     }
 
     // 关联客源
     public function customer()
     {
-        return $this->belongsTo(Customer::class,'guid','rel_guid');
+        return $this->belongsTo(Customer::class,'rel_guid','guid');
     }
 }

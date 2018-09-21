@@ -91,7 +91,6 @@ class HousesService
         $houses['guid'] = $res->guid;
         $houses['img'] = $res->indoor_img_cn; //图片
         $houses['name'] = $res->buildingBlock->building->name;  //名称
-        $houses['name'] = $res->buildingBlock->building->name;  //名称
         $houses['public_private'] = $res->public_private_cn; //公私盘
         $houses['grade'] = $res->grade_cn; //级别
         $houses['key'] = $res->have_key == 1 ? true : false; //是否有钥匙
@@ -667,6 +666,7 @@ class HousesService
         // 判断是否允许编辑
         foreach ($res as $v) {
             if (empty($request->type) || $request->type == 2) {
+                dd($v->visit->visitCustomerHouse);
                 $v->accompanyUser = empty($v->visit)?'':$v->visit->accompanyUser->name;
                 $v->visitCustomer = empty($v->visit)?'':$v->visit->visitCustomerHouse->customer_info[0]['name'];
             }

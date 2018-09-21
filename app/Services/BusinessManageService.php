@@ -4,7 +4,11 @@ namespace App\Services;
 
 use App\Handler\Access;
 use App\Handler\Common;
+use App\Models\Customer;
+use App\Models\House;
+use App\Models\Track;
 use App\Models\User;
+use App\Models\Visit;
 
 class BusinessManageService
 {
@@ -56,6 +60,136 @@ class BusinessManageService
             }])->paginate($request->per_page ?? 10);
 
         return $users;
+    }
+
+    // 获取当天时间
+    public function getTime()
+    {
+        return  [date('Y-m-d', strtotime('now')), date('Y-m-d', strtotime('+1day'))];
+    }
+
+    // 新增房源
+    public function getHouse($request)
+    {
+        if ($request->created_at) {
+            $time = $request->created_at;
+        } else {
+            $time = $this->getTime();
+        }
+        $data = [];
+        $house = House::with('buildingBlock', 'buildingBlock.building', 'guardianPerson')
+                        ->where(['guardian_person' => $request->user_guid])
+                        ->whereBetween('created_at', $time);
+        $house = $house->paginate($request->per_page??10);
+        foreach ($house as $k => $v) {
+            $data[$k]['guid'] = $v->guid;
+            $data[$k]['guardianPerson'] = $v->guardianPerson->name;
+            $data[$k]['house_name'] = $v->buildingBlock->building->name;
+            $data[$k]['house_identifier'] = $v->house_identifier;
+            $data[$k]['img'] = $v->indoor_img_cn;
+            $data[$k]['acreage'] = $v->acreage_cn;
+            $data[$k]['price'] = $v->price.'元/㎡·月';
+            $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
+        }
+        return $house->setCollection(collect($data));
+    }
+
+    // 获取客源
+    public function getCustomer($request)
+    {
+        if ($request->created_at) {
+            $time = $request->created_at;
+        } else {
+            $time = $this->getTime();
+        }
+        $data = [];
+        $customer = Customer::with('guardianPerson')
+                            ->where(['guardian_person' => $request->user_guid])
+                            ->whereBetween('created_at', $time);
+        $customer = $customer->paginate($request->per_page??10);
+        foreach ($customer as $k => $v) {
+            $data[$k]['guid'] = $v->guid;
+            $data[$k]['guardianPerson'] = $v->guardianPerson->name;
+            $data[$k]['name'] = $v->customer_info[0]['name'];
+            $data[$k]['remarks'] = $v->remarks;
+            $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
+        }
+        return $customer->setCollection(collect($data));
+    }
+
+    // 房源跟进
+    public function getHouseTrack($request)
+    {
+        if ($request->created_at) {
+            $time = $request->created_at;
+        } else {
+            $time = $this->getTime();
+        }
+        $data = [];
+        $track = Track::with('house','house.buildingBlock', 'house.buildingBlock.building')
+                        ->where(['model_type' => 'App\Models\House', 'user_guid' => $request->user_guid])
+                        ->whereBetween('created_at', $time);
+        $track = $track->paginate($request->per_page??10);
+        foreach ($track as $k => $v) {
+            $data[$k]['guid'] = $v->guid;
+            $data[$k]['user'] = $v->user->name;
+            $data[$k]['house_name'] = $v->house->buildingBlock->building->name;
+            $data[$k]['house_identifier'] = $v->house->house_identifier;
+            $data[$k]['tracks_info'] = $v->tracks_info;
+            $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
+        }
+        return $track->setCollection(collect($data));
+    }
+
+    // 客源跟进
+    public function getCustomerTrack($request)
+    {
+        if ($request->created_at) {
+            $time = $request->created_at;
+        } else {
+            $time = $this->getTime();
+        }
+        $data = [];
+        $track = Track::with('customer')
+                        ->where(['model_type' => 'App\Models\Customer', 'user_guid' => $request->user_guid])
+                        ->whereBetween('created_at', $time);
+        $track = $track->paginate($request->per_page??10);
+        foreach ($track as $k => $v) {
+            $data[$k]['guid'] = $v->guid;
+            $data[$k]['user'] = $v->user->name;
+            $data[$k]['customer_name'] = $v->customer->customer_info[0]['name'];
+//            $data[$k]['guid'] = $v->guid;  客源编号
+            $data[$k]['tracks_info'] = $v->tracks_info;
+            $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
+        }
+        return $track->setCollection(collect($data));
+    }
+
+    // 房源带看
+    public function getHouseVisit($request)
+    {
+        if ($request->created_at) {
+            $time = $request->created_at;
+        } else {
+            $time = $this->getTime();
+        }
+        $data = [];
+        $visit = Visit::with('coverHouse','coverHouse.buildingBlock', 'coverHouse.buildingBlock.building', 'visitCustomer', 'accompanyUser')
+                    ->where(['model_type' => 'App\Models\House', 'visit_user' => $request->user_guid])
+                    ->whereBetween('created_at', $time);
+        $visit = $visit->paginate($request->per_page??10);
+        foreach ($visit as $k => $v) {
+            $data[$k]['guid'] = $v->guid;
+            $data[$k]['user'] = $v->user->name;
+            $data[$k]['house'] = $v->coverHouse->buildingBlock->building->name;
+            $data[$k]['house_identifier'] = $v->coverHouse->house_identifier;
+            $data[$k]['customer'] = $v->visitCustomer->customer_info[0]['name'];
+//            $data[$k]['customer'] = $v->visitCustomerHouse->name; 客源编号
+            $data[$k]['accompany'] = optional($v->accompanyUser)->name;
+            $data[$k]['remarks'] = $v->remarks;
+            $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
+        }
+        return $visit->setCollection(collect($data));
     }
     
     

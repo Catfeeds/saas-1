@@ -227,5 +227,19 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     */
     Route::resource('business_manage','BusinessManageController');
 
+    // 新增房源
+    Route::get('get_add_house', 'BusinessManageController@getHouse');
+
+    // 新增客源
+    Route::get('get_add_customer', 'BusinessManageController@getCustomer');
+
+    // 房源跟进
+    Route::get('get_house_track', 'BusinessManageController@getHouseTrack');
+
+    // 客源跟进
+    Route::get('get_customer_track', 'BusinessManageController@getCustomerTrack');
+
+    // 房源带看
+    Route::get('get_house_visit', 'BusinessManageController@getHouseVisit');
 
 });

@@ -19,6 +19,14 @@ class BusinessManageService
             $users = $users->where('name', 'like', '%'.$request->name.'%');
         }
 
+        if ($request->area_guid || $request->storefront_guid || $request->group_guid) {
+            $companyFrameworksService = new CompanyFrameworksService();
+            $guid = $companyFrameworksService->getUserAdoptCondition($request);
+            $users = $users->whereIn('guid', $guid);
+        } else {
+            $users = $users->where('company_guid', Common::user()->company_guid);
+        }
+
         if (empty($request->created_at)) {
             $request->offsetSet('created_at', [date('Y-m-d', strtotime('now')), date('Y-m-d', strtotime('+1day'))]);
         }

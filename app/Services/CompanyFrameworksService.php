@@ -34,7 +34,7 @@ class CompanyFrameworksService
         }
     }
 
-    // 通过公司/区域/门店/组获取所有用户
+    // 通过公司/区域/门店/组获取所有用户guid
     public function getUserAdoptCondition($request)
     {
         if ($request->area_guid) {

@@ -495,9 +495,6 @@ class HousesService
                 'have_key' => $haveKey
             ]);
             if (empty($house)) throw new \Exception('房源钥匙人修改失败');
-
-            // TODO 操作记录
-
             \DB::commit();
             return true;
         } catch (\Exception $exception) {

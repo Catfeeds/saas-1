@@ -99,7 +99,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('delete', 'CompanyFrameworksController@delete');
 
     // 通过角色等级获取下拉数据
-    Route::get('get_level_list','CompanyFrameworksController@getLevelLsit');
+    Route::get('get_level_list','CompanyFrameworksController@getLevelList');
     /*
     |--------------------------------------------------------------------------
     | 房源管理

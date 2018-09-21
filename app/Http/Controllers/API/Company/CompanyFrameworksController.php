@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Company;
 
+use App\Handler\Common;
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Requests\Company\CompanyFrameworksRequest;
 use App\Repositories\CompanyFrameworksRepository;
@@ -131,5 +132,15 @@ class CompanyFrameworksController extends APIBaseController
         $res = $service->deleteData($request->data);
         if (!$res['status']) return $this->sendError($res['message']);
         return $this->sendResponse($res['status'], $res['message']);
+    }
+
+    // 通过登录人等级显示下拉数据
+    public function getLevelLsit
+    (
+        CompanyFrameworksRepository $repository
+    )
+    {
+        $res = $repository->getLevelLsit();
+        return $this->sendResponse($res,'获取成功');
     }
 }

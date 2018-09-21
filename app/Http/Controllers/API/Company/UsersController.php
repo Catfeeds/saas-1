@@ -30,14 +30,26 @@ class UsersController extends APIBaseController
     public function edit(User $user)
     {
         $user->detailInfo;
-        $user->level = optional(optional($user)->role)->level;
-
-        // 二级组织
-        $user->second_name = optional($user->companyFramework)->name;
-        $user->second_guid = optional($user->companyFramework)->guid;
-        // 一级组织
-        $user->first_guid = optional(optional($user->companyFramework)->upper)->guid;
-        $user->first_name = optional(optional($user->companyFramework)->upper)->name;
+        $data = [];
+        if ($user->companyFramework) {
+            switch ($user->companyFramework->level) {
+                case 1:
+                    $data[] = $user->rel_guid;
+                    break;
+                case 2:
+                    $data[] = $user->companyFramework->upper->guid;
+                    $data[] = $user->rel_guid;
+                    break;
+                case 3:
+                    $data[] = $user->companyFramework->upper->upper->guid;
+                    $data[] = $user->companyFramework->upper->guid;
+                    $data[] = $user->rel_guid;
+                    break;
+                default;
+                    break;
+            }
+        }
+        $user->conpamyFramework = $data;
         return $this->sendResponse($user, '员工修改之前原始数据');
     }
 

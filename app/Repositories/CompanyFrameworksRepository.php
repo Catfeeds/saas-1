@@ -146,7 +146,7 @@ class CompanyFrameworksRepository extends Model
     }
     
     // 通过登录人等级显示下拉数据
-    public function getLevelLsit()
+    public function getLevelList()
     {
         $parent_guid = CompanyFramework::where('guid',Common::user()->rel_guid)->pluck('parent_guid')->first();
         dd($parent_guid);

@@ -43,35 +43,7 @@ class BusinessManageService
         return $users;
     }
 
-    // 客源带看
-    public function CustomerVisit($request)
-    {
 
-    }
-
-    // 提交钥匙
-    public function SeeHouseWay($request)
-    {
-
-    }
-
-    // 上传图片
-    public function RecordImg($request)
-    {
-
-    }
-
-    // 房号
-    public function recordHouseNumber($request)
-    {
-
-    }
-
-    // 业主信息
-    public function recordOwnerInfo($request)
-    {
-
-    }
 
     // 通过姓名获取guid
     public function getUserGuid($name)
@@ -219,4 +191,36 @@ class BusinessManageService
         return $visit->setCollection(collect($data));
     }
 
+    // 客源带看
+    public function getCustomerVisit
+    (
+
+    )
+    {
+
+    }
+
+    // 提交钥匙
+    public function SeeHouseWay($request)
+    {
+
+    }
+
+    // 上传图片
+    public function RecordImg($request)
+    {
+
+    }
+
+    // 房号
+    public function recordHouseNumber($request)
+    {
+
+    }
+
+    // 业主信息
+    public function recordOwnerInfo($request)
+    {
+
+    }
 }

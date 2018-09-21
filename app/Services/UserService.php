@@ -23,7 +23,6 @@ class UserService
                 'password' => bcrypt($request->tel),    // 账号密码默认一样
                 'role_guid' => $request->role_guid,
                 'rel_guid' => $request->rel_guid,
-                'status' => $request->status,
                 'company_guid' => Common::user()->company_guid
             ]);
             if (empty($user)) throw new \Exception('用户添加失败');

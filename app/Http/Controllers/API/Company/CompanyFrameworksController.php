@@ -135,12 +135,12 @@ class CompanyFrameworksController extends APIBaseController
     }
 
     // 通过登录人等级显示下拉数据
-    public function getLevelLsit
+    public function getLevelList
     (
         CompanyFrameworksRepository $repository
     )
     {
-        $res = $repository->getLevelLsit();
+        $res = $repository->getLevelList();
         return $this->sendResponse($res,'获取成功');
     }
 }

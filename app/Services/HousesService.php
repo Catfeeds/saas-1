@@ -666,6 +666,7 @@ class HousesService
         // 判断是否允许编辑
         foreach ($res as $v) {
             if (empty($request->type) || $request->type == 2) {
+                dd($v->visit->visitCustomerHouse);
                 $v->accompanyUser = empty($v->visit)?'':$v->visit->accompanyUser->name;
                 $v->visitCustomer = empty($v->visit)?'':$v->visit->visitCustomerHouse->customer_info[0]['name'];
             }

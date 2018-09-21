@@ -23,69 +23,60 @@ class BusinessManageController extends APIBaseController
         return $this->sendResponse($res,'业务服务列表获取成功');
     }
 
-    // 通过姓名获取guid
-    public function getUserGuid($name)
-    {
-        return User::where('name', 'like', '%'.$name.'%')->pluck('guid')->toArray();
-    }
-    
-
     // 新增房源
-    public function getHouse($request, $company_guid)
+    public function getHouse
+    (
+        Request $request,
+        BusinessManageService $service
+    )
     {
-        // 同公司下的房子
-        $house = House::where('company_guid', $company_guid)->whereBetween('created_at', $request->time);
-
-        // 姓名
-        if ($request->name) {
-            $user_guid = $this->getUserGuid($request->name);
-            $house = $house->whereIn('guardian_person', $user_guid);
-        }
-
-//        // 范围
-//        if ($request->rang) {
-//            $guardian_person = $this->
-//            $house = $house->whereIn('guardian_person', $guardian_person);
-//        }
-        return $house->paginate(5);
+        $res = $service->getHouse($request);
+        return $this->sendResponse($res, '获取成功');
     }
 
     // 获取客源
-    public function getCustomer($request, $company_guid)
+    public function getCustomer
+    (
+        Request $request,
+        BusinessManageService $service
+    )
     {
-        // 同公司下的客源
-        $customer = Customer::where('company_guid', $company_guid);
-
-        // 姓名
-        if ($request->name) {
-            $user_guid = $this->getUserGuid($request->name);
-            $customer = $customer->whereIn('guardian_person', $user_guid);
-        }
-
-        // 范围
-//        if ($request->rang) {
-//
-//        }
-        return $customer->paginate(5);
+        $res = $service->getCustomer($request);
+        return $this->sendResponse($res, '获取成功');
     }
     
-    // 客源带看
-    public function getCustomerVisit($request ,$company_guid)
+    
+    // 房源跟进
+    public function getHouseTrack
+    (
+        Request $request,
+        BusinessManageService $service
+    )
     {
-        $customerVisit = Customer::with('visit')->where('company_guid',$company_guid)->whereBetween('created_at',
-            $request->time);
-
-        if ($request->name) {
-            $user_guid = $this->getUserGuid($request->name);
-            $customerVisit = $customerVisit->whereIn('guardian_person',$user_guid);
-        }
-
-        return $customerVisit->paginate(5);
+        $res = $service->getHouseTrack($request);
+        return $this->sendResponse($res, '获取成功');
     }
 
-    // 提交钥匙
-    public function getSeeHouseWay($request ,$company_guid)
+    // 客源跟进
+    public function getCustomerTrack
+    (
+        Request $request,
+        BusinessManageService $service
+    )
     {
-        $SeeHouseWay = SeeHouseWay::with('storefront');
+        $res = $service->getCustomerTrack($request);
+        return $this->sendResponse($res, '获取成功');
     }
+
+    // 房源带看
+    public function getHouseVisit
+    (
+        Request $request,
+        BusinessManageService $service
+    )
+    {
+        $res = $service->getHouseVisit($request);
+        return $this->sendResponse($res, '获取成功');
+    }
+
 }

@@ -144,4 +144,62 @@ class CompanyFrameworksRepository extends Model
         return true;
 
     }
+    
+    // 通过登录人等级显示下拉数据
+    public function getLevelLsit()
+    {
+        $parent_guid = CompanyFramework::where('guid',Common::user()->rel_guid)->pluck('parent_guid')->first();
+        dd($parent_guid);
+        $level = Common::user()->role->level;
+        if (in_array($level,[1,2,3,4])) {
+            if (empty(Common::user()->rel_guid)) {
+                $areas = CompanyFramework::with('framework')->where([
+                    'parent_guid' => $parent_guid,
+                    'company_guid' => Common::user()->company_guid,
+                ])->orderBy('level','asc')
+                    ->orderBy('created_at','asc')
+                    ->get();
+            } else {
+                $areas = CompanyFramework::with('framework')->where([
+                    'parent_guid' => $parent_guid,
+                    'company_guid' => Common::user()->company_guid,
+                    'guid' => Common::user()->rel_guid
+                ])->orderBy('level','asc')
+                    ->orderBy('created_at','asc')
+                    ->get();
+            }
+        } elseif ($level == 5) {
+            return Common::user()->name;
+        }
+
+        $box = [];
+        //循环一级划分,查询下级
+        foreach ($areas as $area) {
+            $store_data = [];
+            //查出片区下面的门店
+            foreach ($area->framework as $store) {
+                $group_data = [];
+                //查询门店下面的分组
+                foreach ($store->framework as $group) {
+                    $item = [
+                        'value' => $group->guid,
+                        'label' => $group->name,
+                    ];
+                    $group_data[] = $item;
+                }
+                $store_data[] = [
+                    'value' => $store->guid,
+                    'label' => $store->name,
+                    'children' => $group_data
+                ];
+            }
+            $data = [
+                'value' => $area->guid,
+                'label' => $area->name,
+                'children' => $store_data
+            ];
+            $box[] =  $data;
+        }
+        return $box;
+    }
 }

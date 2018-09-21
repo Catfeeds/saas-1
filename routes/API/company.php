@@ -98,6 +98,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 删除片区、门店、分组
     Route::get('delete', 'CompanyFrameworksController@delete');
 
+    // 通过角色等级获取下拉数据
+    Route::get('get_level_list','CompanyFrameworksController@getLevelLsit');
     /*
     |--------------------------------------------------------------------------
     | 房源管理

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Company;
 use App\Http\Controllers\API\APIBaseController;
 use App\Models\Customer;
 use App\Models\House;
+use App\Models\Track;
 use App\Models\User;
 use App\Services\BusinessManageService;
 use Illuminate\Http\Request;
@@ -17,15 +18,8 @@ class BusinessManageController extends APIBaseController
         BusinessManageService $service
     )
     {
-        $service->BusinessList($request);
-
-
-
-
-
-
-
-
+        $res = $service->BusinessList($request);
+        return $this->sendResponse($res,'业务服务列表获取成功');
     }
 
     // 通过姓名获取guid
@@ -72,17 +66,5 @@ class BusinessManageController extends APIBaseController
 //
 //        }
         return $customer->paginate(5);
-    }
-
-    // 获取客源带看
-    public function getCustomerVisit($request, $company_guid)
-    {
-        // 同公司下的客源带看信息
-        $visit = Customer::with('visit')->where('company_guid',$company_guid);
-
-        // 姓名
-        if ($request->name) {
-            $user_guid =    
-        }
     }
 }

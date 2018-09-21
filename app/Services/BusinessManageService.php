@@ -15,18 +15,20 @@ class BusinessManageService
 
         // 获取所有角色相关信息
         $users = User::whereIn('guid', $usersGuid)
-            ->with([
-                'house.track',  // 房源跟进
-                'customer.track',   // 客源跟进
-                'customer.visit',   // 客源带看
-                'house.visit',  // 房源带看
-                'seeHouseWay'
-            ])->get();
+            ->withCount([
+                'house',    // 房源
+                'customer', // 客源
+                'houseTrack',  // 房源跟进
+                'customerTrack',   // 客源跟进
+                'houseVisit',  // 房源带看
+                'customerVisit',   // 客源带看
+                'seeHouseWay',  // 提交钥匙
+                'recordImg',    // 上传图片
+                'recordHouseNumber',    // 房号
+                'recordOwnerInfo'   // 业主信息
+            ])->paginate($request->per_page ?? 10);
 
-        dd($users[0]);
-
-
-
+        return $users;
     }
     
     

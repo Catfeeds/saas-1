@@ -84,6 +84,47 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\SeeHouseWay','user_guid','guid');
     }
+    
+    // 操作记录图片
+    public function recordImg()
+    {
+        return $this->hasMany('App\Models\HouseOperationRecord','user_guid','guid')->where('type',3);
+    }
 
+    // 房号
+    public function recordHouseNumber()
+    {
+        return $this->hasMany('App\Models\HouseOperationRecord','user_guid','guid')->where('remarks','查看了房源的门牌号信息');
+    }
+
+    // 业主信息
+    public function recordOwnerInfo()
+    {
+        return $this->hasMany('App\Models\HouseOperationRecord','user_guid','guid')->where('remarks','查看了房源的业主信息');
+    }
+
+    // 带看
+    public function houseVisit()
+    {
+        return $this->hasMany('App\Models\Visit','visit_user','guid')->where('model_type','App\Models\House');
+    }
+
+    // 客源带看
+    public function customerVisit()
+    {
+        return $this->hasMany('App\Models\Visit','visit_user','guid')->where('model_type','App\Models\Customer');
+    }
+
+    // 房源跟进
+    public function houseTrack()
+    {
+        return $this->hasMany('App\Models\Track','user_guid','guid')->where('model_type','App\Models\House');
+    }
+
+    // 客源跟进
+    public function customerTrack()
+    {
+        return $this->hasMany('App\Models\Track','user_guid','guid')->where('model_type','App\Models\Customer');
+    }
 
 }

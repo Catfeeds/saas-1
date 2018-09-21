@@ -18,15 +18,8 @@ class BusinessManageController extends APIBaseController
         BusinessManageService $service
     )
     {
-        $service->BusinessList($request);
-
-
-
-
-
-
-
-
+        $res = $service->BusinessList($request);
+        return $this->sendResponse($res,'业务服务列表获取成功');
     }
 
     // 通过姓名获取guid

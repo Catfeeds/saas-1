@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Company;
 use App\Http\Controllers\API\APIBaseController;
 use App\Models\Customer;
 use App\Models\House;
+use App\Models\SeeHouseWay;
 use App\Models\Track;
 use App\Models\User;
 use App\Services\BusinessManageService;
@@ -66,5 +67,25 @@ class BusinessManageController extends APIBaseController
 //
 //        }
         return $customer->paginate(5);
+    }
+    
+    // 客源带看
+    public function getCustomerVisit($request ,$company_guid)
+    {
+        $customerVisit = Customer::with('visit')->where('company_guid',$company_guid)->whereBetween('created_at',
+            $request->time);
+
+        if ($request->name) {
+            $user_guid = $this->getUserGuid($request->name);
+            $customerVisit = $customerVisit->whereIn('guardian_person',$user_guid);
+        }
+
+        return $customerVisit->paginate(5);
+    }
+
+    // 提交钥匙
+    public function getSeeHouseWay($request ,$company_guid)
+    {
+        $SeeHouseWay = SeeHouseWay::with('storefront');
     }
 }

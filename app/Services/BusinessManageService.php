@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Handler\Access;
 use App\Handler\Common;
 use App\Models\User;
+use App\Models\Visit;
 
 class BusinessManageService
 {
@@ -30,6 +31,34 @@ class BusinessManageService
 
         return $users;
     }
-    
-    
+
+    // 客源带看
+    public function CustomerVisit($request)
+    {
+        Visit::with('')
+    }
+
+    // 提交钥匙
+    public function SeeHouseWay($request)
+    {
+
+    }
+
+    // 上传图片
+    public function RecordImg($request)
+    {
+
+    }
+
+    // 房号
+    public function recordHouseNumber($request)
+    {
+
+    }
+
+    // 业主信息
+    public function recordOwnerInfo($request)
+    {
+
+    }
 }

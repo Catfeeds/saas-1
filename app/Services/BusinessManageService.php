@@ -20,7 +20,7 @@ class BusinessManageService
                 'customer.track',   // 客源跟进
                 'customer.visit',   // 客源带看
                 'house.visit',  // 房源带看
-                  
+                'seeHouseWay'
             ])->get();
 
         dd($users[0]);

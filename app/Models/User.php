@@ -79,5 +79,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Customer','entry_person','guid');
     }
 
+    // 看房方式(提交钥匙)
+    public function seeHouseWay()
+    {
+        return $this->hasMany('App\Models\SeeHouseWay','user_guid','guid');
+    }
+
 
 }

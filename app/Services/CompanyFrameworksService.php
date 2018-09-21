@@ -20,6 +20,23 @@ class CompanyFrameworksService
             $where = ['status' => $request->status];
         }
 
+        if ($request->area_guid || $request->storefront_guid || $request->group_guid) {
+            $guid = $this->getUserAdoptCondition($request);
+            return User::where($where)
+                ->whereIn('rel_guid', $guid)
+                ->with(['role', 'companyFramework'])
+                ->paginate($request->per_page??20);
+        } else {
+            return User::where($where)
+                ->where('company_guid', Common::user()->company_guid)
+                ->with(['role', 'companyFramework'])
+                ->paginate($request->per_page??20);
+        }
+    }
+
+    // 通过公司/区域/门店/组获取所有用户
+    public function getUserAdoptCondition($request)
+    {
         if ($request->area_guid) {
             // 获取区域下门店guid
             $storefrontGuid = CompanyFramework::where('parent_guid', $request->area_guid)
@@ -34,35 +51,23 @@ class CompanyFrameworksService
             $guid = array_merge($storefrontGuid, $groupGuid);
             // 区域
             $guid[] = $request->area_guid;
-            return User::where($where)
-                ->whereIn('rel_guid', $guid)
-                ->with(['role', 'companyFramework'])
-                ->paginate($request->per_page??20);
+
         } elseif($request->storefront_guid) {
             // 获取门店下组guid
-            $storefrontGuid = CompanyFramework::where('parent_guid', $request->storefront_guid)
+            $guid = CompanyFramework::where('parent_guid', $request->storefront_guid)
                 ->pluck('guid')
                 ->toArray();
 
             // 将门店guid拼接到关联数据中
-            $storefrontGuid[] = $request->storefront_guid;
-            return User::where($where)
-                ->whereIn('rel_guid', $storefrontGuid)
-                ->with(['role', 'companyFramework'])
-                ->paginate($request->per_page??20);
-        } elseif($request->group_guid) {
-            return User::where($where)
-                ->where('rel_guid', $request->group_guid)
-                ->with(['role', 'companyFramework'])
-                ->paginate($request->per_page??20);
-        } else {
-            return User::where($where)
-                ->where('company_guid', Common::user()->company_guid)
-                ->with(['role', 'companyFramework'])
-                ->paginate($request->per_page??20);
-        }
-    }
+            $guid[] = $request->storefront_guid;
 
+        } elseif ($request->group_guid) {
+            $guid[] = $request->group_guid;
+        }
+
+        return $guid;
+    }
+    
     // 通过用户名称获取用户
     public function adoptNameGetUser(
         $request

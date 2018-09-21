@@ -456,9 +456,21 @@ class HousesService
     {
         \DB::beginTransaction();
         try {
+
+            // 是否有钥匙
+            if ($request->type == 4) {
+                $haveKey = 1;
+                $keyPerson = Common::user()->guid;
+            } else {
+                $haveKey = 2;
+                $keyPerson = '';
+            }
             // 查询是否有看房记录数据
             $seeHouseWay = SeeHouseWay::where('house_guid', $request->house_guid)->first();
             if ($seeHouseWay) {
+                if ($seeHouseWay->type != 4 || $request->type != 4) {
+                    $seeHouseWay->user_guid = $keyPerson;
+                }
                 $seeHouseWay->type = $request->type;
                 $seeHouseWay->remarks = $request->remarks;
                 $seeHouseWay->storefront_guid = $request->storefront_guid;
@@ -470,6 +482,7 @@ class HousesService
                 $seeHouseWay = SeeHouseWay::create([
                     'guid' => Common::getUuid(),
                     'house_guid' => $request->house_guid,
+                    'user_guid' => $keyPerson,
                     'type' => $request->type,
                     'remarks' => $request->remarks,
                     'storefront_guid' => $request->storefront_guid,
@@ -479,25 +492,12 @@ class HousesService
                 ]);
                 if (empty($seeHouseWay)) throw new \Exception('看房方式添加失败');
             }
-
-            // 是否有钥匙
-            if ($request->type == 4) {
-                $haveKey = 1;
-                $keyPerson = Common::user()->guid;
-            } else {
-                $haveKey = 2;
-                $keyPerson = '';
-            }
-
             // 修改房源钥匙人
             $house = House::where(['guid' => $request->house_guid])->update([
                 'key_person' => $keyPerson,
                 'have_key' => $haveKey
             ]);
             if (empty($house)) throw new \Exception('房源钥匙人修改失败');
-
-            // TODO 操作记录
-
             \DB::commit();
             return true;
         } catch (\Exception $exception) {

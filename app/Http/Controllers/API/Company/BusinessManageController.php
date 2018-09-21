@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Company;
 use App\Http\Controllers\API\APIBaseController;
 use App\Models\Customer;
 use App\Models\House;
+use App\Models\Track;
 use App\Models\User;
 use App\Services\BusinessManageService;
 use Illuminate\Http\Request;
@@ -73,6 +74,47 @@ class BusinessManageController extends APIBaseController
 //        }
         return $customer->paginate(5);
     }
+
+    // 房源跟进
+    public function getHouseTrack($request)
+    {
+        $track = Track::with('house')->where('model_type','App\Models\House')->whereBetween('created_at', $request->time);
+
+        // 姓名
+        if ($request->name) {
+            $user_guid = $this->getUserGuid($request->name);
+            $track = $track->where('user_guid', $user_guid);
+        }
+
+//        // 范围
+//        if ($request->rang) {
+//
+//        }
+
+        $track = $track->paginate(5);
+
+    }
+
+    // 客源跟进
+    public function getCustomerTrack($request)
+    {
+        $track = Track::with('customer')->where('model_type','App\Models\Customer')->whereBetween('created_at', $request->time);
+
+        // 姓名
+        if ($request->name) {
+            $user_guid = $this->getUserGuid($request->name);
+            $track = $track->where('user_guid', $user_guid);
+        }
+
+//        // 范围
+//        if ($request->rang) {
+//
+//        }
+
+        $track = $track->paginate(5);
+    }
+
+    //
 
 
 }

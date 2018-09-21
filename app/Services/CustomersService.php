@@ -276,6 +276,7 @@ class CustomersService
         }
         // 获取动态(跟进,带看) 最新4条数据
         $dynamic = [];
+
         foreach ($item as $k => $v) {
             if ($v == 1) {
                 // 1跟进
@@ -293,6 +294,7 @@ class CustomersService
                 ])->first();
             }
         }
+
         $record = array_values(array_filter($dynamic));
         $data['dynamic'] = [];
         if (!empty($record)) {

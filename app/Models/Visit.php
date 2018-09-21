@@ -39,6 +39,16 @@ class Visit extends BaseModel
         return $this->belongsTo(House::class,'rel_guid', 'guid');
     }
 
+    // 被带看房源/客源
+    public function cover()
+    {
+        if ($this->model_type == 'App\Models\House') {
+            return $this->belongsTo(House::class,'cover_rel_guid','guid');
+        } else {
+            return $this->belongsTo(Customer::class,'cover_rel_guid','guid');
+        }
+    }
+
     //带看单
     public function getVisitImgCnAttribute()
     {

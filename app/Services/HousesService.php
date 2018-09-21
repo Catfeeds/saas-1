@@ -91,7 +91,6 @@ class HousesService
         $houses['guid'] = $res->guid;
         $houses['img'] = $res->indoor_img_cn; //图片
         $houses['name'] = $res->buildingBlock->building->name;  //名称
-        $houses['name'] = $res->buildingBlock->building->name;  //名称
         $houses['public_private'] = $res->public_private_cn; //公私盘
         $houses['grade'] = $res->grade_cn; //级别
         $houses['key'] = $res->have_key == 1 ? true : false; //是否有钥匙

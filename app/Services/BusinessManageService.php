@@ -88,7 +88,7 @@ class BusinessManageService
         $house = House::with('buildingBlock', 'buildingBlock.building', 'guardianPerson')
                         ->where(['guardian_person' => $request->user_guid])
                         ->whereBetween('created_at', $time);
-        $house = $house->paginate(5);
+        $house = $house->paginate($request->per_page??10);
         foreach ($house as $k => $v) {
             $data[$k]['guid'] = $v->guid;
             $data[$k]['guardianPerson'] = $v->guardianPerson->name;
@@ -115,7 +115,7 @@ class BusinessManageService
         $customer = Customer::with('guardianPerson')
                             ->where(['guardian_person' => $request->user_guid])
                             ->whereBetween('created_at', $time);
-        $customer = $customer->paginate(5);
+        $customer = $customer->paginate($request->per_page??10);
         foreach ($customer as $k => $v) {
             $data[$k]['guid'] = $v->guid;
             $data[$k]['guardianPerson'] = $v->guardianPerson->name;
@@ -138,7 +138,7 @@ class BusinessManageService
         $track = Track::with('house','house.buildingBlock', 'house.buildingBlock.building')
                         ->where(['model_type' => 'App\Models\House', 'user_guid' => $request->user_guid])
                         ->whereBetween('created_at', $time);
-        $track = $track->paginate(5);
+        $track = $track->paginate($request->per_page??10);
         foreach ($track as $k => $v) {
             $data[$k]['guid'] = $v->guid;
             $data[$k]['user'] = $v->user->name;
@@ -162,7 +162,7 @@ class BusinessManageService
         $track = Track::with('customer')
                         ->where(['model_type' => 'App\Models\Customer', 'user_guid' => $request->user_guid])
                         ->whereBetween('created_at', $time);
-        $track = $track->paginate(5);
+        $track = $track->paginate($request->per_page??10);
         foreach ($track as $k => $v) {
             $data[$k]['guid'] = $v->guid;
             $data[$k]['user'] = $v->user->name;
@@ -186,7 +186,7 @@ class BusinessManageService
         $visit = Visit::with('coverHouse','coverHouse.buildingBlock', 'coverHouse.buildingBlock.building', 'visitCustomer', 'accompanyUser')
                     ->where(['model_type' => 'App\Models\House', 'visit_user' => $request->user_guid])
                     ->whereBetween('created_at', $time);
-        $visit = $visit->paginate(5);
+        $visit = $visit->paginate($request->per_page??10);
         foreach ($visit as $k => $v) {
             $data[$k]['guid'] = $v->guid;
             $data[$k]['user'] = $v->user->name;

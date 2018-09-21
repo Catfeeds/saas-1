@@ -16,6 +16,7 @@ class CreateSeeHouseWaysTable extends Migration
         Schema::create('see_house_ways', function (Blueprint $table) {
             $table->char('guid', 32)->primary()->comment('guid主键');
             $table->char('house_guid',32)->nullable()->comment('房源guid');
+            $table->char('user_guid',32)->nullable()->comment('钥匙人guid');
             $table->tinyInteger('type')->nullable()->comment('看房方式 1: 预约 2: 直接看 3: 借钥匙');
             $table->string('remarks',128)->nullable()->comment('备注');
 

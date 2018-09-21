@@ -218,4 +218,12 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 问题反馈
     Route::resource('feed_backs','FeedBacksController');
 
+    /*
+    |--------------------------------------------------------------------------
+    | 业务管理
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('business_manage','BusinessManageController');
+
+
 });

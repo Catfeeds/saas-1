@@ -67,4 +67,17 @@ class User extends Authenticatable
         return empty($this->pic) ? config('setting.user_default_img') : config('setting.qiniu_url') . $this->pic;
     }
 
+    // 房源
+    public function house()
+    {
+        return $this->hasMany('App\Models\House','entry_person','guid');
+    }
+
+    // 客源
+    public function customer()
+    {
+        return $this->hasMany('App\Models\Customer','entry_person','guid');
+    }
+
+
 }

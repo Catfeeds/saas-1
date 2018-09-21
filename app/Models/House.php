@@ -59,7 +59,13 @@ class House extends BaseModel
     {
         return $this->hasMany(Track::class, 'rel_guid', 'guid')->where('model_type', 'App\Models\House')->orderBy('created_at','desc');
     }
-    
+
+    // 带看
+    public function visit()
+    {
+        return $this->hasMany(Visit::class,'cover_rel_guid', 'guid')->where('model_type', 'App\Models\House');
+    }
+
     // 动态
     public function record()
     {

@@ -194,7 +194,7 @@ class HousesService
 
         $share = Access::adoptGuardianPersonGetHouse('house_share');
         if (!in_array($house->guid, $share)) {
-            $permission['share'] = false; // 是否允许编辑图片
+            $permission['share'] = false; // 是否允许共享房源
         }
 
         // 上传图片
@@ -923,7 +923,9 @@ class HousesService
         if ($request->label) {
             // 有图
             if ($request->label == 1) {
-                $house = $house->whereNotNull('house_type_img')->orWhereNotNull('indoor_img')->orWhereNotNull('outdoor_img');
+//                $house = $house->where('house_type_img','!=',null)->where('indoor_img','!=',null)->where('outdoor_img','!=',null);
+
+                $house = $house->whereNotNull('house_type_img')->whereNotNull('indoor_img')->whereNotNull('outdoor_img');
             }
 
             // 有钥匙

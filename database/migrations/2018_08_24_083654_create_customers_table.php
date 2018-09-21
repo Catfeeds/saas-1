@@ -39,6 +39,7 @@ class CreateCustomersTable extends Migration
             // 跟进时间
             $table->datetime('track_time')->nullable()->comment('跟进时间');
             $table->timestamps();
+            $table->softDeletes();
         });
         \DB::statement("alter table `customers` comment'客源表'");
     }

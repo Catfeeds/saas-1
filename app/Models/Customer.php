@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Customer extends BaseModel
 {
+    use SoftDeletes;
+
     protected $casts = [
         'customer_info' => 'array',
         'intention' => 'array',

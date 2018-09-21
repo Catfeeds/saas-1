@@ -19,6 +19,7 @@ class CreateFeedbacksTable extends Migration
             $table->string('content',255)->nullable()->comment('反馈内容');
             $table->timestamps();
         });
+        \DB::statement("alter table `feed_backs` comment'反馈信息表'");
     }
 
     /**

@@ -3,8 +3,12 @@
 namespace App\Models;
 
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class House extends BaseModel
 {
+    use SoftDeletes;
+
     protected $casts = [
         'owner_info' => 'array',
         'cost_detail' => 'array',

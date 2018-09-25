@@ -29,7 +29,7 @@ class BusinessManageService
         if ($request->area_guid || $request->storefront_guid || $request->group_guid) {
             $companyFrameworksService = new CompanyFrameworksService();
             $guid = $companyFrameworksService->getUserAdoptCondition($request);
-            $users = $users->whereIn('guid', $guid);
+            $users = $users->whereIn('rel_guid', $guid);
         } else {
             $users = $users->where('company_guid', Common::user()->company_guid);
         }

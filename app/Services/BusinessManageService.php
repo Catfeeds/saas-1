@@ -14,14 +14,7 @@ use App\Models\Visit;
 
 class BusinessManageService
 {
-    protected  $user;
-
-    public function __construct()
-    {
-        $this->user = Common::user();
-    }
-
-
+    // 业务服务列表
     public function BusinessList($request)
     {
         // 获取当前查看所有角色
@@ -87,7 +80,6 @@ class BusinessManageService
             $time = $this->getTime();
         }
         $data = [];
-        // 同公司下的房子
         $house = House::with('buildingBlock', 'buildingBlock.building', 'guardianPerson')
                         ->where(['guardian_person' => $request->user_guid])
                         ->whereBetween('created_at', $time);
@@ -114,7 +106,6 @@ class BusinessManageService
             $time = $this->getTime();
         }
         $data = [];
-        // 同公司下的客源
         $customer = Customer::with('guardianPerson')
                             ->where(['guardian_person' => $request->user_guid])
                             ->whereBetween('created_at', $time);

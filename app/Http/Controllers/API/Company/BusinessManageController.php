@@ -100,4 +100,37 @@ class BusinessManageController extends APIBaseController
         $res = $service->getSeeHouseWay($request);
         return $this->sendResponse($res,'获取成功');
     }
+
+    // 上传图片
+    public function getRecordImg
+    (
+        Request $request,
+        BusinessManageService $service
+    )
+    {
+        $res = $service->getRecordImg($request);
+        return $this->sendResponse($res,'获取成功');
+    }
+
+     // 查看房号
+    public function getRecordHouseNumber
+    (
+        Request $request,
+        BusinessManageService $service
+    )
+    {
+        $res = $service->getRecordHouseNumber($request);
+        return $this->sendResponse($res,'获取成功');
+    }
+
+    // 查看业主信息
+    public function getRecordOwnerInfo
+    (
+        Request $request,
+        BusinessManageService $service
+    )
+    {
+        $res = $service->getRecordOwnerInfo($request);
+        return $this->sendResponse($res,'获取成功');
+    }
 }

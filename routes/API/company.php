@@ -243,9 +243,18 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     Route::get('get_house_visit', 'BusinessManageController@getHouseVisit');
 
     // 客源带看
-    Route::get('get_customer_track','BusinessManageController@getCustomerTrack');
+    Route::get('get_customer_visit','BusinessManageController@getCustomerVisit');
 
     // 提交钥匙
-    Route::get('SeeHouseWay')
+    Route::get('get_see_house_way','BusinessManageController@getSeeHouseWay');
+
+    // 上传图片
+    Route::get('get_record_img','BusinessManageController@getRecordImg');
+
+    // 查看房号
+    Route::get('get_record_house_number','BusinessManageController@getRecordHouseNumber');
+
+    // 查看业主信息
+    Route::get('get_record_ownerinfo','BusinessManageController@getRecordOwnerInfo');
 
 });

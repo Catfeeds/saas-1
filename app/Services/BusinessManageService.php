@@ -205,9 +205,8 @@ class BusinessManageService
         }
         $data = [];
         $visit = Visit::with('visitCustomer','visitHouse.buildingBlock','visitHouse.buildingBlock.building','accompanyUser')
-            ->where(['model_type','App\Models\Customer','visit_user' => $request->user_guid])
+            ->where(['visit_user' => $request->user_guid])
             ->whereBetween('created_at',$time);
-
         $visit = $visit->paginate($request->per_page??10);
         foreach ($visit as $k => $v) {
             $data[$k]['guid'] = $v->guid;
@@ -253,7 +252,7 @@ class BusinessManageService
     }
 
     // 上传图片
-    public function RecordImg($request)
+    public function getRecordImg($request)
     {
         if ($request->created_at) {
             $time = $request->created_at;
@@ -262,18 +261,67 @@ class BusinessManageService
         }
 
         $data = [];
-        $recordImg = HouseOperationRecord::with('house','house.buildingBlock','house.buildingBlock.building','storefront');
+        $recordImg = HouseOperationRecord::with('house','house.buildingBlock','house.buildingBlock.building','user')
+            ->where(['user_guid' => $request->user_guid, 'remarks' => '修改了图片'])
+            ->whereIn('created_at',$time);
+        $recordImg = $recordImg->paginate($request->per_page??10);
+        foreach ($recordImg as $k => $v) {
+            $data[$k]['guid'] = $v->guid;
+            $data[$k]['house'] = $v->house->buildingBlock->building->name;
+            $data[$k]['house_identifier'] = $v->house->house_identifier;
+            $data[$k]['img'] = $v->img;
+            $data[$k]['number'] = count($v->img);
+            $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
+        }
+        return $recordImg->setCollection(collect($data));
+
     }
 
     // 房号
-    public function recordHouseNumber($request)
+    public function getRecordHouseNumber($request)
     {
+        if ($request->created_at) {
+            $time = $request->created_at;
+        } else {
+            $time = $this->getTime();
+        }
 
+        $data = [];
+        $recordHouseNumber = HouseOperationRecord::with('house','house.buildingBlock','house.buildingBlock.building','user')->where('remarks','查看了房源的门牌号信息')
+            ->where('user_guid',$request->user_guid)
+            ->whereBetween('created_at',$time);
+
+        $recordHouseNumber = $recordHouseNumber->paginate($request->per_page??10);
+        foreach ($recordHouseNumber as $k => $v) {
+            $data[$k]['guid'] = $v->guid;
+            $data[$k]['house'] = $v->house->buildingBlock->building->name;
+            $data[$k]['house_identifier'] = $v->house->house_identifier;
+            $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
+        }
+        return $recordHouseNumber->setCollection(collect($data));
     }
 
     // 业主信息
-    public function recordOwnerInfo($request)
+    public function getRecordOwnerInfo($request)
     {
+        if ($request->created_at) {
+            $time = $request->created_at;
+        } else {
+            $time = $this->getTime();
+        }
 
+        $data = [];
+        $recordOwnerInfo = HouseOperationRecord::with('house','house.buildingBlock','house.buildingBlock.building','user')->where('remarks','查看了房源的业主信息')
+            ->where('user_guid',$request->user_guid)
+            ->whereBetween('created_at',$time);
+
+        $recordOwnerInfo = $recordOwnerInfo->paginate($request->per_page??10);
+        foreach ($recordOwnerInfo as $k => $v) {
+            $data[$k]['guid'] = $v->guid;
+            $data[$k]['house'] = $v->house->buildingBlock->building->name;
+            $data[$k]['owner_info'] = $v->house->owner_info;
+            $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
+        }
+        return $recordOwnerInfo->setCollection(collect($data));
     }
 }

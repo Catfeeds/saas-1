@@ -87,7 +87,18 @@ class BusinessManageController extends APIBaseController
         BusinessManageService $service
     )
     {
-
+        $res = $service->getCustomerVisit($request);
+        return $this->sendResponse($res,'获取成功');
     }
 
+    // 提交钥匙
+    public function getSeeHouseWay
+    (
+        Request $request,
+        BusinessManageService $service
+    )
+    {
+        $res = $service->getSeeHouseWay($request);
+        return $this->sendResponse($res,'获取成功');
+    }
 }

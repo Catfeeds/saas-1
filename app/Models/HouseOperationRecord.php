@@ -24,7 +24,11 @@ class HouseOperationRecord extends BaseModel
         return $this->belongsTo('App\Models\Visit','visit_guid','guid');
     }
 
-
+    // 房源
+    public function house()
+    {
+        return $this->belongsTo('App\Models\House','house_guid','guid');
+    }
     // 图片 img_cn
     public function getImgCnAttribute()
     {

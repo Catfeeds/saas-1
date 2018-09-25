@@ -245,4 +245,7 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 客源带看
     Route::get('get_customer_track','BusinessManageController@getCustomerTrack');
 
+    // 提交钥匙
+    Route::get('SeeHouseWay')
+
 });

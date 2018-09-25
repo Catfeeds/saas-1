@@ -12,11 +12,16 @@ use Laravel\Passport\Token;
 class LoginsController extends APIBaseController
 {
     //微信登录查数据库
-    public function index(Request $request)
+    public function index(
+        Request $request,
+        LoginsService $service
+
+    )
     {
         $user = User::where('openid', $request->openid)->first();
         //请求前端登录接口
         if (!empty($user)) curl(config('setting.login_url').'/?openid='.$request->openid.'&saftySign='.$request->saftySign,'get');
+
     }
 
     //生成唯一安全标识
@@ -43,28 +48,48 @@ class LoginsController extends APIBaseController
         LoginsService $service
     )
     {
-        //查询用户是否存在
-        $user = User::where(['tel' => $request->tel])->first();
-        if (empty($user)) return $this->sendError('用户不存在');
-        //判断用户是否有效
-        if ($user->status !== 1 || $user->start_up == 2) return $this->sendError('无效账户');
-//        //查询用户是否绑定微信
-//        if (empty($user->openid)) {
-//            //如果未绑定,生成用户电话产生的密文
-//            $key = $service->cipher($request->getClientIp(), $request->tel);
-//            //通过密文获取二维码
-//            $res = curl(config('setting.wechat_url').'/qrcode/'.$key,'get');
-//            if (empty($res->data)) return $this->sendError('二维码获取失败');
-//            return $this->sendResponse($res->data, '二维码获取成功');
-//        }
+
         //获取token
         $token = $service->getToken($request->tel, $request->password);
         if (empty($token['success'])) return $this->sendError($token['message']);
-        return $this->sendResponse($token['data'], '获取token成功！');
+
+        //查询用户是否存在
+        $user = User::where(['tel' => $request->tel])->first();
+
+        if (empty($user)) return $this->sendError('用户不存在');
+        //判断用户是否有效
+        if ($user->status !== 1 || $user->start_up == 2) return $this->sendError('无效账户');
+        //查询用户是否绑定微信
+        if (empty($user->openid)) {
+            if (empty($request->openid)) {
+                // node客户端 id
+                $key = $request->saftySign;
+                //通过密文获取二维码
+                $res = curl(config('setting.wechat_url') . '/qrcode/' . $key, 'get');
+                if (empty($res->data)) return $this->sendError('二维码获取失败');
+                return $this->sendResponse($res->data, '二维码获取成功', 215);
+            }
+            // 查询用户是否已经绑定
+            $openid = User::where(['openid' => $request->openid])->first();
+            if (!empty($openid)) return $this->sendError( '改微信号已绑定');
+            // 如果参数中存在 openid  给当前账号 加上openid  改
+            $res =$user->update(['openid' => $request->openid]);
+            if(empty($res)) return  $this->sendError( '绑定失败');
+        }
+
+        return $this->sendResponse($token['data'], '获取token成功！', 200);
     }
 
+    // 获取微信登录 二维码
+    public function  getWechatLoginCode($code, $status)
+    {
+        $res = curl(config('setting.wechat_url') . '/temporary/' . $code . '/' . $status, 'get');
+        return $this->sendResponse($res->data, '微信登录二维码获取成功', 200);
+    }
+
+
     //首次登陆绑定微信后跳转登陆
-    public function bandingWechat
+    public function qrscene_
     (
         Request $request,
         LoginsService $service
@@ -72,8 +97,11 @@ class LoginsController extends APIBaseController
     {
         $tel = $service->getTel($request->saftySign);
         $res = User::where('tel', $tel)->update(['openid' => $request->openid]);
-        if (!empty($res)) {
-            curl(config('setting.login_url').'/?openid='.$request->openid.'&saftySign='.$request->saftySign,'get');
+//        if (!empty($res)) {
+//            curl(config('setting.login_url').'/?openid='.$request->openid.'&saftySign='.$request->saftySign,'get');
+//        }
+        if(empty($res)){
+            return  $this->sendError( '绑定失败');
         }
     }
 
@@ -84,11 +112,35 @@ class LoginsController extends APIBaseController
         LoginsService $service
     )
     {
-       $user = User::where('openid', $request->openid)->first();
-       if (empty($user)) return $this->sendError('用户不存在');
-       $res = $service->wechatLogins($user);
-       if (empty($res['status'])) return $this->sendError($res['message']);
-       return $this->sendResponse($res, 'token获取成功');
+        $data = [
+            'saftySign' => null,
+            'token' => null,
+            'status' => false,
+            'message' => '该微信没有绑定'
+        ];
+        if (empty($request->saftySign)) {
+            curl('http://192.168.0.188:3000/wechat/codeLogin','post', $data);
+            return;
+        }
+        // 取消光柱
+        $str = preg_replace("/qrscene_/","",$request->saftySign);
+        $data['saftySign'] = $str;
+
+        $user = User::where('openid', $request->openid)->first();
+
+        if(empty($user)) {
+            curl('http://192.168.0.188:3000/wechat/codeLogin','post', $data);
+            return;
+        }
+        $res = $service->wechatLogins($user);
+        if (!$res['status']) {
+            $data['message'] = $res['message'];
+            curl('http://192.168.0.188:3000/wechat/codeLogin','post', $data);
+            return;
+        }
+        $data['token'] = $res['token'];
+        $data['status'] = true;
+        curl('http://192.168.0.188:3000/wechat/codeLogin','post', $data);
     }
 
     //退出登录

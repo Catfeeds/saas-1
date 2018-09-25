@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Log;
 class APIBaseController extends Controller
 {
     // 发送成功请求
-    public function sendResponse($result, $message)
+    public function sendResponse($result, $message, $status = 200)
     {
         $response = [
             'success' => true,
             'data' => $result,
             'message' => $message
         ];
-        return response()->json($response, 200);
+        return response()->json($response, $status);
     }
 
     // 发送失败请求

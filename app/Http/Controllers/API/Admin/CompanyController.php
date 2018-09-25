@@ -48,8 +48,8 @@ class CompanyController extends APIBaseController
     )
     {
         $res = $repository->updateCompany($request, $company);
-        if ($res) return $this->sendResponse($res,'修改公司成功');
-        return $this->sendError('修改公司失败');
+        if ($res) return $this->sendResponse($res,'修改账号成功');
+        return $this->sendError('修改账号失败');
     }
 
     // 获取城市区域下拉数据

@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Services\LoginsService;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UsersController extends APIBaseController
 {
@@ -130,14 +131,25 @@ class UsersController extends APIBaseController
     // 微信换绑
     public function updateWechat
     (
-        UsersRequest $request,
-        LoginsService $service
+        UsersRequest $request
     )
     {
-        $tel = $service->getTel($request->saftySign);
-        $res = User::where('tel', $tel)->update(['openid' => $request->openid]);
-        if (!$res) return $this->sendError('换绑失败');
-        return $this->sendResponse($res, '换绑成功');
+        $user = Common::user();
+
+        if(empty($user->guid)){
+            return $this->sendError('请先登录');
+        }
+        $openid = User::where('guid','!=',$user->guid)->where(['openid' => $request->openid])->first();
+
+        if(!empty($openid)) {
+            return $this->sendError( '绑定失败当前微信已绑定其他账号');
+        }
+        $user->update(['openid' => $request->openid]);
+
+        if(empty($user)) {
+            return $this->sendError( '绑定失败');
+        }
+        return $this->sendResponse([], '换绑绑定成功');
     }
 
     // 获取全部岗位

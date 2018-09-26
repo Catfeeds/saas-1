@@ -12,6 +12,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     //手机密码登录
     Route::resource('logins', 'LoginsController');
+    // 获取换绑微信二维码
+    Route::get('getTieUpCode/{code}/{status}/{user}', 'LoginsController@getTieUpCode');
 
     // 获取微信登录二维码
     Route::get('getWechatLoginCode/{code}/{status}', 'LoginsController@getWechatLoginCode');

@@ -24,5 +24,7 @@ return [
     // 房源默认图
     'pc_building_house_default_img' => 'https://upload.chulouwang.com/sass/admin/building_house_default.jpg',
     // 用户默认图
-    'user_default_img' => 'https://upload.chulouwang.com/agent/default-header.png'
+    'user_default_img' => 'https://upload.chulouwang.com/agent/default-header.png',
+    // node监听接口
+    'monitor' => 'http://192.168.0.188:3000'
 ];

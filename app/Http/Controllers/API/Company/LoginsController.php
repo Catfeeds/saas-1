@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\LoginsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Token;
 
 class LoginsController extends APIBaseController
@@ -80,6 +81,13 @@ class LoginsController extends APIBaseController
         return $this->sendResponse($token['data'], '获取token成功！', 200);
     }
 
+    // 获取微信登录绑定 二维码
+    public function  getTieUpCode($code, $status, $user)
+    {
+        $res = curl(config('setting.wechat_url') . '/tieup/' . $code . '/' . $status . '/'. $user, 'get');
+        return $this->sendResponse($res->data, '微信换绑二维码获取成功', 200);
+    }
+
     // 获取微信登录 二维码
     public function  getWechatLoginCode($code, $status)
     {
@@ -119,28 +127,27 @@ class LoginsController extends APIBaseController
             'message' => '该微信没有绑定'
         ];
         if (empty($request->saftySign)) {
-            curl('http://192.168.0.188:3000/wechat/codeLogin','post', $data);
+            curl(config('setting.monitor') . '/wechat/codeLogin','post', $data);
             return;
         }
-        // 取消光柱
+        // 取消多余字段
         $str = preg_replace("/qrscene_/","",$request->saftySign);
         $data['saftySign'] = $str;
 
         $user = User::where('openid', $request->openid)->first();
-
         if(empty($user)) {
-            curl('http://192.168.0.188:3000/wechat/codeLogin','post', $data);
+            curl(config('setting.monitor') . '/wechat/codeLogin','post', $data);
             return;
         }
         $res = $service->wechatLogins($user);
         if (!$res['status']) {
             $data['message'] = $res['message'];
-            curl('http://192.168.0.188:3000/wechat/codeLogin','post', $data);
+            curl(config('setting.monitor') . '/wechat/codeLogin','post', $data);
             return;
         }
         $data['token'] = $res['token'];
         $data['status'] = true;
-        curl('http://192.168.0.188:3000/wechat/codeLogin','post', $data);
+        curl(config('setting.monitor') . '/wechat/codeLogin','post', $data);
     }
 
     //退出登录

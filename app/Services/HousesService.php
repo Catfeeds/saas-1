@@ -12,7 +12,9 @@ use App\Models\House;
 use App\Models\HouseOperationRecord;
 use App\Models\HouseShareRecord;
 use App\Models\SeeHouseWay;
+use App\Models\Track;
 use App\Models\User;
+use App\Models\Visit;
 
 class HousesService
 {
@@ -987,7 +989,24 @@ class HousesService
             // 删除操作记录
             if (!$house->record->isEmpty()) {
                 $suc = HouseOperationRecord::where('house_guid', $house->guid)->delete();
-                if (!$suc) throw new \Exception('房源操作记录添加失败');
+                if (!$suc) throw new \Exception('房源操作记录删除失败');
+            }
+
+            // 删除房源跟进记录
+            if (!$house->track->isEmpty()) {
+                $delTrack = Track::where(['model_type' => 'App\Models\House','rel_guid' => $house->guid])->delete();
+                if(!$delTrack) throw new \Exception('房源跟进删除失败');
+            }
+
+            // 删除房源带看记录
+            if (!$house->visit->isEmpty()) {
+                $delVisit = Visit::where(['model_type' => 'App\Models\House','rel_guid' => $house->guid])->delete();
+                if (!$delVisit) throw new \Exception('房源带看记录删除失败');
+            }
+            // 删除看房方式记录
+            if (!$house->seeHouseWay->isEmpty()) {
+                $delWey = SeeHouseWay::where('house_guid',$house->guid)->delete();
+                if (!$delWey) throw new \Exception('看房方式关联数据删除失败');
             }
             \DB::commit();
             return true;

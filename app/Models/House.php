@@ -107,6 +107,12 @@ class House extends BaseModel
     {
         return $this->belongsTo(Company::class, 'company_guid', 'guid');
     }
+    
+    // 带看
+    public function visit()
+    {
+        return $this->hasMany(Visit::class,'rel_guid','guid')->where('model_type', 'App\Models\House')->orderBy('created_at','desc');
+    }
 
     // 面积   acreage_cn
     public function getAcreageCnAttribute()

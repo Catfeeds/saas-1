@@ -134,7 +134,7 @@ class BusinessManageService
                         ->whereBetween('created_at', $time);
         $track = $track->paginate($request->per_page??10);
         foreach ($track as $k => $v) {
-            $data[$k]['guid'] = $v->guid;
+            $data[$k]['guid'] = $v->house->guid;
             $data[$k]['user'] = $v->user->name;
             $data[$k]['house_name'] = $v->house->buildingBlock->building->name;
             $data[$k]['house_identifier'] = $v->house->house_identifier;
@@ -158,7 +158,7 @@ class BusinessManageService
                         ->whereBetween('created_at', $time);
         $track = $track->paginate($request->per_page??10);
         foreach ($track as $k => $v) {
-            $data[$k]['guid'] = $v->guid;
+            $data[$k]['guid'] = $v->customer->guid;
             $data[$k]['user'] = $v->user->name;
             $data[$k]['customer_name'] = $v->customer->customer_info[0]['name'];
 //            $data[$k]['guid'] = $v->guid;  客源编号
@@ -182,7 +182,7 @@ class BusinessManageService
                     ->whereBetween('created_at', $time);
         $visit = $visit->paginate($request->per_page??10);
         foreach ($visit as $k => $v) {
-            $data[$k]['guid'] = $v->guid;
+            $data[$k]['guid'] = $v->coverHouse->guid;
             $data[$k]['user'] = $v->user->name;
             $data[$k]['house'] = $v->coverHouse->buildingBlock->building->name;
             $data[$k]['house_identifier'] = $v->coverHouse->house_identifier;
@@ -205,11 +205,11 @@ class BusinessManageService
         }
         $data = [];
         $visit = Visit::with('visitCustomer','visitHouse.buildingBlock','visitHouse.buildingBlock.building','accompanyUser')
-            ->where(['visit_user' => $request->user_guid])
+            ->where(['model_type' => 'App\Models\Customer','visit_user' => $request->user_guid])
             ->whereBetween('created_at',$time);
         $visit = $visit->paginate($request->per_page??10);
         foreach ($visit as $k => $v) {
-            $data[$k]['guid'] = $v->guid;
+            $data[$k]['guid'] = $v->visitCustomer->guid;
             $data[$k]['user'] = $v->user->name;
             $data[$k]['house'] = $v->visitHouse->buildingBlock->building->name;
             $data[$k]['house_identifier'] = $v->visitHouse->house_identifier;
@@ -238,7 +238,7 @@ class BusinessManageService
         $seeHouseWay = $seeHouseWay->paginate($request->per_page??10);
 
         foreach ($seeHouseWay as $k => $v) {
-            $data[$k]['guid'] = $v->guid;
+            $data[$k]['guid'] = $v->house->guid;
             $data[$k]['house'] = $v->house->buildingBlock->building->name;
             $data[$k]['house_identifier'] = $v->house->house_identifier;
 //            $data[$k]['customer'] = $v->visitCustomerHouse->name; 客源编号
@@ -266,7 +266,7 @@ class BusinessManageService
             ->whereIn('created_at',$time);
         $recordImg = $recordImg->paginate($request->per_page??10);
         foreach ($recordImg as $k => $v) {
-            $data[$k]['guid'] = $v->guid;
+            $data[$k]['guid'] = $v->house->guid;
             $data[$k]['house'] = $v->house->buildingBlock->building->name;
             $data[$k]['house_identifier'] = $v->house->house_identifier;
             $data[$k]['img'] = $v->img;
@@ -293,7 +293,7 @@ class BusinessManageService
 
         $recordHouseNumber = $recordHouseNumber->paginate($request->per_page??10);
         foreach ($recordHouseNumber as $k => $v) {
-            $data[$k]['guid'] = $v->guid;
+            $data[$k]['guid'] = $v->house->guid;
             $data[$k]['house'] = $v->house->buildingBlock->building->name;
             $data[$k]['house_identifier'] = $v->house->house_identifier;
             $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
@@ -317,7 +317,7 @@ class BusinessManageService
 
         $recordOwnerInfo = $recordOwnerInfo->paginate($request->per_page??10);
         foreach ($recordOwnerInfo as $k => $v) {
-            $data[$k]['guid'] = $v->guid;
+            $data[$k]['guid'] = $v->house->guid;
             $data[$k]['house'] = $v->house->buildingBlock->building->name;
             $data[$k]['owner_info'] = $v->house->owner_info;
             $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');

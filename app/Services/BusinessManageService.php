@@ -204,16 +204,16 @@ class BusinessManageService
             $time = $this->getTime();
         }
         $data = [];
-        $visit = Visit::with('visitCustomer','visitHouse.buildingBlock','visitHouse.buildingBlock.building','accompanyUser')
+        $visit = Visit::with('coverCustomer','visitHouse.buildingBlock','visitHouse.buildingBlock.building','accompanyUser')
             ->where(['model_type' => 'App\Models\Customer','visit_user' => $request->user_guid])
             ->whereBetween('created_at',$time);
         $visit = $visit->paginate($request->per_page??10);
         foreach ($visit as $k => $v) {
-            $data[$k]['guid'] = $v->visitCustomer->guid;
+            $data[$k]['guid'] = $v->coverCustomer->guid;
             $data[$k]['user'] = $v->user->name;
             $data[$k]['house'] = $v->visitHouse->buildingBlock->building->name;
             $data[$k]['house_identifier'] = $v->visitHouse->house_identifier;
-            $data[$k]['customer'] = $v->visitCustomer->customer_info[0]['name'];
+            $data[$k]['customer'] = $v->coverCustomer->customer_info[0]['name'];
 //            $data[$k]['customer'] = $v->visitCustomerHouse->name; 客源编号
             $data[$k]['accompany'] = optional($v->accompanyUser)->name;
             $data[$k]['remarks'] = $v->remarks;
@@ -232,7 +232,7 @@ class BusinessManageService
         }
         $data = [];
         $seeHouseWay = SeeHouseWay::with('house','house.buildingBlock','house.buildingBlock.building','storefront')
-            ->where('user_guid',$request->user_guid)
+            ->where(['user_guid' => $request->user_guid,'type' => 4])
             ->whereBetween('created_at',$time);
 
         $seeHouseWay = $seeHouseWay->paginate($request->per_page??10);
@@ -244,7 +244,7 @@ class BusinessManageService
 //            $data[$k]['customer'] = $v->visitCustomerHouse->name; 客源编号
             $data[$k]['remarks'] = $v->remarks;
             $data[$k]['storefront'] = $v->storefront->name;
-            $data[$k]['received_time'] = $v->received_time->format('Y-m-d H:i:s');
+            $data[$k]['received_time'] = $v->received_time;
             $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
 
         }
@@ -262,8 +262,8 @@ class BusinessManageService
 
         $data = [];
         $recordImg = HouseOperationRecord::with('house','house.buildingBlock','house.buildingBlock.building','user')
-            ->where(['user_guid' => $request->user_guid, 'remarks' => '修改了图片'])
-            ->whereIn('created_at',$time);
+            ->where(['user_guid' => $request->user_guid, 'type' => 3])
+            ->whereBetween('created_at',$time);
         $recordImg = $recordImg->paginate($request->per_page??10);
         foreach ($recordImg as $k => $v) {
             $data[$k]['guid'] = $v->house->guid;
@@ -288,7 +288,7 @@ class BusinessManageService
 
         $data = [];
         $recordHouseNumber = HouseOperationRecord::with('house','house.buildingBlock','house.buildingBlock.building','user')->where('remarks','查看了房源的门牌号信息')
-            ->where('user_guid',$request->user_guid)
+            ->where(['user_guid' => $request->user_guid,'type' => 4])
             ->whereBetween('created_at',$time);
 
         $recordHouseNumber = $recordHouseNumber->paginate($request->per_page??10);
@@ -312,7 +312,7 @@ class BusinessManageService
 
         $data = [];
         $recordOwnerInfo = HouseOperationRecord::with('house','house.buildingBlock','house.buildingBlock.building','user')->where('remarks','查看了房源的业主信息')
-            ->where('user_guid',$request->user_guid)
+            ->where(['user_guid' => $request->user_guid,'type' => 4])
             ->whereBetween('created_at',$time);
 
         $recordOwnerInfo = $recordOwnerInfo->paginate($request->per_page??10);

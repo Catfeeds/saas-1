@@ -296,6 +296,7 @@ class BusinessManageService
             $data[$k]['guid'] = $v->house->guid;
             $data[$k]['house'] = $v->house->buildingBlock->building->name;
             $data[$k]['house_identifier'] = $v->house->house_identifier;
+            $data[$k]['img'] = $v->house->indoor_img_url;
             $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
         }
         return $recordHouseNumber->setCollection(collect($data));
@@ -320,6 +321,8 @@ class BusinessManageService
             $data[$k]['guid'] = $v->house->guid;
             $data[$k]['house'] = $v->house->buildingBlock->building->name;
             $data[$k]['owner_info'] = $v->house->owner_info;
+            $data[$k]['house_identifier'] = $v->house->house_identifier;
+            $data[$k]['img'] = $v->house->indoor_img_url;
             $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');
         }
         return $recordOwnerInfo->setCollection(collect($data));

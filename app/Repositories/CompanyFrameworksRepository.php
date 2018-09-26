@@ -186,11 +186,19 @@ class CompanyFrameworksRepository extends Model
                     ];
                     $group_data[] = $item;
                 }
-                $store_data[] = [
-                    'value' => $store->guid,
-                    'label' => $store->name,
-                    'children' => $group_data
-                ];
+
+                if (empty($group_data)) {
+                    $store_data[] = [
+                        'value' => $store->guid,
+                        'label' => $store->name,
+                    ];
+                } else {
+                    $store_data[] = [
+                        'value' => $store->guid,
+                        'label' => $store->name,
+                        'children' => $group_data
+                    ];
+                }
             }
             $data = [
                 'value' => $area->guid,

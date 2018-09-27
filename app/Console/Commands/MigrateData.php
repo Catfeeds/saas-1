@@ -53,26 +53,10 @@ class MigrateData extends Command
         $guardian = MediaUser::where('ascription_store',6)->pluck('id')->toArray();
         $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building','user')->whereNotIn('guardian', $guardian)->get();
         foreach ($house as $v) {
-            // 房源对应的楼盘名称
-            $building_name = $v->buildingBlock->building->name;
-            // 查询对应的楼盘的guid
-            $building_guid = Building::where('name', $building_name)->value('guid');
-            // 房源对应栋座名称
-            $building_block_name = $v->buildingBlock->name;
-            // 房源对应楼座单位
-            $name_unit = $v->buildingBlock->name_unit;
-            // 房源对应单位名称
-            $unit = $v->buildingBlock->unit;
-            // 房源对应单位单元
-            $unit_unit = $v->buildingBlock->unit_unit;
-            // 通过楼盘和栋座信息确定楼栋guid
-            $building_block_guid = BuildingBlock::where([
-                'building_guid' => $building_guid,
-                'name' => $building_block_name,
-                'name_unit' => $name_unit,
-                'unit' => $unit,
-                'unit_unit' => $unit_unit
-            ])->value('guid');
+
+            // 楼座guid
+            $building_block_guid = BuildingBlock::where('id', $v->building_block_id)->value('guid');
+
             // 查询新表的人员对应的guid
             $user = User::where('tel', $v->user->tel)->value('guid');
             $pic_person = '';

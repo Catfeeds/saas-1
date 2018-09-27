@@ -26,5 +26,5 @@ return [
     // 用户默认图
     'user_default_img' => 'https://upload.chulouwang.com/agent/default-header.png',
     // node监听接口
-    'monitor' => 'http://192.168.0.188:3000'
+    'monitor' => env('SOCKET_URL')
 ];

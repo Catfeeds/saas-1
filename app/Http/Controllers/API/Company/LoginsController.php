@@ -48,7 +48,6 @@ class LoginsController extends APIBaseController
         LoginsService $service
     )
     {
-
         //获取token
         $token = $service->getToken($request->tel, $request->password);
         if (empty($token['success'])) return $this->sendError($token['message']);

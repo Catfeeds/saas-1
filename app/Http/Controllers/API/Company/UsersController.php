@@ -30,7 +30,6 @@ class UsersController extends APIBaseController
     //员工修改之前原始数据
     public function edit(User $user)
     {
-        $user->detailInfo;
         $data = [];
         if ($user->companyFramework) {
             switch ($user->companyFramework->level) {
@@ -51,6 +50,7 @@ class UsersController extends APIBaseController
             }
         }
         $user->conpamyFramework = $data;
+        $user->sex = optional($user->detailInfo)->sex;
         return $this->sendResponse($user, '员工修改之前原始数据');
     }
 

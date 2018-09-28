@@ -8,6 +8,8 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\QuartersService;
 use Illuminate\Http\Request;
+use App\Models\City;
+use App\Models\Area;
 
 class CompanyFrameworkSeeder extends Seeder
 {
@@ -21,12 +23,18 @@ class CompanyFrameworkSeeder extends Seeder
         $quartersService = new QuartersService();
         $request = new Request();
 
+        // 城市
+        $city_guid = City::where('name', '武汉')->value('guid');
+
+        // 区域
+        $area_guid = Area::where('name', '江夏区')->value('guid');
+
         // 添加公司
         $company = Company::create([
             'guid' => Common::getUuid(),
             'name' => '楚楼网',
-            'city_guid' => '134dba069ad211e8b2e4144fd7c018f6',
-            'area_guid' => '13cc70129ad211e8b005144fd7c018f6',
+            'city_guid' => $city_guid,
+            'area_guid' => $area_guid,
             'address' => '金融港光谷智慧园',
             'company_tel' => '400-580-888',
             'contacts' => '黄智鑫',

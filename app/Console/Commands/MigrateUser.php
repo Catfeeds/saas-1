@@ -55,12 +55,27 @@ class MigrateUser extends Command
                 }
                 // 员工角色
                 $role = Role::where('company_guid', $company_guid);
-                if ($v->level == 1) {
-                    $role_guid = $role->where('name', '!=', '管理员')->where('level', 1)->value('guid');
-                } elseif ($v->level == 6) {
-                    $role_guid = $role->where('level', 5)->value('guid');
-                } else {
-                    $role_guid = $role->where('level', $v->level)->value('guid');
+                switch ($v->level) {
+                    case 1:
+                        $role_guid = $role->where('name', '!=', '管理员')->where('level', 1)->value('guid');
+                        break;
+                    case 2:
+                        $role_guid = $role->where('level', 2)->value('guid');
+                        break;
+                    case 3:
+                        $role_guid = $role->where('level', 3)->value('guid');
+                        break;
+                    case 4:
+                        $role_guid = $role->where('level', 5)->value('guid');
+                        break;
+                    case 5:
+                        $role_guid = $role->where('level', 4)->value('guid');
+                        break;
+                    case 6:
+                        $role_guid = $role->where('level', 5)->value('guid');
+                        break;
+                        default;
+                        break;
                 }
                 // 插入新数据
                 $user = User::create([

@@ -668,7 +668,6 @@ class HousesService
         // 判断是否允许编辑
         foreach ($res as $v) {
             if (empty($request->type) || $request->type == 2) {
-                dd($v->visit->visitCustomerHouse);
                 $v->accompanyUser = empty($v->visit)?'':$v->visit->accompanyUser->name;
                 $v->visitCustomer = empty($v->visit)?'':$v->visit->visitCustomerHouse->customer_info[0]['name'];
             }
@@ -689,7 +688,8 @@ class HousesService
     // 修改房源图片
     public function updateImg(
         $request,
-        $picPerson
+        $picPerson,
+        $old_img
     )
     {
         \DB::beginTransaction();
@@ -711,7 +711,7 @@ class HousesService
             if (empty($house)) throw new \Exception('房源编辑图片失败');
 
             $img = array_merge($request->house_type_img, $request->indoor_img, $request->outdoor_img);
-            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'修改了图片', $img);
+            $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'修改了图片', $img,null,null, $old_img);
             if (empty($houseOperationRecords)) throw new \Exception('编辑图片添加操作记录失败');
 
             \DB::commit();

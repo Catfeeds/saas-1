@@ -21,7 +21,9 @@ class CreateHouseOperationRecordsTable extends Migration
             $table->tinyInteger('type')->nullable()->comment('操作类型 1: 跟进 2: 带看 3: 图片 4: 查看 5: 价格 6: 其他');
             $table->char('user_guid',32)->nullable()->comment('操作人');
             $table->string('remarks',128)->nullable()->comment('操作');
+            $table->json('old_img')->nullable()->comment('原始图片');
             $table->json('img')->nullable()->comment('编辑的图片');
+            $table->integer('img_number')->nullable()->comment('上传图片数量');
             $table->timestamps();
         });
         \DB::statement("alter table `house_operation_records` comment'房源操作记录'");

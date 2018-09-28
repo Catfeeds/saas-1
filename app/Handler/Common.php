@@ -102,7 +102,8 @@ class Common
         $remarks,
         $img=null,
         $track_guid = null,
-        $visit_guid = null
+        $visit_guid = null,
+        $old_img=null
     )
     {
         $houseOperationRecord = HouseOperationRecord::create([
@@ -112,9 +113,9 @@ class Common
             'track_guid' => $track_guid,
             'type' => $type,
             'remarks' => $remarks,
+            'old_img' => $old_img,
             'img' => $img,
             'visit_guid' => $visit_guid
-
         ]);
         if (empty($houseOperationRecord)) return false;
         return true;

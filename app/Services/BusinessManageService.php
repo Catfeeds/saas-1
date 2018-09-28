@@ -269,6 +269,7 @@ class BusinessManageService
             $data[$k]['guid'] = $v->house->guid;
             $data[$k]['house'] = $v->house->buildingBlock->building->name;
             $data[$k]['house_identifier'] = $v->house->house_identifier;
+            $data[$k]['old_img_cn'] = $v->old_img_cn;
             $data[$k]['img_cn'] = $v->img_cn;
             $data[$k]['number'] = count($v->img);
             $data[$k]['created_at'] = $v->created_at->format('Y-m-d H:i:s');

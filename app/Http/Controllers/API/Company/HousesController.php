@@ -192,7 +192,7 @@ class HousesController extends APIBaseController
             $permission['upload_pic'] = false; // 是否允许上传图片
         }
 
-        $res = $service->updateImg($request, $house->pic_person);
+        $res = $service->updateImg($request, $house->pic_person, array_merge($house->house_type_img??array(), $house->indoor_img??array(), $house->outdoor_img??array()));
         if (!$res) return $this->sendError('修改房源图片失败');
         return $this->sendResponse($res,'修改房源图片成功');
     }

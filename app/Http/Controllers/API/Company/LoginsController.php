@@ -146,6 +146,7 @@ class LoginsController extends APIBaseController
         }
         $data['token'] = $res['token'];
         $data['status'] = true;
+        $data['message'] = '微信登录成功';
         curl(config('setting.monitor') . '/wechat/codeLogin','post', $data);
     }
 

@@ -71,7 +71,7 @@ class LoginsController extends APIBaseController
             }
             // 查询用户是否已经绑定
             $openid = User::where(['openid' => $request->openid])->first();
-            if (!empty($openid)) return $this->sendError( '改微信号已绑定');
+            if (!empty($openid)) return $this->sendError( '该微信号已绑定');
             // 如果参数中存在 openid  给当前账号 加上openid  改
             $res =$user->update(['openid' => $request->openid]);
             if(empty($res)) return  $this->sendError( '绑定失败');

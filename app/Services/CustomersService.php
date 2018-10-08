@@ -128,8 +128,14 @@ class CustomersService
     // 添加客源
     public function addCustomer($request)
     {
+        // 获取最后一条数据
+        $lastCustomer = Customer::orderBy('created_at', 'asc')->get()->last();
+        // 房源编号
+        $customerIdentifier = Common::identifier($lastCustomer);
+
         return Customer::create([
             'guid' => Common::getUuid(),
+            'customer_identifier' => $customerIdentifier,
             'company_guid' => Common::user()->company_guid,
             'level' => $request->level,
             'guest' => $request->guest,

@@ -23,7 +23,8 @@ class UserService
                 'password' => bcrypt($request->tel),    // 账号密码默认一样
                 'role_guid' => $request->role_guid,
                 'rel_guid' => $request->rel_guid,
-                'company_guid' => Common::user()->company_guid
+                'company_guid' => Common::user()->company_guid,
+                'work_order' => $request->work_order
             ]);
             if (empty($user)) throw new \Exception('用户添加失败');
 
@@ -55,6 +56,7 @@ class UserService
             $user->name = $request->name;
             $user->role_guid = $request->role_guid;
             $user->rel_guid = $request->rel_guid;
+            $user->work_order = $request->work_order;
             if (!$user->save()) throw new \Exception('用户修改失败');
 
             $user_info = UserInfo::where('user_guid',$user->guid)->first();

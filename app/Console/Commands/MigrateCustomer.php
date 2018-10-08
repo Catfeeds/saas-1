@@ -55,6 +55,7 @@ class MigrateCustomer extends Command
             $res = Customer::create([
                 'guid' => Common::getUuid(),
                 'company_guid' => $company_guid,
+                // 客源编号
                 'level' => $v->class,
                 'guest' => 2,
                 'customer_info' => [["name" => $v->name, "tel" => $v->tel]],

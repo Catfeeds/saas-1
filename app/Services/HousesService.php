@@ -7,6 +7,7 @@ use App\Handler\Common;
 use App\Models\Area;
 use App\Models\Building;
 use App\Models\BuildingBlock;
+use App\Models\ClwHouse;
 use App\Models\Company;
 use App\Models\House;
 use App\Models\HouseOperationRecord;
@@ -1016,5 +1017,60 @@ class HousesService
             return false;
         }
     }
-    
+
+    // 上线房源
+    public function onlineHouse($request)
+    {
+        $user = Common::user();
+        \DB::beginTransaction();
+        try {
+            $res = House::with('buildingBlock.building')->where(['guid' => $request->guid,'status' => 1])->first();
+            $res->online = 2;
+            if (!$res->save()) throw new \Exception('房源上线失败');
+            $clwHouseGuid = ClwHouse::all()->pluck('guid')->toArray();
+            if (!in_array($request->guid,$clwHouseGuid)) {
+                $House = ClwHouse::create([
+                    'guid' => $res->guid,
+                    'house_identifier' => $res->house_identifier,
+                    'building_block_guid' => $res->building_block_guid,
+                    'building_guid' => $res->building_block_guid->building_guid,
+                    'house_number' => $res->house_number,
+                    'owner_info' => $res->owner_info,
+                    'constru_acreage' => $res->acreage,
+                    'split' => $res->split,
+                    'min_acreage' => $res->mini_acreage,
+                    'floor' => $res->floor,
+                    'station_number' => $res->station_number,
+                    'office_building_type' => $res->type,
+                    'register_company' => $res->register_company,
+                    'open_bill' => $res->open_bill,
+                    'renovation' => $res->renovation,
+                    'orientation' => $res->orientation,
+                    'support_facilities' => $res->support_facilities,
+                    'house_description' => $res->remarks,
+                    'rent_price' => $res->price,
+                    'rent_price_unit' => '元/㎡·月',
+                    'payment_type' => $res->payment_type,
+                    'shortest_lease' => $res->shortest_lease,
+                    'rent_free' => $res->rent_free,
+                    'increasing_situation_remark' => $res->increasing_situation_remark,
+                    'cost_detail' => $res->cost_detail,
+                    'house_busine_state' => $res->actuality,
+                    'guardian' => $res->guardian_person,
+                    'house_type_img' => $res->house_type_img,
+                    'indoor_img' => $res->indoor_img,
+                    'start_track_time' => $res->track_time,
+                ]);
+                if (!$res) throw new \Exception('同步数据失败');
+                \DB::commit();
+                return true;
+            } else {
+                return '房源已上线';
+            }
+
+        } catch (\Exception $exception) {
+                \DB::rollback();
+                return false;
+        }
+    }
 }

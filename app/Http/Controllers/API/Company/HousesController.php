@@ -399,4 +399,14 @@ class HousesController extends APIBaseController
         return $this->sendResponse($res, '房源下架成功');
     }
 
+    // 房源上线
+    public function online
+    (
+        HousesRequest $request,
+        HousesService $service
+    )
+    {
+        // 判断权限
+//        $house = Access::adoptGuardianPersonGetHouse()
+    }
 }

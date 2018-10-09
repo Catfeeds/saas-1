@@ -28,10 +28,9 @@ class ClwHouse extends Model
 
     protected $casts = [
         'indoor_img' => 'array',
-        'constru_acreage' => 'integer',
-        'min_acreage' => 'integer',
-        'unit_price' => 'integer',
-        'total_price' => 'integer',
-        'support_facilities' => 'array'
+        'support_facilities' => 'array',
+        'owner_info' => 'array',
+        'cost_detail' => 'array',
+        'house_type_img' => 'array'
     ];
 }

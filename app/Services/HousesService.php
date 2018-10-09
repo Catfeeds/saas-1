@@ -1022,20 +1022,15 @@ class HousesService
     {
         \DB::beginTransaction();
         try {
-            $res = House::with('buildingBlock.building')->where(['guid' => $request->guid,'status' =>
-                    1])->first();
-
-            dd($res);
+            $res = House::with('buildingBlock.building')
+                        ->where(['guid' => $request->guid,'status' => 1])
+                        ->first();
             $res->online = 2;
-            dd($res->online);
             if (!$res->save()) throw new \Exception('房源上线失败');
-//            $clwHouseGuid = ClwHouse::all()->pluck('guid')->toArray();
-//            if (!in_array($request->guid,$clwHouseGuid)) {
                 $house = ClwHouse::create([
-                    'guid' => $res->guid,
                     'house_identifier' => $res->house_identifier,
                     'building_block_guid' => $res->building_block_guid,
-//                    'building_guid' => $res->building_block_guid->building_guid,
+                    'building_guid' => $res->buildingBlock->building_guid,
                     'house_number' => $res->house_number,
                     'owner_info' => $res->owner_info,
                     'constru_acreage' => $res->acreage,
@@ -1051,22 +1046,20 @@ class HousesService
                     'support_facilities' => $res->support_facilities,
                     'house_description' => $res->remarks,
                     'rent_price' => $res->price,
-                    'rent_price_unit' => '元/㎡·月',
+                    'rent_price_unit' => 2,
                     'payment_type' => $res->payment_type,
                     'shortest_lease' => $res->shortest_lease,
                     'rent_free' => $res->rent_free,
                     'increasing_situation_remark' => $res->increasing_situation_remark,
                     'cost_detail' => $res->cost_detail,
                     'house_busine_state' => $res->actuality,
-                    'guardian' => $res->guardian_person,
                     'house_type_img' => $res->house_type_img,
                     'indoor_img' => $res->indoor_img,
-                    'start_track_time' => $res->track_time,
+                    'start_track_time' => strtotime($res->track_time),
                 ]);
                 if (!$house) throw new \Exception('同步数据失败');
                 \DB::commit();
                 return true;
-
         } catch (\Exception $exception) {
             \DB::rollback();
             \Log::error('房源上线失败'.$exception->getMessage());

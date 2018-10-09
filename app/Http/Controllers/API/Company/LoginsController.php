@@ -19,7 +19,7 @@ class LoginsController extends APIBaseController
 
     )
     {
-        $user = User::where('openid', $request->openid)->first();
+        $user = User::where(['openid' => $request->openid, 'start_up' => 1, 'status' => 1])->first();
         //请求前端登录接口
         if (!empty($user)) curl(config('setting.login_url').'/?openid='.$request->openid.'&saftySign='.$request->saftySign,'get');
 
@@ -53,8 +53,8 @@ class LoginsController extends APIBaseController
         $token = $service->getToken($request->tel, $request->password);
         if (empty($token['success'])) return $this->sendError($token['message']);
 
-        //查询用户是否存在
-        $user = User::where(['tel' => $request->tel])->first();
+        //查询用户是否存在 且是否有效
+        $user = User::where(['tel' => $request->tel, 'start_up' => 1, 'status' => 1])->first();
 
         if (empty($user)) return $this->sendError('用户不存在');
         //判断用户是否有效
@@ -133,7 +133,8 @@ class LoginsController extends APIBaseController
         $str = preg_replace("/qrscene_/","",$request->saftySign);
         $data['saftySign'] = $str;
 
-        $user = User::where('openid', $request->openid)->first();
+
+        $user = User::where(['openid' => $request->openid, 'start_up' => 1, 'status' => 1])->first();
         if(empty($user)) {
             curl(config('setting.monitor') . '/wechat/codeLogin','post', $data);
             return;

@@ -50,18 +50,19 @@ class MigrateData extends Command
         $company_guid = Company::where('name', '楚楼网')->value('guid');
         $data = [];
         //查询公司的全部房子
-        $guardian = MediaUser::where('ascription_store',6)->pluck('id')->toArray();
-        $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building','user')->whereIn('guardian', $guardian)->get();
+        $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building','user', 'img')->get();
         foreach ($house as $v) {
+            // 如果有图片人
+            if (!$v->img->isEmpty()) {
+                $pic_person = User::where('tel', $v->img->first()->user->tel)->value('guid');
+            } else {
+                $pic_person = '';
+            }
             // 楼座guid
             $building_block_guid = BuildingBlock::where('id', $v->building_block_id)->value('guid');
 
             // 查询新表的人员对应的guid
             $user = User::where('tel', $v->user->tel)->value('guid');
-            $pic_person = '';
-            if ($v->house_type_img || $v->indoor_img) {
-                $pic_person = $user;
-            }
             // 插入新房源表
             //备注
             $remarks = '';

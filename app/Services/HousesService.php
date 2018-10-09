@@ -1028,6 +1028,7 @@ class HousesService
             $res->online = 2;
             if (!$res->save()) throw new \Exception('房源上线失败');
                 $house = ClwHouse::create([
+                    'guid' => $res->guid,
                     'house_identifier' => $res->house_identifier,
                     'building_block_guid' => $res->building_block_guid,
                     'building_guid' => $res->buildingBlock->building_guid,
@@ -1060,6 +1061,7 @@ class HousesService
                 if (!$house) throw new \Exception('同步数据失败');
                 \DB::commit();
                 return true;
+
         } catch (\Exception $exception) {
             \DB::rollback();
             \Log::error('房源上线失败'.$exception->getMessage());

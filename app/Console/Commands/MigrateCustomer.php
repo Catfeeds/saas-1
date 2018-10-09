@@ -52,8 +52,15 @@ class MigrateCustomer extends Command
         foreach ($customer as $v) {
             $user_guid = $user = User::where('tel', $v->user->tel)->value('guid');
             $area = Area::where('id', $v->area_id)->value('name');
+
+            // 获取最后一条数据
+            $lastCustomer = Customer::orderBy('created_at', 'asc')->get()->last();
+            // 房源编号
+            $customerIdentifier = Common::identifier($lastCustomer);
+
             $res = Customer::create([
                 'guid' => Common::getUuid(),
+                'customer_identifier' => $customerIdentifier,
                 'company_guid' => $company_guid,
                 // 客源编号
                 'level' => $v->class,

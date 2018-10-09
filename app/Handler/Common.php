@@ -155,4 +155,41 @@ class Common
         $title['house_guid'] = $guid;
         return $title;
     }
+
+    // 房源,客源编号
+    public static function identifier(
+        $lastData
+    )
+    {
+        if (empty($lastData->house_identifier) && empty($lastData->customer_identifier)) {
+            return $identifier = 'WH-'.date('ymd',time()).'0001';
+        } else {
+            $lastIdentifier = $lastData->house_identifier??$lastData->customer_identifier;
+        }
+
+        if (empty($lastIdentifier)) {
+            return $identifier = 'WH-'.date('ymd',time()).'0001';
+        } elseif ($lastIdentifier) {
+            // 截取日期
+            $date = substr($lastIdentifier,3,6);
+            // 截取编号
+            $upIdentifier = substr($lastIdentifier,9,4);
+
+            if (date('Y-m-d',strtotime('20'.$date) + (3600 * 24)) == date('Y-m-d',time())) {
+                return $identifier = 'WH-'.date('ymd',time()).'0001';
+            } else {
+                $temp = $upIdentifier+1;
+
+                if (strlen($temp) == 1) {
+                    $temp = '000'.$temp;
+                } elseif (strlen($temp) == 2) {
+                    $temp = '00'.$temp;
+                } elseif (strlen($temp) == 3) {
+                    $temp = '0'.$temp;
+                }
+
+                return $identifier = 'WH-'.date('ymd',time()).$temp;
+            }
+        }
+    }
 }

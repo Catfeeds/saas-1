@@ -700,7 +700,6 @@ class HousesService
                 'indoor_img' => empty($request->indoor_img)?null:json_encode($request->indoor_img),
                 'outdoor_img' => empty($request->outdoor_img)?null:json_encode($request->outdoor_img),
             ];
-
             // 如果图片跟图片人都为空则为图片人
             if ((!empty($request->house_type_img) || !empty($request->indoor_img) || !empty($request->outdoor_img)) && empty($picPerson)) {
                 $data['pic_person'] = Common::user()->guid;
@@ -714,11 +713,11 @@ class HousesService
             $img = array_merge($request->house_type_img, $request->indoor_img, $request->outdoor_img);
             $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid, $request->guid, 3,'修改了图片', $img,null,null, $old_img);
             if (empty($houseOperationRecords)) throw new \Exception('编辑图片添加操作记录失败');
-
             \DB::commit();
             return true;
         } catch (\Exception $exception) {
             \DB::rollback();
+            \Log::error('图片上传失败'.$exception->getMessage());
             return false;
         }
     }

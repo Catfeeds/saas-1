@@ -200,9 +200,14 @@ return [
             'operation_number' => null,
             'follow_up' => null,
         ],
-
         [
-            'name_en' => 'house_share',// 房源-房源共享
+            'name_en' => 'house_share',// 房源-上线房源
+            'action_scope' => 1,
+            'operation_number' => null,
+            'follow_up' => null,
+        ],
+        [
+            'name_en' => 'house_online',// 房源-房源共享
             'action_scope' => 1,
             'operation_number' => null,
             'follow_up' => null,
@@ -540,14 +545,18 @@ return [
             'operation_number' => null,
             'follow_up' => null,
         ],
-
         [
             'name_en' => 'house_share',// 房源-房源共享
             'action_scope' => 2,
             'operation_number' => null,
             'follow_up' => null,
         ],
-
+        [
+            'name_en' => 'house_online',// 房源-房源共享
+            'action_scope' => 2,
+            'operation_number' => null,
+            'follow_up' => null,
+        ],
         [
             'name_en' => 'customer',// 客源
             'action_scope' => null,
@@ -883,14 +892,18 @@ return [
             'operation_number' => null,
             'follow_up' => null,
         ],
-
         [
             'name_en' => 'house_share',// 房源-共享房源
             'action_scope' => 3,
             'operation_number' => null,
             'follow_up' => null,
         ],
-
+        [
+            'name_en' => 'house_online',// 房源-房源共享
+            'action_scope' => 3,
+            'operation_number' => null,
+            'follow_up' => null,
+        ],
         [
             'name_en' => 'customer',// 客源
             'action_scope' => null,
@@ -1226,7 +1239,6 @@ return [
             'operation_number' => null,
             'follow_up' => null,
         ],
-
         [
             'name_en' => 'house_share',// 房源-共享房源
             'action_scope' => 6,
@@ -1234,7 +1246,13 @@ return [
             'follow_up' => null,
             'status' => 2
         ],
-
+        [
+            'name_en' => 'house_online',// 房源-房源共享
+            'action_scope' => 6,
+            'operation_number' => null,
+            'follow_up' => null,
+            'status' => 2
+        ],
         [
             'name_en' => 'customer',// 客源
             'action_scope' => null,
@@ -1570,7 +1588,6 @@ return [
             'operation_number' => null,
             'follow_up' => null,
         ],
-
         [
             'name_en' => 'house_share',// 房源-共享房源
             'action_scope' => 6,
@@ -1578,7 +1595,13 @@ return [
             'follow_up' => null,
             'status' => 2
         ],
-
+        [
+            'name_en' => 'house_online',// 房源-房源共享
+            'action_scope' => 6,
+            'operation_number' => null,
+            'follow_up' => null,
+            'status' => 2
+        ],
         [
             'name_en' => 'customer',// 客源
             'action_scope' => null,

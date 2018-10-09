@@ -12,7 +12,6 @@ class HousesRepository extends Model
     public function houseList($request, $service, $guardianPerson)
     {
         $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->where('company_guid', Common::user()->company_guid)->orderBy('top','asc')->orderBy($request->sortKey,$request->sortValue);
-
         // 范围
         if ($request->range) {
             if ($request->range == 4) {

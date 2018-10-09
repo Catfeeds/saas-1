@@ -51,7 +51,7 @@ class MigrateData extends Command
         $data = [];
         //查询公司的全部房子
         $guardian = MediaUser::where('ascription_store',6)->pluck('id')->toArray();
-        $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building','user')->whereNotIn('guardian', $guardian)->get();
+        $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building','user')->whereIn('guardian', $guardian)->get();
         foreach ($house as $v) {
             // 楼座guid
             $building_block_guid = BuildingBlock::where('id', $v->building_block_id)->value('guid');

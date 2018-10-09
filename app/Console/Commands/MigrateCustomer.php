@@ -46,7 +46,7 @@ class MigrateCustomer extends Command
     {
         $company_guid = Company::where('name', '楚楼网')->value('guid');
         // 只转移公司客源
-        $guardian = MediaUser::where('ascription_store', '!=',6)->pluck('id')->toArray();
+        $guardian = MediaUser::where('ascription_store',6)->pluck('id')->toArray();
         $customer = MediaCustomer::whereIn('guardian', $guardian)->whereNull('deleted_at')->get();
         $data = [];
         foreach ($customer as $v) {
@@ -62,7 +62,6 @@ class MigrateCustomer extends Command
                 'guid' => Common::getUuid(),
                 'customer_identifier' => $customerIdentifier,
                 'company_guid' => $company_guid,
-                // 客源编号
                 'level' => $v->class,
                 'guest' => 2,
                 'customer_info' => [["name" => $v->name, "tel" => $v->tel]],

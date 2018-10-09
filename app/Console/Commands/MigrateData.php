@@ -53,7 +53,6 @@ class MigrateData extends Command
         $guardian = MediaUser::where('ascription_store',6)->pluck('id')->toArray();
         $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building','user')->whereNotIn('guardian', $guardian)->get();
         foreach ($house as $v) {
-
             // 楼座guid
             $building_block_guid = BuildingBlock::where('id', $v->building_block_id)->value('guid');
 
@@ -114,10 +113,16 @@ class MigrateData extends Command
             if ($v->rent_free && $v->rent_free != 12) {
                 $rent_free = $v->rent_free * 30;
             }
+
+            // 获取最后一条数据
+            $lastHouse = House::orderBy('created_at', 'asc')->get()->last();
+            // 房源编号
+            $houseIdentifier = Common::identifier($lastHouse);
+
             $res = House::create([
                 'guid' => Common::getUuid(),
                 'company_guid' => $company_guid,
-                'house_identifier' => 'WH-'.time().rand(1,1000),
+                'house_identifier' => $houseIdentifier,
                 'house_type' => 1,
                 'owner_info' => $v->owner_info,
                 'building_block_guid' => $building_block_guid,

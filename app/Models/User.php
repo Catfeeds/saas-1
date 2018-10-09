@@ -21,6 +21,10 @@ class User extends Authenticatable
 
     protected $guarded = [];
 
+    protected $casts = [
+        'work_order' => 'array',
+    ];
+
     protected $appends = [
         'pic_cn'
     ];

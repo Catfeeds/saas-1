@@ -37,11 +37,16 @@ class HousesRepository extends Model
     // 添加房源
     public function addHouse($request)
     {
+        // 获取最后一条数据
+        $lastHouse = House::orderBy('created_at', 'asc')->get()->last();
+        // 房源编号
+        $houseIdentifier = Common::identifier($lastHouse);
+
         return House::create([
             'guid' => Common::getUuid(),
             'house_type' => 1,
             'company_guid' => Common::user()->company_guid,
-            'house_identifier' => 'WH-'.time().rand(1,1000),
+            'house_identifier' => $houseIdentifier,
             'owner_info' => $request->owner_info,//业主电话
             'floor' => $request->floor,//所在楼层
             'house_number' => $request->house_number,//房号

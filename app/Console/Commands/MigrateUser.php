@@ -44,15 +44,11 @@ class MigrateUser extends Command
     public function handle()
     {
         $company_guid = Company::where('name', '楚楼网')->value('guid');
+
+        $guid = CompanyFramework::where('name', '光谷总部时代')->value('guid');
             // 迁移人员
-            $user = MediaUser::with('storefront')->where('ascription_store', '!=', 6)->get();
+            $user = MediaUser::with('storefront')->where('ascription_store',  6)->get();
             foreach ($user as $v) {
-                // 查询对应门店的guid
-                if ($v->storefront) {
-                    $guid = CompanyFramework::where('name', $v->storefront->storefront_name)->value('guid');
-                } else {
-                    $guid = null;
-                }
                 // 员工角色
                 $role = Role::where('company_guid', $company_guid);
                 switch ($v->level) {

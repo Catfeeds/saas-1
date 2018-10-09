@@ -133,7 +133,6 @@ class Access{
         // 所属
         $companyFramework = Common::user()->companyFramework;
         $data = [];
-
         $count = true ; // 定义递归循环结束条件
         if ($companyFramework->level > $range) {
             // 逆向查询

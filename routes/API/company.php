@@ -162,6 +162,8 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 下架共享房源
     Route::post('un_share', 'HousesController@unShare');
 
+    // 房源上线
+    Route::post('online_house','HousesController@online');
     /*
     |--------------------------------------------------------------------------
     | 共享房源

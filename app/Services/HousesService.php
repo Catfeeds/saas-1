@@ -1020,19 +1020,22 @@ class HousesService
     // 上线房源
     public function onlineHouse($request)
     {
-        $user = Common::user();
         \DB::beginTransaction();
         try {
-            $res = House::with('buildingBlock.building')->where(['guid' => $request->guid,'status' => 1])->first();
+            $res = House::with('buildingBlock.building')->where(['guid' => $request->guid,'status' =>
+                    1])->first();
+
+            dd($res);
             $res->online = 2;
+            dd($res->online);
             if (!$res->save()) throw new \Exception('房源上线失败');
-            $clwHouseGuid = ClwHouse::all()->pluck('guid')->toArray();
-            if (!in_array($request->guid,$clwHouseGuid)) {
-                $House = ClwHouse::create([
+//            $clwHouseGuid = ClwHouse::all()->pluck('guid')->toArray();
+//            if (!in_array($request->guid,$clwHouseGuid)) {
+                $house = ClwHouse::create([
                     'guid' => $res->guid,
                     'house_identifier' => $res->house_identifier,
                     'building_block_guid' => $res->building_block_guid,
-                    'building_guid' => $res->building_block_guid->building_guid,
+//                    'building_guid' => $res->building_block_guid->building_guid,
                     'house_number' => $res->house_number,
                     'owner_info' => $res->owner_info,
                     'constru_acreage' => $res->acreage,
@@ -1060,16 +1063,14 @@ class HousesService
                     'indoor_img' => $res->indoor_img,
                     'start_track_time' => $res->track_time,
                 ]);
-                if (!$res) throw new \Exception('同步数据失败');
+                if (!$house) throw new \Exception('同步数据失败');
                 \DB::commit();
                 return true;
-            } else {
-                return '房源已上线';
-            }
 
         } catch (\Exception $exception) {
-                \DB::rollback();
-                return false;
+            \DB::rollback();
+            \Log::error('房源上线失败'.$exception->getMessage());
+            return false;
         }
     }
 }

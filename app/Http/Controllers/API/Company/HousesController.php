@@ -405,7 +405,8 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-        // 判断权限
-//        $house = Access::adoptGuardianPersonGetHouse()
+        $res = $service->onlineHouse($request);
+        if (!$res) return $this->sendError('房源上线失败');
+        return $this->sendResponse($res,'房源上线成功');
     }
 }

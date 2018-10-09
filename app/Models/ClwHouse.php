@@ -25,4 +25,13 @@ class ClwHouse extends Model
     protected $keyType = 'string';
 
     protected $guarded = [];
+
+    protected $casts = [
+        'indoor_img' => 'array',
+        'constru_acreage' => 'integer',
+        'min_acreage' => 'integer',
+        'unit_price' => 'integer',
+        'total_price' => 'integer',
+        'support_facilities' => 'array'
+    ];
 }

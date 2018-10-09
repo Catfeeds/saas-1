@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Company;
 
 use App\Models\BuildingBlock;
+use App\Models\ClwHouse;
 use App\Models\CompanyFramework;
 use App\Models\House;
 use App\Models\User;
@@ -32,6 +33,10 @@ class HousesRequest extends FormRequest
             case 'transferHouse' :
                 return [
                     'user_guid.in' => '用户必须存在',
+                ];
+            case 'online':
+                return [
+                   'guid.not_in' => '房源已上线',
                 ];
             default;
                 return [
@@ -250,6 +255,16 @@ class HousesRequest extends FormRequest
                             House::all()->pluck('guid')->toArray()
                         )
                     ],
+                ];
+            case 'online':
+                return [
+                    'guid' => [
+                        'required',
+                        'max:32',
+                        Rule::notIn(
+                            ClwHouse::all()->pluck('guid')->toArray()
+                        )
+                    ]
                 ];
             default:
                 {

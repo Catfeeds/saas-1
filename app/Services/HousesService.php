@@ -1080,4 +1080,34 @@ class HousesService
             return false;
         }
     }
+
+    // 房源下线
+    public function offlineHouse($request)
+    {
+        $user = Common::user();
+        \DB::beginTransaction();
+        try {
+            $res = House::where('guid',$request->guid)->update(['online' => 1]);
+            if (!$res) throw new \Exception('房源下线失败');
+
+            $remarks = $user->name . '-' . optional($user->role)->name . '下线';
+
+            $record = HouseOnlineRecord::create([
+                'guid' => Common::getUuid(),
+                'house_guid' => $request->guid,
+                'remarks' => $remarks,
+            ]);
+            if (!$record) throw new \Exception('房源下线记录操作失败');
+
+            $clwHouse = ClwHouse::where('guid',$request->guid)->delete();
+            if (!$clwHouse) throw new \Exception('同步房源数据删除失败');
+
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            \Log::error('房源下线失败'.$exception->getMessage());
+            return false;
+        }
+    }
 }

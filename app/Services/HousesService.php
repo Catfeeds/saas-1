@@ -10,6 +10,7 @@ use App\Models\BuildingBlock;
 use App\Models\ClwHouse;
 use App\Models\Company;
 use App\Models\House;
+use App\Models\HouseOnlineRecord;
 use App\Models\HouseOperationRecord;
 use App\Models\HouseShareRecord;
 use App\Models\SeeHouseWay;
@@ -1020,6 +1021,7 @@ class HousesService
     // 上线房源
     public function onlineHouse($request)
     {
+        $user = Common::user();
         \DB::beginTransaction();
         try {
             $res = House::with('buildingBlock.building')
@@ -1027,6 +1029,16 @@ class HousesService
                         ->first();
             $res->online = 2;
             if (!$res->save()) throw new \Exception('房源上线失败');
+
+            $remarks = $user->name . '-' . optional($user->role)->name . '上线';
+
+            $record = HouseOnlineRecord::create([
+                'guid' => Common::getUuid(),
+                'house_guid' => $request->guid,
+                'remarks' => $remarks,
+            ]);
+            if (!$record) throw new \Exception('房源上线记录操作失败');
+
                 $house = ClwHouse::create([
                     'guid' => $res->guid,
                     'house_identifier' => $res->house_identifier,

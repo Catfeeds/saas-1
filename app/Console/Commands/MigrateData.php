@@ -7,6 +7,7 @@ use App\Models\Building;
 use App\Models\BuildingBlock;
 use App\Models\Company;
 use App\Models\House;
+use App\Models\HouseImgRecord;
 use App\Models\MediaBuilding;
 use App\Models\MediaBuildingBlock;
 use App\Models\MediaUser;
@@ -21,14 +22,14 @@ class MigrateData extends Command
      *
      * @var string
      */
-    protected $signature = 'migrateHouse';
+    protected $signature = 'updateHouse';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = '迁移房源数据';
+    protected $description = '更改房源图片维护人';
 
     /**
      * Create a new command instance.
@@ -47,117 +48,25 @@ class MigrateData extends Command
      */
     public function handle()
     {
-        $company_guid = Company::where('name', '楚楼网')->value('guid');
+        // 查询全部的房子
+        $house = House::all();
         $data = [];
-        //查询公司的全部房子
-        $house = OfficeBuildingHouse::with('buildingBlock','buildingBlock.building','user', 'img')->get();
         foreach ($house as $v) {
-            // 如果有图片人
-            if (!$v->img->isEmpty()) {
-                $pic_person = User::where('tel', $v->img->first()->user->tel)->value('guid');
-            } else {
-                $pic_person = '';
-            }
-            // 楼座guid
-            $building_block_guid = BuildingBlock::where('id', $v->building_block_id)->value('guid');
+            // 匹配图片记录
+            if ($v->indoor_img) {
+                $indoor_img = json_encode($v->indoor_img);
+                $img = HouseImgRecord::whereRaw("JSON_CONTAINS(indoor_img,'".$indoor_img."')")->first();
+                if ($img) {
+                   // 查询图片人
+                    $guid = User::where('tel', $img->user->tel)->value('guid');
+                    // 修改房源图片人
+                    $v->pic_person = $guid;
+                    if (!$v->save()) {
+                        $data[] = $v->guid;
+                    }
+                }
 
-            // 查询新表的人员对应的guid
-            $user = User::where('tel', $v->user->tel)->value('guid');
-            // 插入新房源表
-            //备注
-            $remarks = '';
-            //6室1厅付佣:50%,看房时间电话预约状态:委托
-
-            // 几室几厅
-            if ($v->HouseType) {
-                $remarks .= $v->HouseType;
             }
-            // 房源描述
-            if ($v->house_description) {
-                $remarks .= ',房源描述:'.$v->house_description;
-            }
-            // 入住时间
-            if ($v->check_in_time) {
-                $remarks .=',入住时间:'. $v->check_in_time;
-            }
-            // 付佣
-            if ($v->pay_commission) {
-                $remarks .=',付佣:'.$v->pay_commission.'%';
-            }
-            // 实勘
-            if ($v->prospecting == 1) {
-                $remarks .= ',已实勘';
-            }
-            // 看房时间
-            if ($v->see_house_time) {
-                $remarks .=',看房时间:'.$v->see_house_time_cn;
-            }
-            // 房源状态
-            if ($v->house_proxy_type == 1) {
-                $remarks .=',状态:独家';
-            } else {
-                $remarks .=',状态:委托';
-            }
-            $remarks = trim($remarks, ',');
-            // 递增情况
-            $increasing = '';
-            if ($v->increasing_situation) {
-                $increasing .= $v->increasing_situation. '%';
-            }
-            if ($v->increasing_situation_remark) {
-                $increasing .=','.$v->increasing_situation_remark;
-            }
-            $increasing = trim($increasing, ',');
-
-            // 免租期
-            $rent_free = null;
-            if ($v->rent_free && $v->rent_free != 12) {
-                $rent_free = $v->rent_free * 30;
-            }
-
-            // 获取最后一条数据
-            $lastHouse = House::orderBy('created_at', 'asc')->get()->last();
-            // 房源编号
-            $houseIdentifier = Common::identifier($lastHouse);
-
-            $res = House::create([
-                'guid' => Common::getUuid(),
-                'company_guid' => $company_guid,
-                'house_identifier' => $houseIdentifier,
-                'house_type' => 1,
-                'owner_info' => $v->owner_info,
-                'building_block_guid' => $building_block_guid,
-                'floor' => $v->floor,
-                'house_number' => $v->house_number,
-                'grade' => 1,
-                'public_private' => 1,
-                'price' => $v->unit_price,
-                'payment_type' => $v->payment_type,
-                'increasing_situation_remark' => $increasing,
-                'cost_detail' => $v->cost_detail,
-                'acreage' => $v->constru_acreage,
-                'mini_acreage' => $v->min_acreage,
-                'split' => $v->split,
-                'register_company' => $v->register_company,
-                'type' => $v->office_building_type,
-                'orientation' => $v->orientation,
-                'renovation' => $v->renovation,
-                'open_bill' => $v->open_bill,
-                'station_number' => $v->station_number,
-                'rent_free' => $rent_free,
-                'support_facilities' => $v->support_facilities,
-                'shortest_lease' => $v->shortest_lease,
-                'house_type_img' => $v->house_type_img,
-                'indoor_img' => $v->indoor_img,
-                'entry_person' => $user,
-                'guardian_person' => $user,
-                'pic_person' => $pic_person,
-                'status' => $v->house_busine_state == 1 ? 1: 7,
-                'top' => 2, // 默认不置顶
-                'track_time' => $v->start_track_time? date('Y-m-d H:i:s', $v->start_track_time) : $v->created_at,
-                'remarks' => $remarks
-            ]);
-            if (!$res) $data[] = $v->id;
         }
         return $data;
     }

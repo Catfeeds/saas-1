@@ -405,7 +405,6 @@ class HousesController extends APIBaseController
         HousesService $service
     )
     {
-        dd(123);
         // 判断权限
         $house = Access::adoptGuardianPersonGetHouse('house_online');
         if (!in_array($request->guid,$house)) return $this->sendError('无权限上线该房源');

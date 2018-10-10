@@ -119,6 +119,12 @@ class House extends BaseModel
         return $this->hasMany(Visit::class,'rel_guid','guid')->where('model_type', 'App\Models\House')->orderBy('created_at','desc');
     }
 
+    // 关联图片记录
+    public function img()
+    {
+        return $this->hasMany(HouseImgRecord::class, 'indoor_img', 'indoor_img');
+    }
+
     // 面积   acreage_cn
     public function getAcreageCnAttribute()
     {

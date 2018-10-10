@@ -2,16 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Handler\Common;
-use App\Models\Building;
-use App\Models\BuildingBlock;
-use App\Models\Company;
 use App\Models\House;
 use App\Models\HouseImgRecord;
-use App\Models\MediaBuilding;
-use App\Models\MediaBuildingBlock;
-use App\Models\MediaUser;
-use App\Models\OfficeBuildingHouse;
 use App\Models\User;
 use Illuminate\Console\Command;
 

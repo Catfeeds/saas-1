@@ -158,14 +158,12 @@ class QuartersService
                     'follow_up' => $v['follow_up'],
                     'status' => 1
                 ]);
-                dump($roleHasPermission);
                 if (empty($roleHasPermission)) return false;
             } else {
                 $res->action_scope = $v['action_scope'];
                 $res->operation_number = $v['operation_number'];
                 $res->follow_up = $v['follow_up'];
                 $res->status = 1;
-                dump($res->save());
                 if (empty($res->save())) return false;
             }
         }

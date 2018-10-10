@@ -101,7 +101,12 @@ class House extends BaseModel
     {
         return $this->hasMany(HouseShareRecord::class, 'house_guid', 'guid')->orderBy('created_at', 'desc');
     }
-
+    
+    // 关联上线记录
+    public function onlineRecord()
+    {
+        return $this->hasMany(HouseOnlineRecord::class,'house_guid','guid')->orderBy('created_at','desc');
+    }
     // 房子关联公司
     public function company()
     {

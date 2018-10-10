@@ -170,6 +170,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
 
     // 上线房源列表
     Route::get('online_house_list','HousesController@onlineHouseList');
+
+    // 上线房源详情
+    Route::get('online_show','HousesController@onlineShow');
     /*
     |--------------------------------------------------------------------------
     | 共享房源

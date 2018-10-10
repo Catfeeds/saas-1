@@ -89,7 +89,11 @@ class OfficeBuildingHouse extends Model
         return $this->belongsTo(MediaUser::class,'guardian', 'id');
     }
 
-
+    // 关联房源图片
+    public function img()
+    {
+        return $this->hasMany(HouseImgRecord::class, 'house_id', 'id')->where('status', 3)->orderBy('created_at', 'desc');
+    }
 
     /**
      * 说明: 楼座

@@ -43,7 +43,6 @@ class UsersController extends APIBaseController
                     $data[] = $user->rel_guid;
                     break;
                 case 3:
-                    dd($user->companyFramework->upper->upper);
                     if ($user->companyFramework->upper->upper) {
                         $data[] = $user->companyFramework->upper->upper->guid;
                     }

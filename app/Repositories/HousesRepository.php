@@ -216,30 +216,4 @@ class HousesRepository extends Model
             return false;
         }
     }
-
-    //上线房源列表
-    public function onlineHouseList($request, $service, $guardianPerson)
-    {
-        $house = House::with('track', 'entryPerson', 'track.user','buildingBlock', 'buildingBlock.building')->where(['company_guid' => Common::user()->company_guid,'online' => 2])->orderBy('top','asc')->orderBy($request->sortKey,$request->sortValue);
-        // 范围
-        if ($request->range) {
-            if ($request->range == 4) {
-                $guardian_person[] = Common::user()->guid;
-            } elseif ($request->range == 1 || $request->range == 2 || $request->range == 3) {
-                $guardian_person = Access::getCompanyRange($request->range);
-            } elseif ($request->range == 5) {
-                $guardian_person = Access::getUser(1);
-            }
-            $house = $house->whereIn('guardian_person', $guardian_person);
-        } else {
-            $house = $house->whereIn('guardian_person', $guardianPerson);
-        }
-
-        $data = $service->getHouse($house, $request);
-        $houses = [];
-        foreach ($data as $key => $v) {
-            $houses[$key] = $service->getData($v);
-        }
-        return $data->setCollection(collect($houses));
-    }
 }

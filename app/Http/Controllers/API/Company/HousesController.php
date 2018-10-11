@@ -413,19 +413,43 @@ class HousesController extends APIBaseController
         return $this->sendResponse($res,'房源上线成功');
     }
     
+    // 房源下线
+    public function offline
+    (
+        HousesRequest $request,
+        HousesService $service
+    )
+    {
+        // 判断权限
+        $house = Access::adoptGuardianPersonGetHouse('house_online');
+        if (!in_array($request->guid,$house)) return $this->sendError('无权限下线该房源');
+        $res = $service->offlineHouse($request);
+        if (!$res) return $this->sendError('房源下线失败');
+        return $this->sendResponse($res,'房源下线成功');
+    }
+    
     // 上线房源列表
     public function onlineHouseList
     (
         Request $request,
-        HousesRepository $repository,
         HousesService $service
     )
     {
         // 通过权限获取区间用户
         $guardian_person = Access::adoptPermissionGetUser('house_list');
         if (empty($guardian_person)) return $this->sendError('暂无权限');
-        $res = $repository->onlineHouseList($request, $service, $guardian_person);
+        $res = $service->getOnlineList($request);
         return $this->sendResponse($res,'房源列表获取成功');
     }
 
+    // 上线房源详情
+    public function onlineShow
+    (
+        HousesRequest $request,
+        HousesService $service
+    )
+    {
+        $res = $service->getOnlineInfo($request->guid);
+        return $this->sendResponse($res,'上线房源详情获取成功');
+    }
 }

@@ -16,6 +16,9 @@ class UserService
     {
         \DB::beginTransaction();
         try {
+            if (empty($request->work_order)) {
+                $request->work_order = null;
+            }
             $user = User::create([
                 'guid' => Common::getUuid(),
                 'tel' => $request->tel,
@@ -52,6 +55,9 @@ class UserService
     {
         \DB::beginTransaction();
         try {
+            if (empty($request->work_order)) {
+                $request->work_order = null;
+            }
             $user->tel = $request->tel;
             $user->name = $request->name;
             $user->role_guid = $request->role_guid;

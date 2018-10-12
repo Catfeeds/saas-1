@@ -170,6 +170,7 @@ class UsersController extends APIBaseController
         $res = $user->toArray();
         $res['company_name'] = $user->company->name; // 公司名
         $res['company_guid'] = $user->company->guid; // 公司guid
+        $res['contacts_tel'] = $user->company->contacts_tel; // 联系电话
         $res['role_name'] = $user->role->name;  // 角色名称
         $res['role_level'] = $user->role->level; // 角色等级
         $res['storefront'] = empty($user->companyFramework)?$user->company->name:$user->companyFramework->name;

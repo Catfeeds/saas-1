@@ -38,7 +38,32 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
+        // 判断云房源唯一性
+        if ($request->share == 1) {
+            $house = House::where([
+                'floor' => $request->floor,
+                'house_number' => $request->house_number,
+                'building_block_guid' => $request->building_block_guid,
+            ])->first();
+            if ($house) {
+                return $this->sendError('该房源已共享');
+            }
+        }
+
+        // 判断是否上线
+        if ($request->online == 2) {
+            $house = House::where([
+                'floor' => $request->floor,
+                'house_number' => $request->house_number,
+                'building_block_guid' => $request->building_block_guid,
+            ])->first();
+            if ($house) {
+                return $this->sendError('该房源已上线');
+            }
+        }
+
         $res = $repository->addHouse($request);
+        if (empty($res)) return $this->sendError('房源添加失败');
         return $this->sendResponse($res,'添加房源成功');
     }
 

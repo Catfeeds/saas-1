@@ -546,10 +546,26 @@ class HousesService
                 $res = HouseShareRecord::create([
                     'guid' => Common::getUuid(),
                     'house_guid' => $house->guid,
-                    'remarks' => $status. ' 自动下架'
+                    'remarks' => Common::user()->name.'将该房源改为:'.$status. ' 自动下架'
                 ]);
                 if (!$res) throw new \Exception('房源状态修改失败');
             }
+
+            // 下线房源
+            if ($house->online == 2) {
+                $house->online = 1;
+                // 添加下线记录
+                $res = HouseShareRecord::create([
+                    'guid' => Common::getUuid(),
+                    'house_guid' => $house->guid,
+                    'remarks' => Common::user()->name.'将该房源改为:'.$status. ' 自动下线'
+                ]);
+                if (!$res) throw new \Exception('房源下线失败');
+
+                $clwHouse = ClwHouse::where('guid', $request->guid)->delete();
+                if (!$clwHouse) throw new \Exception('同步房源数据删除失败');
+            }
+
             if (empty($house->save())) throw new \Exception('修改房源状态失败');
             $houseOperationRecords = Common::houseOperationRecords(Common::user()->guid,$request->guid,6, $remarks);
             if (empty($houseOperationRecords)) throw new \Exception('房源其他操作记录添加失败');
@@ -765,6 +781,14 @@ class HousesService
         $user = Common::user();
         \DB::beginTransaction();
         try {
+            // 判断房源是否已被共享
+            $house = House::where([
+                'floor' => $request->floor,
+                'house_number' => $request->house_number,
+                'building_block_guid' => $request->building_block_guid,
+                'share' => 1
+            ])->first();
+            if ($house) throw new \Exception('该房源已被共享');
 
             if ($request->type) {
                 $release_source = '平台';
@@ -774,25 +798,28 @@ class HousesService
                 $remarks = $user->name. '-'. optional($user->role)->name.' 发布共享';
             }
 
-          $res = House::where(['guid' => $request->guid, 'status' => 1])->update([
-              'release_source' => $release_source,
-              'share' => 1,
-              'share_time' => date('Y-m-d H:i:s', time())
-          ]);
-          if (!$res) throw new \Exception('房源共享失败');
-          $record = HouseShareRecord::create([
-              'guid' => Common::getUuid(),
-              'house_guid' => $request->guid,
-              'remarks' => $remarks
-          ]);
-          if (!$record) throw new \Exception('房源共享记录添加失败');
+            $res = House::where([
+                'guid' => $request->guid,
+                'status' => 1
+            ])->update([
+                'release_source' => $release_source,
+                'share' => 1,
+                'share_time' => date('Y-m-d H:i:s', time())
+            ]);
+            if (!$res) throw new \Exception('房源共享失败');
+            $record = HouseShareRecord::create([
+                'guid' => Common::getUuid(),
+                'house_guid' => $request->guid,
+                'remarks' => $remarks
+            ]);
+            if (!$record) throw new \Exception('房源共享记录添加失败');
 
-          \DB::commit();
-          return true;
+            \DB::commit();
+            return true;
         } catch (\Exception $exception) {
-          \DB::rollback();
-          \Log::error('房源共享失败'.$exception->getMessage());
-          return false;
+            \DB::rollback();
+            \Log::error('房源共享失败'.$exception->getMessage());
+            return false;
         }
     }
 
@@ -1024,9 +1051,23 @@ class HousesService
         $user = Common::user();
         \DB::beginTransaction();
         try {
-            $res = House::with('buildingBlock.building')
-                        ->where(['guid' => $request->guid,'status' => 1])
-                        ->first();
+            // 判断房源是否正确
+            $res = House::where([
+                        'guid' => $request->guid,
+                        'status' => 1
+                    ])->with('buildingBlock.building')
+                    ->first();
+            if (empty($res)) throw new \Exception('房源异常');
+
+            // 判断房源是否上线过
+            $temp = House::where([
+                'floor' => $res->floor,
+                'house_number' => $res->house_number,
+                'building_block_guid' => $res->building_block_guid,
+                'online' => 2
+            ])->first();
+            if ($temp) throw new \Exception('该房源已上线');
+
             $res->online = 2;
             if (!$res->save()) throw new \Exception('房源上线失败');
 
@@ -1039,41 +1080,40 @@ class HousesService
             ]);
             if (!$record) throw new \Exception('房源上线记录操作失败');
 
-                $house = ClwHouse::create([
-                    'guid' => $res->guid,
-                    'house_identifier' => $res->house_identifier,
-                    'building_block_guid' => $res->building_block_guid,
-                    'building_guid' => $res->buildingBlock->building_guid,
-                    'house_number' => $res->house_number,
-                    'owner_info' => $res->owner_info,
-                    'constru_acreage' => $res->acreage,
-                    'split' => $res->split,
-                    'min_acreage' => $res->mini_acreage,
-                    'floor' => $res->floor,
-                    'station_number' => $res->station_number,
-                    'office_building_type' => $res->type,
-                    'register_company' => $res->register_company,
-                    'open_bill' => $res->open_bill,
-                    'renovation' => $res->renovation,
-                    'orientation' => $res->orientation,
-                    'support_facilities' => $res->support_facilities,
-                    'house_description' => $res->remarks,
-                    'rent_price' => $res->price,
-                    'rent_price_unit' => 2,
-                    'payment_type' => $res->payment_type,
-                    'shortest_lease' => $res->shortest_lease,
-                    'rent_free' => $res->rent_free,
-                    'increasing_situation_remark' => $res->increasing_situation_remark,
-                    'cost_detail' => $res->cost_detail,
-                    'house_busine_state' => $res->actuality,
-                    'house_type_img' => $res->house_type_img,
-                    'indoor_img' => $res->indoor_img,
-                    'start_track_time' => strtotime($res->track_time),
-                ]);
-                if (!$house) throw new \Exception('同步数据失败');
-                \DB::commit();
-                return true;
-
+            $house = ClwHouse::create([
+                'guid' => $res->guid,
+                'house_identifier' => $res->house_identifier,
+                'building_block_guid' => $res->building_block_guid,
+                'building_guid' => $res->buildingBlock->building_guid,
+                'house_number' => $res->house_number,
+                'owner_info' => $res->owner_info,
+                'constru_acreage' => $res->acreage,
+                'split' => $res->split,
+                'min_acreage' => $res->mini_acreage,
+                'floor' => $res->floor,
+                'station_number' => $res->station_number,
+                'office_building_type' => $res->type,
+                'register_company' => $res->register_company,
+                'open_bill' => $res->open_bill,
+                'renovation' => $res->renovation,
+                'orientation' => $res->orientation,
+                'support_facilities' => $res->support_facilities,
+                'house_description' => $res->remarks,
+                'rent_price' => $res->price,
+                'rent_price_unit' => 2,
+                'payment_type' => $res->payment_type,
+                'shortest_lease' => $res->shortest_lease,
+                'rent_free' => $res->rent_free,
+                'increasing_situation_remark' => $res->increasing_situation_remark,
+                'cost_detail' => $res->cost_detail,
+                'house_busine_state' => $res->actuality,
+                'house_type_img' => $res->house_type_img,
+                'indoor_img' => $res->indoor_img,
+                'start_track_time' => strtotime($res->track_time),
+            ]);
+            if (!$house) throw new \Exception('同步数据失败');
+            \DB::commit();
+            return true;
         } catch (\Exception $exception) {
             \DB::rollback();
             \Log::error('房源上线失败'.$exception->getMessage());

@@ -1045,6 +1045,7 @@ class HousesService
                     'building_block_guid' => $res->building_block_guid,
                     'building_guid' => $res->buildingBlock->building_guid,
                     'house_number' => $res->house_number,
+                    'title' => $this->getTitle($res),
                     'owner_info' => $res->owner_info,
                     'constru_acreage' => $res->acreage,
                     'split' => $res->split,
@@ -1058,13 +1059,13 @@ class HousesService
                     'orientation' => $res->orientation,
                     'support_facilities' => $res->support_facilities,
                     'house_description' => $res->remarks,
-                    'rent_price' => $res->price,
-                    'rent_price_unit' => 2,
+                    'unit_price' => $res->price,
+                    'total_price' => $res->price * $res->acreage,
                     'payment_type' => $res->payment_type,
                     'shortest_lease' => $res->shortest_lease,
                     'rent_free' => $res->rent_free,
                     'increasing_situation_remark' => $res->increasing_situation_remark,
-                    'cost_detail' => $res->cost_detail,
+                    'cost_detail' => $res->cost_detail??array(),
                     'house_busine_state' => $res->actuality,
                     'house_type_img' => $res->house_type_img,
                     'indoor_img' => $res->indoor_img,
@@ -1200,5 +1201,58 @@ class HousesService
             $houses[$key]['online_time'] = optional($online)->created_at->format('Y-m-d H:i:s');
         }
         return $res->setCollection(collect($houses));
+    }
+
+    public function getTitle(
+        $res
+    )
+    {
+        $string = '';
+        $temp = BuildingBlock::with(['building.area'])->find($res->building_block_guid);
+
+        $string .= $temp->Building->area->name;
+        $string .= '['.$temp->Building->name.']';
+
+        if (!empty($res->type)) {
+            if ($res->type == 1) {
+                $string .= '纯写字楼';
+            } elseif ($res->type == 2) {
+                $string .= '商住楼';
+            } elseif ($res->type == 3) {
+                $string .= '商业综合体楼';
+            } elseif ($res->type == 4) {
+                $string .= '酒店写字楼';
+            } elseif ($res->type == 5) {
+                $string .= '其他';
+            }
+        }
+
+        if (!empty($res->renovation)) {
+            if ($res->renovation == 1) {
+                $string .= '-豪华装修';
+            } elseif ($res->renovation == 2) {
+                $string .= '-精装修';
+            } elseif ($res->renovation == 3) {
+                $string .= '-中装修';
+            } elseif ($res->renovation == 4) {
+                $string .= '-间装修';
+            } elseif ($res->renovation == 5) {
+                $string .= '-毛坯';
+            }
+        }
+
+        if (!empty($res->register_company)) {
+            if ($res->register_company == 1) {
+                $string .= '-可注册';
+            } elseif ($res->register_company == 2) {
+                $string .= '-不可注册';
+            }
+        }
+
+        if (!empty($res->acreage)) {
+            $string .= '-'.$res->acreage.'㎡';
+        }
+
+        return $string;
     }
 }

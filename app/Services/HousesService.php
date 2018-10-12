@@ -448,6 +448,7 @@ class HousesService
         $data['status'] = $house->status;
         $data['status_cn'] = $house->status_cn;
         $data['share'] = $house->share; // 是否共享
+        $data['online'] = $house->online; // 是否已上线
 
         return $data;
     }
@@ -1111,6 +1112,7 @@ class HousesService
                 'house_type_img' => $res->house_type_img,
                 'indoor_img' => $res->indoor_img,
                 'start_track_time' => strtotime($res->track_time),
+                'shelf' => 1
             ]);
             if (!$house) throw new \Exception('同步数据失败');
             \DB::commit();

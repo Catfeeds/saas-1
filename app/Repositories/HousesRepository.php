@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Handler\Access;
 use App\Handler\Common;
+use App\Models\ClwHouse;
 use App\Models\House;
 use App\Services\HousesService;
 use Illuminate\Database\Eloquent\Model;
@@ -115,55 +116,98 @@ class HousesRepository extends Model
     public function updateHouse(
         $house,
         $request,
-        $permission
+        $permission,
+        $service
     )
     {
-        // 有修改业主信息权限
-        if ($permission['edit_owner_info']) {
-            $house->owner_info = $request->owner_info;//业主信息
-        }
-        // 有修改门牌号权限
-        if ($permission['update_house_number']) {
-            $house->floor = $request->floor;//楼层
-            $house->house_number = $request->house_number;//房号
-            $house->building_block_guid = $request->building_block_guid;//楼座
-        }
-        // 有修改房源等级权限
-        if ($permission['update_house_grade']) {
-            $house->grade = $request->grade;//房源等级
-        }
-        // 有修改房源价格权限
-        if ($permission['update_house_price']) {
-            $house->price = $request->price;//租金
-        }
-        // 有修改其他信息权限
-        if ($permission['update_house_other']) {
-            $house->house_type = 1;
-            $house->public_private = $request->public_private;
-            $house->payment_type = $request->payment_type;
-            $house->increasing_situation_remark = $request->increasing_situation_remark;
-            $house->cost_detail = $request->cost_detail;
-            $house->acreage = $request->acreage;
-            $house->split = $request->split;
-            $house->mini_acreage = $request->mini_acreage;
-            $house->floor_height = $request->floor_height;
-            $house->register_company = $request->register_company;
-            $house->type = $request->type;
-            $house->orientation = $request->orientation;
-            $house->renovation = $request->renovation;
-            $house->open_bill = $request->open_bill;
-            $house->station_number = $request->station_number;
-            $house->rent_free = $request->rent_free;
-            $house->support_facilities = $request->support_facilities;
-            $house->source = $request->source;
-            $house->actuality = $request->actuality;
-            $house->shortest_lease = $request->shortest_lease;
-            $house->remarks = $request->remarks;
-        }
-        $house->guardian_person = Common::user()->guid;
+        \DB::beginTransaction();
+        try {
+            // 有修改业主信息权限
+            if ($permission['edit_owner_info']) {
+                $house->owner_info = $request->owner_info;//业主信息
+            }
+            // 有修改门牌号权限
+            if ($permission['update_house_number']) {
+                $house->floor = $request->floor;//楼层
+                $house->house_number = $request->house_number;//房号
+                $house->building_block_guid = $request->building_block_guid;//楼座
+            }
+            // 有修改房源等级权限
+            if ($permission['update_house_grade']) {
+                $house->grade = $request->grade;//房源等级
+            }
+            // 有修改房源价格权限
+            if ($permission['update_house_price']) {
+                $house->price = $request->price;//租金
+            }
+            // 有修改其他信息权限
+            if ($permission['update_house_other']) {
+                $house->house_type = 1;
+                $house->public_private = $request->public_private;
+                $house->payment_type = $request->payment_type;
+                $house->increasing_situation_remark = $request->increasing_situation_remark;
+                $house->cost_detail = $request->cost_detail;
+                $house->acreage = $request->acreage;
+                $house->split = $request->split;
+                $house->mini_acreage = $request->mini_acreage;
+                $house->floor_height = $request->floor_height;
+                $house->register_company = $request->register_company;
+                $house->type = $request->type;
+                $house->orientation = $request->orientation;
+                $house->renovation = $request->renovation;
+                $house->open_bill = $request->open_bill;
+                $house->station_number = $request->station_number;
+                $house->rent_free = $request->rent_free;
+                $house->support_facilities = $request->support_facilities;
+                $house->source = $request->source;
+                $house->actuality = $request->actuality;
+                $house->shortest_lease = $request->shortest_lease;
+                $house->remarks = $request->remarks;
+            }
+            $house->guardian_person = Common::user()->guid;
+            if (!$house->save()) throw new \Exception('房源修改失败');
 
-        if (!$house->save()) return false;
-        return true;
+            if ($house->online == 2) {
+                $clwHouse = ClwHouse::where('guid',$house->guid)->first();
+//                $clwHouse->house_identifier = $request->house_identifier;
+                $clwHouse->building_block_guid = $request->building_block_guid;
+//                $clwHouse->building_guid = $request->buildingBlock->building_guid;
+                $clwHouse->house_number = $request->house_number;
+                $clwHouse->title = $service->getTitle($request);
+                $clwHouse->owner_info = $request->owner_info;
+                $clwHouse->constru_acreage = $request->acreage;
+                $clwHouse->split = $request->split;
+                $clwHouse->min_acreage = $request->mini_acreage;
+                $clwHouse->floor = $request->floor;
+                $clwHouse->station_number = $request->station_number;
+                $clwHouse->office_building_type = $request->type;
+                $clwHouse->register_company = $request->register_company;
+                $clwHouse->open_bill = $request->open_bill;
+                $clwHouse->renovation = $request->renovation;
+                $clwHouse->orientation = $request->orientation;
+                $clwHouse->support_facilities = $request->support_facilities;
+                $clwHouse->house_description = $request->remarks;
+                $clwHouse->unit_price = $request->price;
+                $clwHouse->total_price = $request->price * $request->acreage;
+                $clwHouse->payment_type = $request->payment_type;
+                $clwHouse->shortest_lease = $request->shortest_lease;
+                $clwHouse->rent_free = $request->rent_free;
+                $clwHouse->increasing_situation_remark = $request->increasing_situation_remark;
+                $clwHouse->cost_detail = $request->cost_detail??array();
+                $clwHouse->house_busine_state = $request->actuality;
+
+                if (!$clwHouse->save()) throw new \Exception('上线房源同步数据修改失败');
+            }
+
+            \DB::commit();
+            return true;
+
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            \Log::error('修改房源失败'.$exception->getMessage());
+            return false;
+        }
+
     }
 
     // 变更人员

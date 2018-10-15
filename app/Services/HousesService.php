@@ -1108,11 +1108,11 @@ class HousesService
                 'rent_free' => $res->rent_free,
                 'increasing_situation_remark' => $res->increasing_situation_remark,
                 'cost_detail' => $res->cost_detail??array(),
-                'house_busine_state' => $res->actuality,
+                'house_busine_state' => 1,
                 'house_type_img' => $res->house_type_img,
                 'indoor_img' => $res->indoor_img,
                 'start_track_time' => strtotime($res->track_time),
-                'shelf' => 1
+                'shelf' => 1,
             ]);
             if (!$house) throw new \Exception('同步数据失败');
             \DB::commit();

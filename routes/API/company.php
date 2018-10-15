@@ -6,6 +6,8 @@
  * Time: 上午9:44
  */
 
+header('Access-Control-Allow-Headers:X-Token,Content-Type,Authorization,safeString');
+
 Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 七牛token
     Route::get('/get_qi_niu_token', 'HousesController@token');

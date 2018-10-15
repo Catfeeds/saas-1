@@ -26,7 +26,8 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'pic_cn'
+        'pic_cn',
+        'work_order_cn'
     ];
 
     //获取token
@@ -129,6 +130,12 @@ class User extends Authenticatable
     public function customerTrack()
     {
         return $this->hasMany('App\Models\Track','user_guid','guid')->where('model_type','App\Models\Customer');
+    }
+
+    // 区域 work_order_cn
+    public function getWorkOrderCnAttribute()
+    {
+        return empty($this->work_order)?'':implode(',',$this->work_order);
     }
 
 }

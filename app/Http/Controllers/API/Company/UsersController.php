@@ -278,4 +278,62 @@ class UsersController extends APIBaseController
         if (!$res) return $this->sendError('修改失败');
         return $this->sendResponse($res, '修改成功');
     }
+
+    // 获取全部管理成
+    public function getAllDistribution(UserService $service)
+    {
+        $res = $service->getAllDistribution();
+        if (!$res) return $this->sendError('获取失败');
+        return $this->sendResponse($res,'获取成功');
+    }
+
+    // 管理层获取下级
+    public function getAgent
+    (
+        UsersRequest $request,
+        UserService $service
+    )
+    {
+        $res = $service->getAgent($request->user_guid);
+        return $this->sendResponse($res, '获取成功');
+    }
+
+    // 通过openid获取经纪人guid
+    public function getUserGuid(UsersRequest $request)
+    {
+        $res =  User::where('openid', $request->openid)->value('guid');
+        return $this->sendResponse($res, '获取成功');
+    }
+
+    // 获取人员称呼
+    public function getUserInfo(UsersRequest $request)
+    {
+        $user = User::where('guid', $request->user_guid)->first();
+        // 管理层
+        if ($user->work_order) {
+            $str = ' ('.$user->name. '-'. $user->work_order_cn. '-'. $user->company->name. ')';
+        } elseif ($user->rel_guid) {
+            $str = ' ('.$user->name. '-'. $user->companyFramework->name. '-'. $user->role->name.')';
+        } else {
+            $str = $user->name;
+        }
+        return $this->sendResponse($str, '获取成功');
+    }
+
+    // 验证房源或客源编号是否有效
+    public function getIdentifier(UsersRequest $request)
+    {
+        if ($request->demand == 1) {
+            $res = House::where('house_identifier', $request->identifier)->first();
+            $str = '房源编号无效';
+        } else {
+            $res = Customer::where('customer_identifier', $request->identifier)->first();
+            $str = '客源编号无效';
+        }
+        if ($res) {
+            return $this->sendResponse(true, '存在');
+        } else {
+            return $this->sendError($str);
+        }
+    }
 }

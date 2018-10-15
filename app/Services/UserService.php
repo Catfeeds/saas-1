@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Handler\Access;
 use App\Handler\Common;
+use App\Models\CompanyFramework;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -190,6 +191,54 @@ class UserService
         $user->pic = $request->pic;
         if (!$user->save()) return false;
         return $user->pic_cn;
+    }
+
+    // 获取给人员分配工单下拉数据
+    public function getAllDistribution()
+    {
+        $res = User::with('company')
+            ->where(['status' => 1, 'start_up' => 1])
+            ->where('openid','!=','')
+            ->where('work_order','!=','')
+            ->get();
+        return $res->map(function ($v){
+            return [
+                'value' => $v->guid,
+                'label' => $v->name . '-' . $v->work_order_cn . '-' . $v->company->name
+            ];
+        });
+    }
+
+
+    // 管理层获取下级
+    public function getAgent($guid)
+    {
+
+        $user = User::where('guid', $guid)->first();
+        $res = User::with('role', 'companyFramework')
+            ->where('openid', '!=', '')
+            ->where(['start_up' => 1, 'status' => 1, 'company_guid' => $user->company_guid]);
+        // 如果没有归属,查全公司员工
+        if (empty($user->rel_guid)) {
+            $res = $res->where('rel_guid', '!=', '');
+        } else {
+            // 如果有归属, 则查询全部下级归属
+            $pid = array($user->rel_guid);
+            while ($pid) {
+                $data[] = $pid;
+                $pid = CompanyFramework::whereIn('parent_guid', $pid)->pluck('guid')->toarray();
+            }
+            $res = $res->where('guid', '!=', '')
+                ->whereIn('rel_guid', collect($data)->flatten()->toArray());
+
+        }
+        $res = $res->where('guid', '!=', $guid)->orderBy('rel_guid')->get();
+        return $res->map(function ($v) {
+            return [
+                'label' => $v->name. '-'. $v->companyFramework->name. '-'. $v->role->name,
+                'value' => $v->guid,
+            ];
+        });
     }
 
 

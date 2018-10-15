@@ -28,12 +28,31 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 公司管理
     Route::resource('company', 'CompanyController');
 
+
     /*
     |--------------------------------------------------------------------------
     | 用户管理
     |--------------------------------------------------------------------------
     */
     Route::resource('users','UsersController');
+
+    // 工单分配获取全部管理层
+    Route::get('get_all_distribution', 'UsersController@getAllDistribution');
+
+    // 管理层获取全部下级
+    Route::get('get_agent', 'UsersController@getAgent');
+
+    // 通过openid获取用户guid
+    Route::get('get_user_guid', 'UsersController@getUserGuid');
+
+    // 获取经纪人称谓
+    Route::get('get_user_info', 'UsersController@getUserInfo');
+
+    // 获取房源或客源编号
+    Route::get('get_identifier', 'UsersController@getIdentifier');
+
+
+
     // 冻结
     Route::get('freeze','UsersController@freeze');
     // 离职

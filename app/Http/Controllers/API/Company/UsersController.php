@@ -304,6 +304,13 @@ class UsersController extends APIBaseController
         return $this->sendResponse($res, '获取成功');
     }
 
+    // 通过guid获取openid
+    public function getOpenid(UsersRequest $request)
+    {
+        $res = User::where('guid', $request->guid)->value('openid');
+        return $this->sendResponse($res, '获取成功');
+    }
+
     // 获取人员称呼
     public function getUserInfo(UsersRequest $request)
     {

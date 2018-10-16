@@ -47,6 +47,9 @@ Route::group(['namespace' => 'Company', 'prefix' => 'company'], function () {
     // 通过openid获取用户guid
     Route::get('get_user_guid', 'UsersController@getUserGuid');
 
+    // 通过guid获取用户openid
+    Route::get('get_openid', 'UsersController@getOpenid');
+
     // 获取经纪人称谓
     Route::get('get_user_info', 'UsersController@getUserInfo');
 

@@ -36,9 +36,9 @@ class CompanyFrameworkSeeder extends Seeder
             'city_guid' => $city_guid,
             'area_guid' => $area_guid,
             'address' => '总部时代',
-            'company_tel' => '123456789',
+            'company_tel' => '15926289802',
             'contacts' => '总部时代老板',
-            'contacts_tel' => '123456789',
+            'contacts_tel' => '15926289802',
             'job_remarks' => '总经理',
             'status' => 1
         ]);

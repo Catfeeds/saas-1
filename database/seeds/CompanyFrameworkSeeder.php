@@ -24,11 +24,11 @@ class CompanyFrameworkSeeder extends Seeder
         $request = new Request();
 
         // 城市
-        $city_guid = City::where('name', '武汉')->value('guid');
 
+        $city_guid = City::where('name', '武汉')->value('guid');
+        //----总部时代店独立--------
         // 区域
         $area_guid = Area::where('name', '江夏区')->value('guid');
-
         // 新建公司
         $company = Company::create([
             'guid' => Common::getUuid(),
@@ -89,5 +89,7 @@ class CompanyFrameworkSeeder extends Seeder
         $request->offsetSet('role_guid', $role->guid);
         $request->offsetSet('level', 5);
         $quartersService->defaultPermissions($request);
+
+        //---- 总部时代店独立 --------
     }
 }

@@ -984,9 +984,9 @@ class HousesService
     {
         \DB::beginTransaction();
         try {
+
             $res = $house->delete();
             if (!$res) throw new \Exception('房源删除失败');
-
             // 删除操作记录
             if (!$house->record->isEmpty()) {
                 $suc = HouseOperationRecord::where('house_guid', $house->guid)->delete();
@@ -1005,7 +1005,7 @@ class HousesService
                 if (!$delVisit) throw new \Exception('房源带看记录删除失败');
             }
             // 删除看房方式记录
-            if (!$house->seeHouseWay->isEmpty()) {
+            if ($house->seeHouseWay) {
                 $delWey = SeeHouseWay::where('house_guid',$house->guid)->delete();
                 if (!$delWey) throw new \Exception('看房方式关联数据删除失败');
             }

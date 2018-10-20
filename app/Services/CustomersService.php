@@ -246,6 +246,7 @@ class CustomersService
         $data = [];
         $data['permission'] = $permission;
         $data['guid'] = $res->guid;
+        $data['customer_identifier'] = $res->customer_identifier;
         $data['level'] = $res->level_cn;
         $data['guest'] = $res->guest_cn;
         $data['title'] = $res->price_interval_cn . ',' . $res->acreage_interval_cn . '的写字楼。';

@@ -27,25 +27,25 @@ class CompanyFrameworkSeeder extends Seeder
 
         $city_guid = City::where('name', '武汉')->value('guid');
 
-        //----武昌关山区域--------
-        $area_guid = Area::where('name', '武昌区')->value('guid');
+        //----汉口区域--------
+        $area_guid = Area::where('name', '江岸区')->value('guid');
 
         // 新建公司(武昌关山区域)
         $company = Company::create([
             'guid' => Common::getUuid(),
-            'name' => '武昌关山区域',
+            'name' => '汉口区域',
             'city_guid' => $city_guid,
             'area_guid' => $area_guid,
-            'address' => '关山',
-            'company_tel' => '18154318180',
-            'contacts' => '黄建',
-            'contacts_tel' => '18154318180',
+            'address' => '汉口',
+            'company_tel' => '18772664414',
+            'contacts' => '鄢志敏',
+            'contacts_tel' => '18772664414',
             'job_remarks' => '经理',
             'status' => 1
         ]);
 
-        // 修改总部时代店/汉街店 所属公司
-        CompanyFramework::whereIn('name', ['汉街店', '光谷总部时代'])->update(['company_guid' => $company->guid, 'parent_guid' => null]);
+        // 修改 所属公司
+        CompanyFramework::where('name', '汉口泛海国际店')->update(['company_guid' => $company->guid, 'parent_guid' => null]);
 
         // 添加管理员角色
         $role = Role::create([
@@ -59,7 +59,7 @@ class CompanyFrameworkSeeder extends Seeder
         $quartersService->defaultPermissions($request);
 
         // 更新黄建账户
-        $user = User::where(['tel' => '18154318180', 'name' => '黄建'])->first();
+        $user = User::where(['tel' => '18772664414', 'name' => '鄢志敏'])->first();
         $user->company_guid = $company->guid;
         $user->rel_guid = null;
         $user->role_guid = $role->guid;
@@ -87,23 +87,24 @@ class CompanyFrameworkSeeder extends Seeder
         $request->offsetSet('level', 5);
         $quartersService->defaultPermissions($request);
 
-        //---- 智慧园店独立 --------
+        //---- 光谷区域 --------
+        $area_guid = Area::where('name', '东湖高新区')->value('guid');
 
         // 新建公司(武昌关山区域)
         $company = Company::create([
             'guid' => Common::getUuid(),
-            'name' => '关山区域',
+            'name' => '光谷区域',
             'city_guid' => $city_guid,
             'area_guid' => $area_guid,
-            'address' => '关山',
-            'company_tel' => '18571858150',
-            'contacts' => '程达',
-            'contacts_tel' => '18571858150',
+            'address' => '光谷',
+            'company_tel' => '15527661257',
+            'contacts' => '王玺',
+            'contacts_tel' => '15527661257',
             'job_remarks' => '经理',
             'status' => 1
         ]);
         // 修改总部时代店/汉街店 所属公司
-        CompanyFramework::where(['name' => '智慧园店-楚楼总部', 'level' => 2])->update(['company_guid' => $company->guid, 'parent_guid' => null]);
+        CompanyFramework::where(['name' => '光谷店', 'level' => 2])->update(['company_guid' => $company->guid, 'parent_guid' => null]);
         // 添加管理员角色
         $role = Role::create([
             'guid' => Common::getUuid(),
@@ -116,7 +117,7 @@ class CompanyFrameworkSeeder extends Seeder
         $quartersService->defaultPermissions($request);
 
         // 更新程达账号
-        $user = User::where(['tel' => '18571858150', 'name' => '程达'])->first();
+        $user = User::where(['tel' => '15527661257', 'name' => '王玺'])->first();
         $user->company_guid = $company->guid;
         $user->rel_guid = null;
         $user->role_guid = $role->guid;

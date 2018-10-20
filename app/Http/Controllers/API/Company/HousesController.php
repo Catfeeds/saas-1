@@ -38,6 +38,17 @@ class HousesController extends APIBaseController
         HousesRepository $repository
     )
     {
+        // 查询该公司房源是否存在
+        $companyHouse = House::where([
+            'company_guid' => Common::user()->company_guid,
+            'building_block_guid' => $request->building_block_guid,
+            'floor' => $request->floor,
+            'house_number' => $request->house_number,
+        ])->first();
+        if ($companyHouse) {
+            return $this->sendError('该公司已存在该房源');
+        }
+
         // 判断云房源唯一性
         if ($request->share == 1) {
             $house = House::where([

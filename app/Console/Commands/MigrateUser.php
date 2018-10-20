@@ -24,7 +24,7 @@ class MigrateUser extends Command
      *
      * @var string
      */
-    protected $description = '迁移人员';
+    protected $description = '更新人员';
 
     /**
      * Create a new command instance.
@@ -43,49 +43,32 @@ class MigrateUser extends Command
      */
     public function handle()
     {
-        $company_guid = Company::where('name', '楚楼网')->value('guid');
+        // 先更新黄建公司
+        $company_guid = Company::where('name', '武昌关山区域')->value('guid');
 
-        $guid = CompanyFramework::where('name', '光谷总部时代')->value('guid');
-            // 迁移人员
-            $user = MediaUser::with('storefront')->where('ascription_store',  6)->get();
-            foreach ($user as $v) {
-                // 员工角色
-                $role = Role::where('company_guid', $company_guid);
-                switch ($v->level) {
-                    case 1:
-                        $role_guid = $role->where('name', '!=', '管理员')->where('level', 1)->value('guid');
-                        break;
-                    case 2:
-                        $role_guid = $role->where('level', 2)->value('guid');
-                        break;
-                    case 3:
-                        $role_guid = $role->where('level', 3)->value('guid');
-                        break;
-                    case 4:
-                        $role_guid = $role->where('level', 5)->value('guid');
-                        break;
-                    case 5:
-                        $role_guid = $role->where('level', 4)->value('guid');
-                        break;
-                    case 6:
-                        $role_guid = $role->where('level', 5)->value('guid');
-                        break;
-                        default;
-                        break;
-                }
-                // 插入新数据
-                $user = User::create([
-                    'guid' => Common::getUuid(),
-                    'openid' => $v->openid,
-                    'company_guid' => $company_guid,
-                    'rel_guid' => $guid ,// 员工关联架构guid
-                    'name' => $v->real_name,
-                    'tel' => $v->tel,
-                    'password' => $v->password,
-                    'role_guid' => $role_guid, //根据等级关联对应guid
-                    'status' => $v->remark ? 2 : 1,
-                ]);
-                if (!$user) \Log::info($user->id.'添加失败');
-            }
+        // 更新黄建公司人员
+        $guid = CompanyFramework::whereIn('name', ['汉街店', '光谷总部时代'])->pluck('guid')->toArray();
+
+        $user = User::whereIn('rel_guid', $guid)->get();
+        foreach ($user as $v) {
+            // 查询该用户角色等级
+            $level = $v->role->level;
+            $role_guid = Role::where(['company_guid' => $company_guid, 'level' => $level])->value('guid');
+            // 去新公司查询role_guid
+            $v->update(['company_guid' => $company_guid, 'role_guid' => $role_guid]);
+        }
+
+        // 更新程达公司
+        $company_guid = Company::where('name', '关山区域')->value('guid');
+        // 更新黄建公司人员
+        $guid = CompanyFramework::where('name', '智慧园店-楚楼总部')->value('guid');
+        $user = User::where('rel_guid', $guid)->get();
+        foreach ($user as $v) {
+            // 查询该用户角色等级
+            $level = $v->role->level;
+            $role_guid = Role::where(['company_guid' => $company_guid, 'level' => $level])->value('guid');
+            // 去新公司查询role_guid
+            $v->update(['company_guid' => $company_guid, 'role_guid' => $role_guid]);
+        }
     }
 }

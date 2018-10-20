@@ -2,11 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Models\CompanyFramework;
+use App\Models\Company;
 use App\Models\Customer;
 use App\Models\House;
-use App\Models\HouseImgRecord;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Console\Command;
 
@@ -24,7 +22,7 @@ class MigrateData extends Command
      *
      * @var string
      */
-    protected $description = '修改总部时代数据';
+    protected $description = '公司数据迁移';
 
     /**
      * Create a new command instance.
@@ -43,35 +41,27 @@ class MigrateData extends Command
      */
     public function handle()
     {
-        // 更改人员公司
-        $companyFramework = CompanyFramework::where('name', '光谷总部时代')->first();
-        $user = User::where('rel_guid', $companyFramework->guid)->get();
-           foreach ($user as $v) {
-               // 查询角色id
-               $role_guid = Role::where([
-                   'company_guid' => $companyFramework->company_guid,
-                   'level' => $v->role->level
-               ])->value('guid');
-               $suc = $v->update([
-                   'company_guid' => $companyFramework->company_guid,
-                   'role_guid' => $role_guid
-               ]);
-               if (!$suc) \Log::info($v->guid.'变更失败');
-        }
+        // 更新黄建公司的房子
+        $company_guid = Company::where('name', '武昌关山区域')->value('guid');
 
-        // 房源变更
-        $user = User::where('rel_guid', $companyFramework->guid)->pluck('guid')->toArray();
+        // 查询全部人员
+        $user = User::where('company_guid', $company_guid)->pluck('guid')->toArray();
 
-        // 变更房子
-        $house = House::whereIn('guardian_person', $user)->update(['company_guid' => $companyFramework->company_guid]);
-        if (!$house) {
-            return '房源变更失败';
-        }
+        // 更新房子
+        House::whereIn('guardian_person', $user)->update(['company_guid' => $company_guid]);
 
-        // 变更客户
-        $customer = Customer::whereIn('guardian_person', $user)->update(['company_guid' => $companyFramework->company_guid]);
-        if (!$customer) {
-            return '客源变更失败';
-        }
+        Customer::whereIn('guardian_person', $user)->update(['company_guid' => $company_guid]);
+
+
+        // 更新程达公司的房子
+        $company_guid = Company::where('name', '关山区域')->value('guid');
+
+        // 查询全部人员
+        $user = User::where('company_guid', $company_guid)->pluck('guid')->toArray();
+
+        // 更新房子
+        House::whereIn('guardian_person', $user)->update(['company_guid' => $company_guid]);
+
+        Customer::whereIn('guardian_person', $user)->update(['company_guid' => $company_guid]);
     }
 }

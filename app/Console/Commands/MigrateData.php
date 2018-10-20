@@ -42,7 +42,7 @@ class MigrateData extends Command
     public function handle()
     {
         // 更新黄建公司的房子
-        $company_guid = Company::where('name', '武昌关山区域')->value('guid');
+        $company_guid = Company::where('name', '汉口区域')->value('guid');
 
         // 查询全部人员
         $user = User::where('company_guid', $company_guid)->pluck('guid')->toArray();
@@ -54,7 +54,7 @@ class MigrateData extends Command
 
 
         // 更新程达公司的房子
-        $company_guid = Company::where('name', '关山区域')->value('guid');
+        $company_guid = Company::where('name', '光谷区域')->value('guid');
 
         // 查询全部人员
         $user = User::where('company_guid', $company_guid)->pluck('guid')->toArray();

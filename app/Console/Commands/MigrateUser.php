@@ -43,11 +43,12 @@ class MigrateUser extends Command
      */
     public function handle()
     {
-        // 先更新黄建公司
-        $company_guid = Company::where('name', '武昌关山区域')->value('guid');
+        // 先更新鄢志敏公司
+        $company_guid = Company::where('name', '汉口区域')->value('guid');
+        dd($company_guid);
 
         // 更新黄建公司人员
-        $guid = CompanyFramework::whereIn('name', ['汉街店', '光谷总部时代'])->pluck('guid')->toArray();
+        $guid = CompanyFramework::where('name', '汉口泛海国际店')->pluck('guid')->toArray();
 
         $user = User::whereIn('rel_guid', $guid)->get();
         foreach ($user as $v) {
@@ -59,9 +60,9 @@ class MigrateUser extends Command
         }
 
         // 更新程达公司
-        $company_guid = Company::where('name', '关山区域')->value('guid');
+        $company_guid = Company::where('name', '光谷区域')->value('guid');
         // 更新黄建公司人员
-        $guid = CompanyFramework::where('name', '智慧园店-楚楼总部')->value('guid');
+        $guid = CompanyFramework::where('name', '光谷店')->value('guid');
         $user = User::where('rel_guid', $guid)->get();
         foreach ($user as $v) {
             // 查询该用户角色等级

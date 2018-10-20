@@ -15,5 +15,7 @@ class DatabaseSeeder extends Seeder
 //        $this->call(PermissionSeeder::class);
         $this->call(CompanyFrameworkSeeder::class);
 //        $this->call(AddPermissionSeeder::class);
+//        $this->call(ƒ::class);
+        $this->call(AddPermissionSeeder::class);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Company;
 use App\Models\Customer;
 use App\Models\House;
 use App\Models\User;
@@ -22,7 +21,7 @@ class MigrateData extends Command
      *
      * @var string
      */
-    protected $description = '公司数据迁移';
+    protected $description = '离职人员数据处理';
 
     /**
      * Create a new command instance.
@@ -41,27 +40,19 @@ class MigrateData extends Command
      */
     public function handle()
     {
-        // 更新黄建公司的房子
-        $company_guid = Company::where('name', '汉口区域')->value('guid');
-
-        // 查询全部人员
-        $user = User::where('company_guid', $company_guid)->pluck('guid')->toArray();
-
-        // 更新房子
-        House::whereIn('guardian_person', $user)->update(['company_guid' => $company_guid]);
-
-        Customer::whereIn('guardian_person', $user)->update(['company_guid' => $company_guid]);
-
-
-        // 更新程达公司的房子
-        $company_guid = Company::where('name', '光谷区域')->value('guid');
-
-        // 查询全部人员
-        $user = User::where('company_guid', $company_guid)->pluck('guid')->toArray();
-
-        // 更新房子
-        House::whereIn('guardian_person', $user)->update(['company_guid' => $company_guid]);
-
-        Customer::whereIn('guardian_person', $user)->update(['company_guid' => $company_guid]);
+        \DB::beginTransaction();
+        try {
+            // 所有已经离职人员
+            $user = User::where('status', 2)->pluck('guid')->toArray();
+            // 把房子和客源转移到公盘
+            House::whereIn('guardian_person', $user)->update(['public_private', 2]);
+            Customer::whereIn('guardian_person', $user)->update(['guest' => 1]);
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            \Log::error('处理失败'.$exception->getMessage());
+            return false;
+        }
     }
 }

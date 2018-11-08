@@ -26,13 +26,13 @@ class UsersRequest extends FormRequest
         switch ($this->route()->getActionMethod()) {
             case 'store':
                 return [
-                    'tel.unique' => '手机号不能重复',
+                    'tel.unique' => '该人员已存在并且在职',
                     'role_guid.in' => '角色必须存在',
                     'rel_guid.in' => '门店必须存在',
                 ];
             case 'update':
                 return [
-                    'tel.unique' => '手机号不能重复',
+                    'tel.unique' => '手机号已存在',
                     'role_guid.in' => '角色必须存在',
                     'rel_guid.in' => '门店必须存在',
                 ];
@@ -64,7 +64,13 @@ class UsersRequest extends FormRequest
             case 'store':
                 return [
                     'name' => 'required|max:64',
-                    'tel' => 'required|max:16|unique:users,tel',
+                    'tel' => [
+                        'required',
+                        'max:16',
+                        Rule::unique('users', 'tel')->where(function($q) {
+                            $q->where('status', 1);
+                        })
+                    ],
                     'role_guid' => [
                         'required',
                         Rule::in(
@@ -91,7 +97,9 @@ class UsersRequest extends FormRequest
                     'tel' => [
                         'required',
                         'max:16',
-                        Rule::unique('users')->ignore($this->route('user')->guid,'guid'),
+                        Rule::unique('users')->where(function ($q) {
+                            $q->where('status', 1);
+                        })->ignore($this->route('user')->guid,'guid'),
                     ],
                     'role_guid' => [
                         'required',

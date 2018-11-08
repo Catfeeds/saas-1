@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Handler\Access;
 use App\Handler\Common;
 use App\Models\CompanyFramework;
+use App\Models\Customer;
+use App\Models\House;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -125,7 +127,20 @@ class UserService
     // 人员离职
     public function resignation($request)
     {
-        return User::where(['guid' => $request->guid])->update(['status' => $request->status]);
+        \DB::beginTransaction();
+        try {
+            $suc = User::where(['guid' => $request->guid])->update(['status' => $request->status]);
+            if (empty($suc)) throw new \Exception('人员离职失败');
+            // 转移房源客源
+             House::where('guardian_person', $request->guid)->update(['public_private' => 2]);
+             Customer::where('guardian_person', $request->guid)->update(['guest' =>  1]);
+            \DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            \DB::rollback();
+            \Log::error('人员离职失败'.$exception->getMessage());
+            return false;
+        }
     }
 
     // 获取公司下的全部岗位

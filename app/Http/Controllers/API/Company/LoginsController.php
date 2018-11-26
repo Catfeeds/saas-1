@@ -69,8 +69,8 @@ class LoginsController extends APIBaseController
                 if (empty($res->data)) return $this->sendError('二维码获取失败');
                 return $this->sendResponse($res->data, '二维码获取成功', 215);
             }
-            // 查询用户是否已经绑定
-            $openid = User::where(['openid' => $request->openid])->first();
+            // 查询在职用户是否已经绑定
+            $openid = User::where(['openid' => $request->openid, 'status' => 1])->first();
             if (!empty($openid)) return $this->sendError( '该微信号已绑定');
             // 如果参数中存在 openid  给当前账号 加上openid  改
             $res =$user->update(['openid' => $request->openid]);

@@ -19,7 +19,7 @@ class BusinessManageService
     {
         // 获取当前查看所有角色
         $usersGuid = Access::getUser(Common::user()->role->level);
-        $users = User::whereIn('guid', $usersGuid);
+        $users = User::whereIn('guid', $usersGuid)->where('status', '!=',  2);
 
         if ($request->name) {
             $users = $users->where('name', 'like', '%'.$request->name.'%');

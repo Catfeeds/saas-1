@@ -129,7 +129,7 @@ class UserService
     {
         \DB::beginTransaction();
         try {
-            $suc = User::where(['guid' => $request->guid])->update(['status' => $request->status]);
+            $suc = User::where(['guid' => $request->guid])->update(['status' => $request->status, 'openid' => null]);
             if (empty($suc)) throw new \Exception('人员离职失败');
             // 转移房源客源
              House::where('guardian_person', $request->guid)->update(['public_private' => 2]);
